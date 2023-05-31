@@ -59,7 +59,7 @@
 				DECB8B602A26724A007D0409 /* AppDelegate.swift */,
 				DECB8B642A26724A007D0409 /* ViewController.swift */,
 				DECB8B752A26B8DE007D0409 /* Extension + UIColor.swift */,
-				DECB8B772A26CA99007D0409 /* BERNIERDistressed-Regular.otf */,
+				DECB8B7C2A26D8A2007D0409 /* Fonts */,
 				DECB8B742A2672E0007D0409 /* Base */,
 			);
 			path = RecipeApp;
@@ -73,6 +73,14 @@
 				DECB8B6E2A26724A007D0409 /* Info.plist */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		DECB8B7C2A26D8A2007D0409 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				DECB8B772A26CA99007D0409 /* BERNIERDistressed-Regular.otf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
