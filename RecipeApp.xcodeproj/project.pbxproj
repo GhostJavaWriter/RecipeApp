@@ -13,6 +13,9 @@
 		DECB8B6D2A26724A007D0409 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B6B2A26724A007D0409 /* LaunchScreen.storyboard */; };
 		DECB8B762A26B8DE007D0409 /* Extension + UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B752A26B8DE007D0409 /* Extension + UIColor.swift */; };
 		DECB8B782A26CA99007D0409 /* BERNIERDistressed-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B772A26CA99007D0409 /* BERNIERDistressed-Regular.otf */; };
+		DECB8B7E2A26DCF4007D0409 /* Annabelle.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B7D2A26DCF4007D0409 /* Annabelle.ttf */; };
+		DECB8B802A27AD42007D0409 /* ScaledFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B7F2A27AD42007D0409 /* ScaledFont.swift */; };
+		DECB8B822A27AD4F007D0409 /* Annabelle.plist in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B812A27AD4F007D0409 /* Annabelle.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +27,9 @@
 		DECB8B6E2A26724A007D0409 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DECB8B752A26B8DE007D0409 /* Extension + UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIColor.swift"; sourceTree = "<group>"; };
 		DECB8B772A26CA99007D0409 /* BERNIERDistressed-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BERNIERDistressed-Regular.otf"; sourceTree = "<group>"; };
+		DECB8B7D2A26DCF4007D0409 /* Annabelle.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Annabelle.ttf; sourceTree = "<group>"; };
+		DECB8B7F2A27AD42007D0409 /* ScaledFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScaledFont.swift; sourceTree = "<group>"; };
+		DECB8B812A27AD4F007D0409 /* Annabelle.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Annabelle.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +64,7 @@
 			children = (
 				DECB8B602A26724A007D0409 /* AppDelegate.swift */,
 				DECB8B642A26724A007D0409 /* ViewController.swift */,
-				DECB8B752A26B8DE007D0409 /* Extension + UIColor.swift */,
+				DECB8B832A27ADD6007D0409 /* Helpers */,
 				DECB8B7C2A26D8A2007D0409 /* Fonts */,
 				DECB8B742A2672E0007D0409 /* Base */,
 			);
@@ -71,6 +77,7 @@
 				DECB8B692A26724A007D0409 /* Assets.xcassets */,
 				DECB8B6B2A26724A007D0409 /* LaunchScreen.storyboard */,
 				DECB8B6E2A26724A007D0409 /* Info.plist */,
+				DECB8B812A27AD4F007D0409 /* Annabelle.plist */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -79,8 +86,18 @@
 			isa = PBXGroup;
 			children = (
 				DECB8B772A26CA99007D0409 /* BERNIERDistressed-Regular.otf */,
+				DECB8B7D2A26DCF4007D0409 /* Annabelle.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		DECB8B832A27ADD6007D0409 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				DECB8B752A26B8DE007D0409 /* Extension + UIColor.swift */,
+				DECB8B7F2A27AD42007D0409 /* ScaledFont.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -142,8 +159,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				DECB8B6D2A26724A007D0409 /* LaunchScreen.storyboard in Resources */,
+				DECB8B822A27AD4F007D0409 /* Annabelle.plist in Resources */,
 				DECB8B6A2A26724A007D0409 /* Assets.xcassets in Resources */,
 				DECB8B782A26CA99007D0409 /* BERNIERDistressed-Regular.otf in Resources */,
+				DECB8B7E2A26DCF4007D0409 /* Annabelle.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,6 +175,7 @@
 			files = (
 				DECB8B652A26724A007D0409 /* ViewController.swift in Sources */,
 				DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */,
+				DECB8B802A27AD42007D0409 /* ScaledFont.swift in Sources */,
 				DECB8B762A26B8DE007D0409 /* Extension + UIColor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
