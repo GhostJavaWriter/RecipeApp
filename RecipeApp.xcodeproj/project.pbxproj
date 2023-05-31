@@ -11,6 +11,8 @@
 		DECB8B652A26724A007D0409 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B642A26724A007D0409 /* ViewController.swift */; };
 		DECB8B6A2A26724A007D0409 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B692A26724A007D0409 /* Assets.xcassets */; };
 		DECB8B6D2A26724A007D0409 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B6B2A26724A007D0409 /* LaunchScreen.storyboard */; };
+		DECB8B762A26B8DE007D0409 /* Extension + UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B752A26B8DE007D0409 /* Extension + UIColor.swift */; };
+		DECB8B782A26CA99007D0409 /* BERNIERDistressed-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B772A26CA99007D0409 /* BERNIERDistressed-Regular.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +22,8 @@
 		DECB8B692A26724A007D0409 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DECB8B6C2A26724A007D0409 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DECB8B6E2A26724A007D0409 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DECB8B752A26B8DE007D0409 /* Extension + UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIColor.swift"; sourceTree = "<group>"; };
+		DECB8B772A26CA99007D0409 /* BERNIERDistressed-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BERNIERDistressed-Regular.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +58,8 @@
 			children = (
 				DECB8B602A26724A007D0409 /* AppDelegate.swift */,
 				DECB8B642A26724A007D0409 /* ViewController.swift */,
+				DECB8B752A26B8DE007D0409 /* Extension + UIColor.swift */,
+				DECB8B772A26CA99007D0409 /* BERNIERDistressed-Regular.otf */,
 				DECB8B742A2672E0007D0409 /* Base */,
 			);
 			path = RecipeApp;
@@ -129,6 +135,7 @@
 			files = (
 				DECB8B6D2A26724A007D0409 /* LaunchScreen.storyboard in Resources */,
 				DECB8B6A2A26724A007D0409 /* Assets.xcassets in Resources */,
+				DECB8B782A26CA99007D0409 /* BERNIERDistressed-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,6 +148,7 @@
 			files = (
 				DECB8B652A26724A007D0409 /* ViewController.swift in Sources */,
 				DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */,
+				DECB8B762A26B8DE007D0409 /* Extension + UIColor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,7 +307,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -330,7 +338,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
