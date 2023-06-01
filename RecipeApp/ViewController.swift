@@ -13,7 +13,6 @@ class ViewController: UIViewController {
     
     private lazy var containerView: UIView = {
         let view = UIView()
-//        view.backgroundColor = .red
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -22,8 +21,8 @@ class ViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "What will we cook?"
-        label.textColor = .white
-        label.font = UIFont(name: "Annabelle", size: 52)
+        label.textColor = Colors.welcomeLabelColor
+        label.font = UIFont(name: Fonts.welcomeLabelFont, size: 52)
         label.numberOfLines = 0
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.7
@@ -31,8 +30,18 @@ class ViewController: UIViewController {
         return label
     }()
     
+    private lazy var collectionView: CategoriesCollectionView = {
+        let collectionView = CategoriesCollectionView()
+        collectionView.dataSource = dataSource
+        collectionView.delegate = delegate
+        return collectionView
+    }()
+    
     // MARK: - Properties
         
+    private let dataSource = CategoriesCollectionViewDataSource()
+    private let delegate = CategoriesCollectionViewDelegate()
+    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -45,15 +54,18 @@ class ViewController: UIViewController {
     
     private func configureView() {
         
-        view.backgroundColor = UIColor(hex: "#E8B634")
+        view.backgroundColor = Colors.mainBackgroundColor
         
         view.addSubview(containerView)
+        view.addSubview(collectionView)
         containerView.addSubview(welcomeLabel)
         
         let margins = view.layoutMarginsGuide
-        view.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 40, leading: 40, bottom: 40, trailing: 40)
+        view.directionalLayoutMargins = Metrics.Margins.directionalLayoutMargins
         
         NSLayoutConstraint.activate([
+            
+            // configure caption label
             
             containerView.topAnchor.constraint(equalToSystemSpacingBelow: margins.topAnchor, multiplier: 1),
             containerView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
@@ -65,6 +77,12 @@ class ViewController: UIViewController {
             welcomeLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             containerView.trailingAnchor.constraint(equalTo: welcomeLabel.trailingAnchor),
             
+            // configure collection view
+            
+            collectionView.topAnchor.constraint(equalToSystemSpacingBelow: containerView.bottomAnchor, multiplier: 1),
+            collectionView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
         ])
         
     }
