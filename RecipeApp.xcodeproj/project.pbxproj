@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DE8358C22A29221700675966 /* RecipesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358C12A29221700675966 /* RecipesListViewController.swift */; };
 		DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B602A26724A007D0409 /* AppDelegate.swift */; };
-		DECB8B652A26724A007D0409 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B642A26724A007D0409 /* ViewController.swift */; };
+		DECB8B652A26724A007D0409 /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B642A26724A007D0409 /* CategoriesViewController.swift */; };
 		DECB8B6A2A26724A007D0409 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B692A26724A007D0409 /* Assets.xcassets */; };
 		DECB8B6D2A26724A007D0409 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B6B2A26724A007D0409 /* LaunchScreen.storyboard */; };
 		DECB8B762A26B8DE007D0409 /* Extension + UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B752A26B8DE007D0409 /* Extension + UIColor.swift */; };
@@ -25,9 +26,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DE8358C12A29221700675966 /* RecipesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesListViewController.swift; sourceTree = "<group>"; };
 		DECB8B5D2A26724A007D0409 /* RecipeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecipeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DECB8B602A26724A007D0409 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DECB8B642A26724A007D0409 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		DECB8B642A26724A007D0409 /* CategoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewController.swift; sourceTree = "<group>"; };
 		DECB8B692A26724A007D0409 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DECB8B6C2A26724A007D0409 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DECB8B6E2A26724A007D0409 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -55,6 +57,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DE8358C02A29215200675966 /* CategoriesScreen */ = {
+			isa = PBXGroup;
+			children = (
+				DECB8B642A26724A007D0409 /* CategoriesViewController.swift */,
+				DECB8B8A2A283647007D0409 /* CollectionView */,
+			);
+			path = CategoriesScreen;
+			sourceTree = "<group>";
+		};
+		DE8358C32A29221E00675966 /* RecipesListScreen */ = {
+			isa = PBXGroup;
+			children = (
+				DE8358C12A29221700675966 /* RecipesListViewController.swift */,
+			);
+			path = RecipesListScreen;
+			sourceTree = "<group>";
+		};
 		DECB8B542A26724A007D0409 = {
 			isa = PBXGroup;
 			children = (
@@ -75,8 +94,8 @@
 			isa = PBXGroup;
 			children = (
 				DECB8B602A26724A007D0409 /* AppDelegate.swift */,
-				DECB8B642A26724A007D0409 /* ViewController.swift */,
-				DECB8B8A2A283647007D0409 /* CollectionView */,
+				DE8358C32A29221E00675966 /* RecipesListScreen */,
+				DE8358C02A29215200675966 /* CategoriesScreen */,
 				DECB8B832A27ADD6007D0409 /* Helpers */,
 				DECB8B7C2A26D8A2007D0409 /* Fonts */,
 				DECB8B742A2672E0007D0409 /* Base */,
@@ -199,7 +218,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DECB8B652A26724A007D0409 /* ViewController.swift in Sources */,
+				DECB8B652A26724A007D0409 /* CategoriesViewController.swift in Sources */,
 				DECB8B8C2A28386E007D0409 /* CategoriesCollectionViewDelegate.swift in Sources */,
 				DECB8B902A28415A007D0409 /* CategoriesFlowLayout.swift in Sources */,
 				DECB8B852A283309007D0409 /* CategoriesCollectionView.swift in Sources */,
@@ -208,6 +227,7 @@
 				DECB8B872A28336E007D0409 /* CategoryCollectionViewCell.swift in Sources */,
 				DECB8B922A284CCC007D0409 /* Metrics+Colors.swift in Sources */,
 				DECB8B762A26B8DE007D0409 /* Extension + UIColor.swift in Sources */,
+				DE8358C22A29221700675966 /* RecipesListViewController.swift in Sources */,
 				DECB8B892A283607007D0409 /* CategoriesCollectionViewDataSource.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

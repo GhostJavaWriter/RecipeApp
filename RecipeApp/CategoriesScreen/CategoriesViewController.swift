@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  CategoriesViewController.swift
 //  RecipeApp
 //
 //  Created by Bair Nadtsalov on 30.05.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+final class CategoriesViewController: UIViewController {
 
     // MARK: - UI
     
