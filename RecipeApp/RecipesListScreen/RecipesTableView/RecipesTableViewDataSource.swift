@@ -23,7 +23,7 @@ final class RecipesTableViewDataSource: NSObject, UITableViewDataSource {
               let cell = tableView.dequeueReusableCell(withIdentifier: reuseID, for: indexPath) as? RecipeViewCell else {
             return UITableViewCell()
         }
-        
+        cell.selectionStyle = .none
         if let recipesList = recipesList {
             cell.configureCell(withText: recipesList[indexPath.row])
         } 
