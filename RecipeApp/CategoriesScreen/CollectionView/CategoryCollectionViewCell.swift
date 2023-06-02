@@ -15,7 +15,8 @@ final class CategoryCollectionViewCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 2
         label.textAlignment = .center
-        label.font = UIFont(name: Fonts.categorieItemFont, size: 32)
+        label.font = UIFont(name: Fonts.categorieItemFont,
+                            size: Fonts.Sizes.categorieName)
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.7
         return label

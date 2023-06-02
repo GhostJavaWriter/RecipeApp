@@ -22,7 +22,8 @@ final class CategoriesViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "What will we cook?"
         label.textColor = Colors.welcomeLabelColor
-        label.font = UIFont(name: Fonts.welcomeLabelFont, size: 52)
+        label.font = UIFont(name: Fonts.welcomeLabelFont,
+                            size: Fonts.Sizes.welcomeLabel)
         label.numberOfLines = 0
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.7
@@ -61,7 +62,7 @@ final class CategoriesViewController: UIViewController {
         containerView.addSubview(welcomeLabel)
         
         let margins = view.layoutMarginsGuide
-        view.directionalLayoutMargins = Metrics.Margins.directionalLayoutMargins
+        view.directionalLayoutMargins = Metrics.Margins.screenMargins
         
         NSLayoutConstraint.activate([
             

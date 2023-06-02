@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		DE8358C22A29221700675966 /* RecipesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358C12A29221700675966 /* RecipesListViewController.swift */; };
+		DE8358C52A29471000675966 /* RecipesTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358C42A29471000675966 /* RecipesTableViewDataSource.swift */; };
+		DE8358C72A2947BD00675966 /* RecipeViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358C62A2947BD00675966 /* RecipeViewCell.swift */; };
+		DE8358C92A294C1A00675966 /* RecipesTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358C82A294C1A00675966 /* RecipesTableViewDelegate.swift */; };
+		DE8358CC2A2966BC00675966 /* AmericanTypewriterRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE8358CB2A2966BC00675966 /* AmericanTypewriterRegular.ttf */; };
 		DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B602A26724A007D0409 /* AppDelegate.swift */; };
 		DECB8B652A26724A007D0409 /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B642A26724A007D0409 /* CategoriesViewController.swift */; };
 		DECB8B6A2A26724A007D0409 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B692A26724A007D0409 /* Assets.xcassets */; };
@@ -27,6 +31,10 @@
 
 /* Begin PBXFileReference section */
 		DE8358C12A29221700675966 /* RecipesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesListViewController.swift; sourceTree = "<group>"; };
+		DE8358C42A29471000675966 /* RecipesTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesTableViewDataSource.swift; sourceTree = "<group>"; };
+		DE8358C62A2947BD00675966 /* RecipeViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeViewCell.swift; sourceTree = "<group>"; };
+		DE8358C82A294C1A00675966 /* RecipesTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesTableViewDelegate.swift; sourceTree = "<group>"; };
+		DE8358CB2A2966BC00675966 /* AmericanTypewriterRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AmericanTypewriterRegular.ttf; sourceTree = "<group>"; };
 		DECB8B5D2A26724A007D0409 /* RecipeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecipeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DECB8B602A26724A007D0409 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DECB8B642A26724A007D0409 /* CategoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewController.swift; sourceTree = "<group>"; };
@@ -70,8 +78,19 @@
 			isa = PBXGroup;
 			children = (
 				DE8358C12A29221700675966 /* RecipesListViewController.swift */,
+				DE8358CA2A2950AE00675966 /* RecipesTableView */,
 			);
 			path = RecipesListScreen;
+			sourceTree = "<group>";
+		};
+		DE8358CA2A2950AE00675966 /* RecipesTableView */ = {
+			isa = PBXGroup;
+			children = (
+				DE8358C42A29471000675966 /* RecipesTableViewDataSource.swift */,
+				DE8358C82A294C1A00675966 /* RecipesTableViewDelegate.swift */,
+				DE8358C62A2947BD00675966 /* RecipeViewCell.swift */,
+			);
+			path = RecipesTableView;
 			sourceTree = "<group>";
 		};
 		DECB8B542A26724A007D0409 = {
@@ -119,6 +138,7 @@
 			children = (
 				DECB8B772A26CA99007D0409 /* BERNIERDistressed-Regular.otf */,
 				DECB8B7D2A26DCF4007D0409 /* Annabelle.ttf */,
+				DE8358CB2A2966BC00675966 /* AmericanTypewriterRegular.ttf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -205,6 +225,7 @@
 			files = (
 				DECB8B6D2A26724A007D0409 /* LaunchScreen.storyboard in Resources */,
 				DECB8B822A27AD4F007D0409 /* Annabelle.plist in Resources */,
+				DE8358CC2A2966BC00675966 /* AmericanTypewriterRegular.ttf in Resources */,
 				DECB8B6A2A26724A007D0409 /* Assets.xcassets in Resources */,
 				DECB8B782A26CA99007D0409 /* BERNIERDistressed-Regular.otf in Resources */,
 				DECB8B7E2A26DCF4007D0409 /* Annabelle.ttf in Resources */,
@@ -222,6 +243,8 @@
 				DECB8B8C2A28386E007D0409 /* CategoriesCollectionViewDelegate.swift in Sources */,
 				DECB8B902A28415A007D0409 /* CategoriesFlowLayout.swift in Sources */,
 				DECB8B852A283309007D0409 /* CategoriesCollectionView.swift in Sources */,
+				DE8358C92A294C1A00675966 /* RecipesTableViewDelegate.swift in Sources */,
+				DE8358C52A29471000675966 /* RecipesTableViewDataSource.swift in Sources */,
 				DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */,
 				DECB8B802A27AD42007D0409 /* ScaledFont.swift in Sources */,
 				DECB8B872A28336E007D0409 /* CategoryCollectionViewCell.swift in Sources */,
@@ -229,6 +252,7 @@
 				DECB8B762A26B8DE007D0409 /* Extension + UIColor.swift in Sources */,
 				DE8358C22A29221700675966 /* RecipesListViewController.swift in Sources */,
 				DECB8B892A283607007D0409 /* CategoriesCollectionViewDataSource.swift in Sources */,
+				DE8358C72A2947BD00675966 /* RecipeViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
