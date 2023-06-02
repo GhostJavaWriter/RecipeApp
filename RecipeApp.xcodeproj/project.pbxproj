@@ -13,6 +13,7 @@
 		DE8358C92A294C1A00675966 /* RecipesTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358C82A294C1A00675966 /* RecipesTableViewDelegate.swift */; };
 		DE8358CC2A2966BC00675966 /* AmericanTypewriterRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE8358CB2A2966BC00675966 /* AmericanTypewriterRegular.ttf */; };
 		DE8358CE2A2A5A6B00675966 /* AddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358CD2A2A5A6B00675966 /* AddButton.swift */; };
+		DE8358D02A2A636B00675966 /* TrashButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358CF2A2A636B00675966 /* TrashButton.swift */; };
 		DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B602A26724A007D0409 /* AppDelegate.swift */; };
 		DECB8B652A26724A007D0409 /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B642A26724A007D0409 /* CategoriesViewController.swift */; };
 		DECB8B6A2A26724A007D0409 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B692A26724A007D0409 /* Assets.xcassets */; };
@@ -37,6 +38,7 @@
 		DE8358C82A294C1A00675966 /* RecipesTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesTableViewDelegate.swift; sourceTree = "<group>"; };
 		DE8358CB2A2966BC00675966 /* AmericanTypewriterRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AmericanTypewriterRegular.ttf; sourceTree = "<group>"; };
 		DE8358CD2A2A5A6B00675966 /* AddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButton.swift; sourceTree = "<group>"; };
+		DE8358CF2A2A636B00675966 /* TrashButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashButton.swift; sourceTree = "<group>"; };
 		DECB8B5D2A26724A007D0409 /* RecipeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecipeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DECB8B602A26724A007D0409 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DECB8B642A26724A007D0409 /* CategoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewController.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 			children = (
 				DE8358C12A29221700675966 /* RecipesListViewController.swift */,
 				DE8358CD2A2A5A6B00675966 /* AddButton.swift */,
+				DE8358CF2A2A636B00675966 /* TrashButton.swift */,
 				DE8358CA2A2950AE00675966 /* RecipesTableView */,
 			);
 			path = RecipesListScreen;
@@ -252,6 +255,7 @@
 				DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */,
 				DECB8B802A27AD42007D0409 /* ScaledFont.swift in Sources */,
 				DECB8B872A28336E007D0409 /* CategoryCollectionViewCell.swift in Sources */,
+				DE8358D02A2A636B00675966 /* TrashButton.swift in Sources */,
 				DECB8B922A284CCC007D0409 /* Metrics+Colors.swift in Sources */,
 				DECB8B762A26B8DE007D0409 /* Extension + UIColor.swift in Sources */,
 				DE8358C22A29221700675966 /* RecipesListViewController.swift in Sources */,

@@ -24,11 +24,11 @@ final class RecipesListViewController: UIViewController {
         return button
     }()
     
-    private lazy var trashImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "trashButton")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+    private lazy var trashButton: TrashButton = {
+        let button = TrashButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "trashButton"), for: .normal)
+        return button
     }()
     
     private lazy var tableView: UITableView = {
@@ -67,7 +67,7 @@ final class RecipesListViewController: UIViewController {
         view.addSubview(tableView)
         view.addSubview(containerView)
         containerView.addSubview(addButton)
-        containerView.addSubview(trashImageView)
+        containerView.addSubview(trashButton)
         
         let margins = view.layoutMarginsGuide
         
@@ -91,15 +91,15 @@ final class RecipesListViewController: UIViewController {
             containerView.leadingAnchor.constraint(equalTo: leadingGuide.leadingAnchor),
             leadingGuide.trailingAnchor.constraint(equalTo: addButton.leadingAnchor),
             addButton.trailingAnchor.constraint(equalTo: middleGuide.leadingAnchor),
-            middleGuide.trailingAnchor.constraint(equalTo: trashImageView.leadingAnchor),
-            trashImageView.trailingAnchor.constraint(equalTo: trailingGuide.leadingAnchor),
+            middleGuide.trailingAnchor.constraint(equalTo: trashButton.leadingAnchor),
+            trashButton.trailingAnchor.constraint(equalTo: trailingGuide.leadingAnchor),
             trailingGuide.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             
-            addButton.widthAnchor.constraint(equalTo: trashImageView.widthAnchor, multiplier: 1),
+            addButton.widthAnchor.constraint(equalTo: trashButton.widthAnchor, multiplier: 1),
             leadingGuide.widthAnchor.constraint(equalTo: middleGuide.widthAnchor, multiplier: 1),
             middleGuide.widthAnchor.constraint(equalTo: trailingGuide.widthAnchor, multiplier: 1),
             addButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            trashImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            trashButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             
             tableView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),

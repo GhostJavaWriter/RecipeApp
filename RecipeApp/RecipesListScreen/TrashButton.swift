@@ -1,5 +1,5 @@
 //
-//  AddButton.swift
+//  TrashButton.swift
 //  RecipeApp
 //
 //  Created by Bair Nadtsalov on 2.06.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class AddButton: UIButton {
+final class TrashButton: UIButton {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
@@ -39,4 +39,3 @@ final class AddButton: UIButton {
         }
     }
 }
-
