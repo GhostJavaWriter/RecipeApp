@@ -17,11 +17,11 @@ final class RecipesListViewController: UIViewController {
         return view
     }()
     
-    private lazy var addImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "addButton")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+    private lazy var addButton: AddButton = {
+        let button = AddButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "addButton"), for: .normal)
+        return button
     }()
     
     private lazy var trashImageView: UIImageView = {
@@ -59,8 +59,6 @@ final class RecipesListViewController: UIViewController {
         configureView()
     }
     
-    // MARK: - Public methods
-    
     // MARK: - Private methods
     
     private func configureView() {
@@ -68,7 +66,7 @@ final class RecipesListViewController: UIViewController {
         view.backgroundColor = Colors.mainBackgroundColor
         view.addSubview(tableView)
         view.addSubview(containerView)
-        containerView.addSubview(addImageView)
+        containerView.addSubview(addButton)
         containerView.addSubview(trashImageView)
         
         let margins = view.layoutMarginsGuide
@@ -88,19 +86,19 @@ final class RecipesListViewController: UIViewController {
             containerView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             tableView.topAnchor.constraint(equalToSystemSpacingBelow: containerView.bottomAnchor, multiplier: 1),
             
-            containerView.heightAnchor.constraint(equalTo: addImageView.heightAnchor, multiplier: 2),
+            containerView.heightAnchor.constraint(equalTo: addButton.heightAnchor, multiplier: 2),
             
             containerView.leadingAnchor.constraint(equalTo: leadingGuide.leadingAnchor),
-            leadingGuide.trailingAnchor.constraint(equalTo: addImageView.leadingAnchor),
-            addImageView.trailingAnchor.constraint(equalTo: middleGuide.leadingAnchor),
+            leadingGuide.trailingAnchor.constraint(equalTo: addButton.leadingAnchor),
+            addButton.trailingAnchor.constraint(equalTo: middleGuide.leadingAnchor),
             middleGuide.trailingAnchor.constraint(equalTo: trashImageView.leadingAnchor),
             trashImageView.trailingAnchor.constraint(equalTo: trailingGuide.leadingAnchor),
             trailingGuide.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             
-            addImageView.widthAnchor.constraint(equalTo: trashImageView.widthAnchor, multiplier: 1),
+            addButton.widthAnchor.constraint(equalTo: trashImageView.widthAnchor, multiplier: 1),
             leadingGuide.widthAnchor.constraint(equalTo: middleGuide.widthAnchor, multiplier: 1),
             middleGuide.widthAnchor.constraint(equalTo: trailingGuide.widthAnchor, multiplier: 1),
-            addImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            addButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             trashImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             
             tableView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),

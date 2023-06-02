@@ -12,6 +12,7 @@
 		DE8358C72A2947BD00675966 /* RecipeViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358C62A2947BD00675966 /* RecipeViewCell.swift */; };
 		DE8358C92A294C1A00675966 /* RecipesTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358C82A294C1A00675966 /* RecipesTableViewDelegate.swift */; };
 		DE8358CC2A2966BC00675966 /* AmericanTypewriterRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE8358CB2A2966BC00675966 /* AmericanTypewriterRegular.ttf */; };
+		DE8358CE2A2A5A6B00675966 /* AddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358CD2A2A5A6B00675966 /* AddButton.swift */; };
 		DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B602A26724A007D0409 /* AppDelegate.swift */; };
 		DECB8B652A26724A007D0409 /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B642A26724A007D0409 /* CategoriesViewController.swift */; };
 		DECB8B6A2A26724A007D0409 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B692A26724A007D0409 /* Assets.xcassets */; };
@@ -35,6 +36,7 @@
 		DE8358C62A2947BD00675966 /* RecipeViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeViewCell.swift; sourceTree = "<group>"; };
 		DE8358C82A294C1A00675966 /* RecipesTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesTableViewDelegate.swift; sourceTree = "<group>"; };
 		DE8358CB2A2966BC00675966 /* AmericanTypewriterRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AmericanTypewriterRegular.ttf; sourceTree = "<group>"; };
+		DE8358CD2A2A5A6B00675966 /* AddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButton.swift; sourceTree = "<group>"; };
 		DECB8B5D2A26724A007D0409 /* RecipeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecipeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DECB8B602A26724A007D0409 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DECB8B642A26724A007D0409 /* CategoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewController.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				DE8358C12A29221700675966 /* RecipesListViewController.swift */,
+				DE8358CD2A2A5A6B00675966 /* AddButton.swift */,
 				DE8358CA2A2950AE00675966 /* RecipesTableView */,
 			);
 			path = RecipesListScreen;
@@ -242,6 +245,7 @@
 				DECB8B652A26724A007D0409 /* CategoriesViewController.swift in Sources */,
 				DECB8B8C2A28386E007D0409 /* CategoriesCollectionViewDelegate.swift in Sources */,
 				DECB8B902A28415A007D0409 /* CategoriesFlowLayout.swift in Sources */,
+				DE8358CE2A2A5A6B00675966 /* AddButton.swift in Sources */,
 				DECB8B852A283309007D0409 /* CategoriesCollectionView.swift in Sources */,
 				DE8358C92A294C1A00675966 /* RecipesTableViewDelegate.swift in Sources */,
 				DE8358C52A29471000675966 /* RecipesTableViewDataSource.swift in Sources */,
