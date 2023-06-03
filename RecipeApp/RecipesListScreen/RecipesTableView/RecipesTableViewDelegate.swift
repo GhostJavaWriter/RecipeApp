@@ -21,4 +21,5 @@ final class RecipesTableViewDelegate: NSObject, UITableViewDelegate
             cell.transform = originalTransform
         }, completion: nil)
     }
+
 }

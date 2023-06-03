@@ -48,6 +48,10 @@ final class RecipeViewCell: UITableViewCell {
         recipeNameLabel.text = text
     }
     
+    func getRecipeName() -> String {
+        return recipeNameLabel.text ?? "default"
+    }
+    
     // MARK: - Private methods
     
     private func configureView() {
