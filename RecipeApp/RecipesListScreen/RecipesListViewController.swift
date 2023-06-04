@@ -58,6 +58,8 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
         }
     }
     
+    var trashRecipes: [String] = []
+    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -166,6 +168,7 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
     func tableView(_ tableView: UITableView, dragPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
         let parameters = UIDragPreviewParameters()
         parameters.backgroundColor = .clear
+        // TODO: clear half transparent background when dragging
         return parameters
     }
     
@@ -212,12 +215,17 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
             
             if let recipe = recipes.first {
                 DispatchQueue.main.async {
-                    
+                    // TODO: perform sound
                     UIView.animate(withDuration: 0.3) {
                         self.trashButton.transform = .identity
                     }
-                    // delete from recipes and move to trash list
-                    // perform sound
+                    // TODO: delete from recipes and move to trash list
+                    if let index = self.recipesList.firstIndex(of: recipe) {
+                        self.recipesList.remove(at: index)
+                        let indexPath = IndexPath(row: index, section: 0)
+                        self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                        self.trashRecipes.append(recipe)
+                    }
                 }
             }
             
