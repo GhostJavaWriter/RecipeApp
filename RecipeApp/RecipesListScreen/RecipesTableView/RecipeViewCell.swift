@@ -17,7 +17,17 @@ final class RecipeViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: Fonts.recipeNameFont,
                             size: Fonts.Sizes.recipeName)
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label
+    }()
+    
+    private lazy var dragImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "recipesImage")
+        imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
     
     private lazy var containerView: UIView = {
@@ -60,6 +70,7 @@ final class RecipeViewCell: UITableViewCell {
         
         contentView.addSubview(containerView)
         containerView.addSubview(recipeNameLabel)
+        containerView.addSubview(dragImageView)
         
         contentView.directionalLayoutMargins = Metrics.Margins.spaceBetweenCells
         containerView.directionalLayoutMargins = Metrics.Margins.cellContentInsets
@@ -77,7 +88,11 @@ final class RecipeViewCell: UITableViewCell {
             recipeNameLabel.topAnchor.constraint(equalTo: insets.topAnchor),
             recipeNameLabel.bottomAnchor.constraint(equalTo: insets.bottomAnchor),
             recipeNameLabel.leadingAnchor.constraint(equalTo: insets.leadingAnchor),
-            recipeNameLabel.trailingAnchor.constraint(equalTo: insets.trailingAnchor)
+            recipeNameLabel.trailingAnchor.constraint(equalTo: dragImageView.leadingAnchor),
+            
+            dragImageView.topAnchor.constraint(equalTo: insets.topAnchor),
+            dragImageView.bottomAnchor.constraint(equalTo: insets.bottomAnchor),
+            dragImageView.trailingAnchor.constraint(equalTo: insets.trailingAnchor),
         ])
         
     }

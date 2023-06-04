@@ -33,7 +33,7 @@ enum Metrics {
         static let cellContentInsets = NSDirectionalEdgeInsets(top: 10,
                                                                leading: 20,
                                                                bottom: 10,
-                                                               trailing: 20)
+                                                               trailing: 10)
     }
 }
 enum Colors {
