@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class RecipesListViewController: UIViewController, UITableViewDragDelegate, UITableViewDropDelegate {
+final class RecipesListViewController: UIViewController, UITableViewDragDelegate, UITableViewDropDelegate, UIDropInteractionDelegate {
     
     // MARK: - UI
     
@@ -28,14 +28,8 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
         let button = TrashButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "trashButton"), for: .normal)
+        button.addInteraction(UIDropInteraction(delegate: self))
         return button
-    }()
-    
-    private lazy var dropZone: UIView = {
-        let view = UIView()
-        //        view.backgroundColor = .red
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
     }()
     
     private lazy var tableView: UITableView = {
@@ -78,7 +72,6 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
         
         view.backgroundColor = Colors.mainBackgroundColor
         view.addSubview(tableView)
-        view.addSubview(dropZone)
         view.addSubview(containerView)
         
         containerView.addSubview(addButton)
@@ -119,11 +112,6 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
             tableView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
-            
-            dropZone.leadingAnchor.constraint(equalTo: trashButton.leadingAnchor),
-            dropZone.trailingAnchor.constraint(equalTo: trashButton.trailingAnchor),
-            dropZone.topAnchor.constraint(equalTo: trashButton.topAnchor),
-            dropZone.bottomAnchor.constraint(equalTo: trashButton.bottomAnchor)
         ])
     }
     
@@ -187,5 +175,53 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
         return parameters
     }
 
+    // MARK: - UIDropInteractionDelegate
+    
+    func dropInteraction(_ interaction: UIDropInteraction,
+                         canHandle session: UIDropSession) -> Bool
+    {
+        return session.canLoadObjects(ofClass: String.self)
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction,
+                         sessionDidUpdate session: UIDropSession) -> UIDropProposal
+    {
+        
+        UIView.animate(withDuration: 0.3) {
+            self.trashButton.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        }
+        return UIDropProposal(operation: .copy)
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction,
+                         sessionDidExit session: UIDropSession) {
+        UIView.animate(withDuration: 0.3) {
+            self.trashButton.transform = .identity
+        }
+    }
+
+    
+    func dropInteraction(_ interaction: UIDropInteraction,
+                         performDrop session: UIDropSession)
+    {
+        _ = session.loadObjects(ofClass: String.self) { recipes in
+            
+            if let local = session.localDragSession?.localContext as? String {
+                print(local)
+            }
+            
+            if let recipe = recipes.first {
+                DispatchQueue.main.async {
+                    
+                    UIView.animate(withDuration: 0.3) {
+                        self.trashButton.transform = .identity
+                    }
+                    // delete from recipes and move to trash list
+                    // perform sound
+                }
+            }
+            
+        }
+    }
     
 }
