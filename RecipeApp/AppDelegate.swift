@@ -16,7 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
 //        window?.rootViewController = CategoriesViewController()
-        window?.rootViewController = RecipesListViewController()
+//        window?.rootViewController = RecipesListViewController()
+        window?.rootViewController = AddNewRecipeViewController()
         window?.makeKeyAndVisible()
         
         return true

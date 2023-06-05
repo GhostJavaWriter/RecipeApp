@@ -15,7 +15,7 @@ final class RecipeViewCell: UITableViewCell {
         let label = UILabel()
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont(name: Fonts.recipeNameFont,
+        label.font = UIFont(name: Fonts.AmericanTypewriter,
                             size: Fonts.Sizes.recipeName)
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label

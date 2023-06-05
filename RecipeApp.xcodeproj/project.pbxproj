@@ -18,7 +18,7 @@
 		DECB8B652A26724A007D0409 /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B642A26724A007D0409 /* CategoriesViewController.swift */; };
 		DECB8B6A2A26724A007D0409 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B692A26724A007D0409 /* Assets.xcassets */; };
 		DECB8B6D2A26724A007D0409 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B6B2A26724A007D0409 /* LaunchScreen.storyboard */; };
-		DECB8B762A26B8DE007D0409 /* Extension + UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B752A26B8DE007D0409 /* Extension + UIColor.swift */; };
+		DECB8B762A26B8DE007D0409 /* Extension+UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B752A26B8DE007D0409 /* Extension+UIColor.swift */; };
 		DECB8B782A26CA99007D0409 /* BERNIERDistressed-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B772A26CA99007D0409 /* BERNIERDistressed-Regular.otf */; };
 		DECB8B7E2A26DCF4007D0409 /* Annabelle.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B7D2A26DCF4007D0409 /* Annabelle.ttf */; };
 		DECB8B802A27AD42007D0409 /* ScaledFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B7F2A27AD42007D0409 /* ScaledFont.swift */; };
@@ -29,6 +29,7 @@
 		DECB8B8C2A28386E007D0409 /* CategoriesCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B8B2A28386E007D0409 /* CategoriesCollectionViewDelegate.swift */; };
 		DECB8B902A28415A007D0409 /* CategoriesFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B8F2A28415A007D0409 /* CategoriesFlowLayout.swift */; };
 		DECB8B922A284CCC007D0409 /* Metrics+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B912A284CCC007D0409 /* Metrics+Colors.swift */; };
+		DEE083862A2C1DE400C0ECEC /* AddNewRecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083852A2C1DE400C0ECEC /* AddNewRecipeViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,7 +46,7 @@
 		DECB8B692A26724A007D0409 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DECB8B6C2A26724A007D0409 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DECB8B6E2A26724A007D0409 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DECB8B752A26B8DE007D0409 /* Extension + UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIColor.swift"; sourceTree = "<group>"; };
+		DECB8B752A26B8DE007D0409 /* Extension+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIColor.swift"; sourceTree = "<group>"; };
 		DECB8B772A26CA99007D0409 /* BERNIERDistressed-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BERNIERDistressed-Regular.otf"; sourceTree = "<group>"; };
 		DECB8B7D2A26DCF4007D0409 /* Annabelle.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Annabelle.ttf; sourceTree = "<group>"; };
 		DECB8B7F2A27AD42007D0409 /* ScaledFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScaledFont.swift; sourceTree = "<group>"; };
@@ -56,6 +57,7 @@
 		DECB8B8B2A28386E007D0409 /* CategoriesCollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesCollectionViewDelegate.swift; sourceTree = "<group>"; };
 		DECB8B8F2A28415A007D0409 /* CategoriesFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesFlowLayout.swift; sourceTree = "<group>"; };
 		DECB8B912A284CCC007D0409 /* Metrics+Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Metrics+Colors.swift"; sourceTree = "<group>"; };
+		DEE083852A2C1DE400C0ECEC /* AddNewRecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewRecipeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				DECB8B602A26724A007D0409 /* AppDelegate.swift */,
+				DEE083872A2C1DF000C0ECEC /* NewRecipeScreen */,
 				DE8358C32A29221E00675966 /* RecipesListScreen */,
 				DE8358C02A29215200675966 /* CategoriesScreen */,
 				DECB8B832A27ADD6007D0409 /* Helpers */,
@@ -152,7 +155,7 @@
 		DECB8B832A27ADD6007D0409 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				DECB8B752A26B8DE007D0409 /* Extension + UIColor.swift */,
+				DECB8B752A26B8DE007D0409 /* Extension+UIColor.swift */,
 				DECB8B7F2A27AD42007D0409 /* ScaledFont.swift */,
 				DECB8B912A284CCC007D0409 /* Metrics+Colors.swift */,
 			);
@@ -169,6 +172,14 @@
 				DECB8B8F2A28415A007D0409 /* CategoriesFlowLayout.swift */,
 			);
 			path = CollectionView;
+			sourceTree = "<group>";
+		};
+		DEE083872A2C1DF000C0ECEC /* NewRecipeScreen */ = {
+			isa = PBXGroup;
+			children = (
+				DEE083852A2C1DE400C0ECEC /* AddNewRecipeViewController.swift */,
+			);
+			path = NewRecipeScreen;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,8 +268,9 @@
 				DECB8B872A28336E007D0409 /* CategoryCollectionViewCell.swift in Sources */,
 				DE8358D02A2A636B00675966 /* TrashButton.swift in Sources */,
 				DECB8B922A284CCC007D0409 /* Metrics+Colors.swift in Sources */,
-				DECB8B762A26B8DE007D0409 /* Extension + UIColor.swift in Sources */,
+				DECB8B762A26B8DE007D0409 /* Extension+UIColor.swift in Sources */,
 				DE8358C22A29221700675966 /* RecipesListViewController.swift in Sources */,
+				DEE083862A2C1DE400C0ECEC /* AddNewRecipeViewController.swift in Sources */,
 				DECB8B892A283607007D0409 /* CategoriesCollectionViewDataSource.swift in Sources */,
 				DE8358C72A2947BD00675966 /* RecipeViewCell.swift in Sources */,
 			);

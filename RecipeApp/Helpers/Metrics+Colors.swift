@@ -55,7 +55,7 @@ enum Fonts {
     
     static let categorieItemFont = "BERNIERDistressed-Regular"
     static let welcomeLabelFont = "Annabelle"
-    static let recipeNameFont = "AmericanTypewriter"
+    static let AmericanTypewriter = "AmericanTypewriter"
     
     enum Sizes {
         static let welcomeLabel: CGFloat = 52
