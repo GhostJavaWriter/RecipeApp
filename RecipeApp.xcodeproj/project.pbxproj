@@ -30,6 +30,7 @@
 		DECB8B902A28415A007D0409 /* CategoriesFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B8F2A28415A007D0409 /* CategoriesFlowLayout.swift */; };
 		DECB8B922A284CCC007D0409 /* Metrics+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B912A284CCC007D0409 /* Metrics+Colors.swift */; };
 		DEE083862A2C1DE400C0ECEC /* AddNewRecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083852A2C1DE400C0ECEC /* AddNewRecipeViewController.swift */; };
+		DEE0838B2A302EA700C0ECEC /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE0838A2A302EA700C0ECEC /* CustomTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		DECB8B8F2A28415A007D0409 /* CategoriesFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesFlowLayout.swift; sourceTree = "<group>"; };
 		DECB8B912A284CCC007D0409 /* Metrics+Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Metrics+Colors.swift"; sourceTree = "<group>"; };
 		DEE083852A2C1DE400C0ECEC /* AddNewRecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewRecipeViewController.swift; sourceTree = "<group>"; };
+		DEE0838A2A302EA700C0ECEC /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				DEE083852A2C1DE400C0ECEC /* AddNewRecipeViewController.swift */,
+				DEE0838A2A302EA700C0ECEC /* CustomTextField.swift */,
 			);
 			path = NewRecipeScreen;
 			sourceTree = "<group>";
@@ -264,6 +267,7 @@
 				DE8358C92A294C1A00675966 /* RecipesTableViewDelegate.swift in Sources */,
 				DE8358C52A29471000675966 /* RecipesTableViewDataSource.swift in Sources */,
 				DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */,
+				DEE0838B2A302EA700C0ECEC /* CustomTextField.swift in Sources */,
 				DECB8B802A27AD42007D0409 /* ScaledFont.swift in Sources */,
 				DECB8B872A28336E007D0409 /* CategoryCollectionViewCell.swift in Sources */,
 				DE8358D02A2A636B00675966 /* TrashButton.swift in Sources */,
