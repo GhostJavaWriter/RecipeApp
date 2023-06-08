@@ -9,4 +9,10 @@ import UIKit
 
 final class CategoriesCollectionViewDelegate: NSObject, UICollectionViewDelegate {
     
+    var navigationController: UINavigationController?
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let recipesVC = RecipesListViewController()
+        navigationController?.pushViewController(recipesVC, animated: true)
+    }
 }

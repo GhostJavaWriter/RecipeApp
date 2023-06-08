@@ -26,6 +26,10 @@ enum Metrics {
                                                            leading: 40,
                                                            bottom: 20,
                                                            trailing: 40)
+        static let recipeScreenMargins = NSDirectionalEdgeInsets(top: 20,
+                                                                 leading: 20,
+                                                                 bottom: 20,
+                                                                 trailing: 20)
         static let spaceBetweenCells = NSDirectionalEdgeInsets(top: 10,
                                                                leading: 10,
                                                                bottom: 10,

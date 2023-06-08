@@ -15,9 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         window = UIWindow(frame: UIScreen.main.bounds)
-//        window?.rootViewController = CategoriesViewController()
-//        window?.rootViewController = RecipesListViewController()
-        window?.rootViewController = AddNewRecipeViewController()
+        
+        let categoriesVC = CategoriesViewController()
+        let navController = UINavigationController(rootViewController: categoriesVC)
+        UINavigationBar.appearance().tintColor = Colors.CategorieItem.backgroundColor
+        window?.rootViewController = navController
         window?.makeKeyAndVisible()
         
         return true

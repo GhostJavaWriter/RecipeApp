@@ -48,8 +48,8 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
     }()
     
     // MARK: - Properties
-    private let dataSource = RecipesTableViewDataSource()
-    private let delegate = RecipesTableViewDelegate()
+    private let dataSource = RecipesListTableViewDataSource()
+    private let delegate = RecipesListTableViewDelegate()
     private let reuseIdentifier = String(describing: RecipeViewCell.self)
     
     var recipesList = ["• Summer pie","• Carrot cake","• disdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsh 3","• dish 4", "• dish 4", "• dish 4", "• dish 4", "• dish 4", "• dish 4", "• dish 4"] {
@@ -66,6 +66,7 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
         super.viewDidLoad()
         
         configureView()
+        delegate.navigationController = navigationController
     }
     
     // MARK: - Private methods

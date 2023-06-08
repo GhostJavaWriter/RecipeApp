@@ -1,5 +1,5 @@
 //
-//  RecipesTableViewDelegate.swift
+//  RecipesListTableViewDelegate.swift
 //  RecipeApp
 //
 //  Created by Bair Nadtsalov on 1.06.2023.
@@ -7,8 +7,10 @@
 
 import UIKit
 
-final class RecipesTableViewDelegate: NSObject, UITableViewDelegate
+final class RecipesListTableViewDelegate: NSObject, UITableViewDelegate
 {
+    var navigationController: UINavigationController?
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) else { return }
         
@@ -20,6 +22,9 @@ final class RecipesTableViewDelegate: NSObject, UITableViewDelegate
         UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [], animations: {
             cell.transform = originalTransform
         }, completion: nil)
+        
+        let recipeVC = RecipeViewController()
+        navigationController?.pushViewController(recipeVC, animated: true)
     }
 
 }

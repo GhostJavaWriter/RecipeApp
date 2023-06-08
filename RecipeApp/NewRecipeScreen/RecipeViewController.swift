@@ -1,5 +1,5 @@
 //
-//  AddNewRecipeViewController.swift
+//  RecipeViewController.swift
 //  RecipeApp
 //
 //  Created by Bair Nadtsalov on 3.06.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class AddNewRecipeViewController: UIViewController {
+final class RecipeViewController: UIViewController {
     
     // MARK: - UI
     
@@ -59,35 +59,53 @@ final class AddNewRecipeViewController: UIViewController {
         super.viewDidLoad()
         
         configureView()
+        let shareButton = UIBarButtonItem(image: UIImage(named: "plane"), style: .plain, target: self, action: #selector(shareButtonTapped))
+        let editButton = UIBarButtonItem(image: UIImage(named: "edit"), style: .plain, target: self, action: #selector(editButtonTapped))
+        navigationItem.rightBarButtonItems = [shareButton, editButton]
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
     }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
     
     // MARK: - Private methods
     
     private func configureView() {
         
+        nameTextField.isUserInteractionEnabled = false
+        linkTextField.isUserInteractionEnabled = false
+        ingredientsTextView.isEditable = false
+        methodTextView.isEditable = false
+        
         view.backgroundColor = Colors.mainBackgroundColor
         
         view.addSubview(nameLabel)
         view.addSubview(nameTextField)
-        view.addSubview(shareButton)
-        view.addSubview(editButton)
+        //        view.addSubview(shareButton)
+        //        view.addSubview(editButton)
         view.addSubview(scrollView)
         
-        view.directionalLayoutMargins = Metrics.Margins.screenMargins
+        view.directionalLayoutMargins = Metrics.Margins.recipeScreenMargins
         let margins = view.layoutMarginsGuide
-
+        
         let content = scrollView.contentLayoutGuide
         
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: margins.topAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            nameLabel.trailingAnchor.constraint(equalTo: editButton.leadingAnchor),
+            nameLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             
-            editButton.topAnchor.constraint(equalTo: margins.topAnchor),
-            editButton.trailingAnchor.constraint(equalTo: shareButton.leadingAnchor),
-            
-            shareButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            shareButton.topAnchor.constraint(equalTo: margins.topAnchor),
+            //            editButton.topAnchor.constraint(equalTo: margins.topAnchor),
+            //            editButton.trailingAnchor.constraint(equalTo: shareButton.leadingAnchor),
+            //
+            //            shareButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            //            shareButton.topAnchor.constraint(equalTo: margins.topAnchor),
             
             nameTextField.topAnchor.constraint(equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1),
             nameTextField.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
@@ -133,9 +151,60 @@ final class AddNewRecipeViewController: UIViewController {
     }
     
     @objc private func shareButtonTapped() {
-        // TODO: Share
-        print("share")
+        // Prepare the text to share
+        let recipeName = nameTextField.text ?? ""
+        let recipeIngredients = ingredientsTextView.text ?? ""
+        let recipeMethod = methodTextView.text ?? ""
+        let recipeLink = linkTextField.text ?? ""
+        
+        let shareText = "Recipe Name: \(recipeName)\nIngredients: \(recipeIngredients)\nMethod: \(recipeMethod)\nLink: \(recipeLink)"
+        
+        // Create an instance of UIActivityViewController and pass the sharing text to it
+        let activityViewController = UIActivityViewController(activityItems: [shareText], applicationActivities: nil)
+        
+        // Present the view controller
+        self.present(activityViewController, animated: true, completion: nil)
     }
+    
+    @objc private func editButtonTapped() {
+        // Toggle editing
+        let editing = !nameTextField.isUserInteractionEnabled
+        nameTextField.isUserInteractionEnabled = editing
+        linkTextField.isUserInteractionEnabled = editing
+        ingredientsTextView.isEditable = editing
+        methodTextView.isEditable = editing
+        
+        // Update edit button title
+        let newTitle = editing ? "Save" : "Edit"
+        editButton.setTitle(newTitle, for: .normal)
+        
+        if editing {
+            // Show keyboard and set cursor to nameTextField
+            nameTextField.becomeFirstResponder()
+        } else {
+            // Hide keyboard
+            view.endEditing(true)
+        }
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        else {
+            return
+        }
+        
+        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height, right: 0.0)
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        let contentInsets = UIEdgeInsets.zero
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
+    
 }
 
 // MARK: - Private extensions

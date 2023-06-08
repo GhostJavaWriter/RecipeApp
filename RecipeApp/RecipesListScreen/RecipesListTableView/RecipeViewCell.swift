@@ -21,14 +21,8 @@ final class RecipeViewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var dragImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "recipesImage")
-        imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
+    private lazy var dragImageView = UIImageView.makeImageView(withImage: "recipesImage")
+    private lazy var planeImageView = UIImageView.makeImageView(withImage: "plane")
     
     private lazy var containerView: UIView = {
         let view = UIView()
@@ -71,6 +65,7 @@ final class RecipeViewCell: UITableViewCell {
         contentView.addSubview(containerView)
         containerView.addSubview(recipeNameLabel)
         containerView.addSubview(dragImageView)
+        containerView.addSubview(planeImageView)
         
         contentView.directionalLayoutMargins = Metrics.Margins.spaceBetweenCells
         containerView.directionalLayoutMargins = Metrics.Margins.cellContentInsets
@@ -88,12 +83,28 @@ final class RecipeViewCell: UITableViewCell {
             recipeNameLabel.topAnchor.constraint(equalTo: insets.topAnchor),
             recipeNameLabel.bottomAnchor.constraint(equalTo: insets.bottomAnchor),
             recipeNameLabel.leadingAnchor.constraint(equalTo: insets.leadingAnchor),
-            recipeNameLabel.trailingAnchor.constraint(equalTo: dragImageView.leadingAnchor),
+            recipeNameLabel.trailingAnchor.constraint(equalTo: planeImageView.leadingAnchor),
             
+            planeImageView.topAnchor.constraint(equalTo: insets.topAnchor),
+            planeImageView.bottomAnchor.constraint(equalTo: insets.bottomAnchor),
+            
+            dragImageView.leadingAnchor.constraint(equalToSystemSpacingAfter: planeImageView.trailingAnchor, multiplier: 1),
             dragImageView.topAnchor.constraint(equalTo: insets.topAnchor),
             dragImageView.bottomAnchor.constraint(equalTo: insets.bottomAnchor),
             dragImageView.trailingAnchor.constraint(equalTo: insets.trailingAnchor),
         ])
         
+    }
+}
+
+private extension UIImageView {
+    
+    static func makeImageView(withImage image: String) -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: image)
+        imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }
 }

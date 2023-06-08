@@ -49,6 +49,7 @@ final class CategoriesViewController: UIViewController {
         super.viewDidLoad()
         
         configureView()
+        delegate.navigationController = navigationController
     }
 
     // MARK: - Private methods

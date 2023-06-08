@@ -1,5 +1,5 @@
 //
-//  RecipesTableViewDataSource.swift
+//  RecipesListTableViewDataSource.swift
 //  RecipeApp
 //
 //  Created by Bair Nadtsalov on 1.06.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class RecipesTableViewDataSource: NSObject, UITableViewDataSource {
+final class RecipesListTableViewDataSource: NSObject, UITableViewDataSource {
     
     var reuseIdentifier: String?
     
