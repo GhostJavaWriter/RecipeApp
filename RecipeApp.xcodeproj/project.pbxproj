@@ -125,7 +125,7 @@
 				DECB8B602A26724A007D0409 /* AppDelegate.swift */,
 				DE8358C02A29215200675966 /* CategoriesScreen */,
 				DE8358C32A29221E00675966 /* RecipesListScreen */,
-				DEE083872A2C1DF000C0ECEC /* NewRecipeScreen */,
+				DEE083872A2C1DF000C0ECEC /* RecipeScreen */,
 				DECB8B832A27ADD6007D0409 /* Helpers */,
 				DECB8B7C2A26D8A2007D0409 /* Fonts */,
 				DECB8B742A2672E0007D0409 /* Base */,
@@ -176,13 +176,13 @@
 			path = CollectionView;
 			sourceTree = "<group>";
 		};
-		DEE083872A2C1DF000C0ECEC /* NewRecipeScreen */ = {
+		DEE083872A2C1DF000C0ECEC /* RecipeScreen */ = {
 			isa = PBXGroup;
 			children = (
 				DEE083852A2C1DE400C0ECEC /* RecipeViewController.swift */,
 				DEE0838A2A302EA700C0ECEC /* CustomTextField.swift */,
 			);
-			path = NewRecipeScreen;
+			path = RecipeScreen;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

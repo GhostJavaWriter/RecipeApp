@@ -22,7 +22,7 @@ enum Metrics {
     }
     
     enum Margins {
-        static let screenMargins = NSDirectionalEdgeInsets(top: 40,
+        static let screenMargins = NSDirectionalEdgeInsets(top: 0,
                                                            leading: 40,
                                                            bottom: 20,
                                                            trailing: 40)

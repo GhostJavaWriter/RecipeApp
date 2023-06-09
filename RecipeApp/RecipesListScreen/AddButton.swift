@@ -9,6 +9,19 @@ import UIKit
 
 final class AddButton: UIButton {
     
+    var addButtonTapped: (() -> Void)?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        setImage(UIImage(named: "addButton"), for: .normal)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         
@@ -17,7 +30,7 @@ final class AddButton: UIButton {
         if let touch = touches.first, self.bounds.contains(touch.location(in: self)) {
             scaleIdentity()
         
-            print("button aciton")
+            addButtonTapped?()
         }
     }
     

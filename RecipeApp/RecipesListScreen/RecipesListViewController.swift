@@ -17,20 +17,8 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
         return view
     }()
     
-    private lazy var addButton: AddButton = {
-        let button = AddButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "addButton"), for: .normal)
-        return button
-    }()
-    
-    private lazy var trashButton: TrashButton = {
-        let button = TrashButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "trashButton"), for: .normal)
-        button.addInteraction(UIDropInteraction(delegate: self))
-        return button
-    }()
+    private lazy var addButton = AddButton(frame: .zero)
+    private lazy var trashButton = TrashButton(frame: .zero)
     
     private lazy var tableView: UITableView = {
         let table = UITableView()
@@ -67,6 +55,11 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
         
         configureView()
         delegate.navigationController = navigationController
+        trashButton.addInteraction(UIDropInteraction(delegate: self))
+        addButton.addButtonTapped = { [weak self] in
+            let newRecipeVC = RecipeViewController()
+            self?.present(newRecipeVC, animated: true)
+        }
     }
     
     // MARK: - Private methods

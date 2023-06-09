@@ -11,7 +11,6 @@ final class RecipeViewController: UIViewController {
     
     // MARK: - UI
     
-    // TODO: adapt for keyboard appearance
     // TODO: add dots as placeholder?
     
     private let nameLabel = UILabel.makeLabel(text: "Name")

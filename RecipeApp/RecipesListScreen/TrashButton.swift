@@ -9,6 +9,17 @@ import UIKit
 
 final class TrashButton: UIButton {
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        setImage(UIImage(named: "trashButton"), for: .normal)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         

@@ -69,7 +69,7 @@ final class CategoriesViewController: UIViewController {
             
             // configure caption label
             
-            containerView.topAnchor.constraint(equalToSystemSpacingBelow: margins.topAnchor, multiplier: 1),
+            containerView.topAnchor.constraint(equalTo: margins.topAnchor),
             containerView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             containerView.heightAnchor.constraint(equalTo: margins.heightAnchor, multiplier: 0.25),
