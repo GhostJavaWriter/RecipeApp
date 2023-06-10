@@ -26,7 +26,7 @@ enum Metrics {
                                                            leading: 40,
                                                            bottom: 20,
                                                            trailing: 40)
-        static let recipeScreenMargins = NSDirectionalEdgeInsets(top: 20,
+        static let recipeScreenMargins = NSDirectionalEdgeInsets(top: 0,
                                                                  leading: 20,
                                                                  bottom: 20,
                                                                  trailing: 20)

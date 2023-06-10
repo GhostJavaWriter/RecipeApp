@@ -37,7 +37,7 @@ final class RecipeViewController: UIViewController {
     private lazy var shareButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "plane"), for: .normal)
+        button.setImage(UIImage(named: "shareImage"), for: .normal)
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         button.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
         return button
@@ -46,10 +46,44 @@ final class RecipeViewController: UIViewController {
     private lazy var editButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "edit"), for: .normal)
+        button.setImage(UIImage(named: "editImage"), for: .normal)
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        button.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         return button
+    }()
+    
+    private lazy var containerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(editButton)
+        view.addSubview(shareButton)
+        
+        let leadingGuide = UILayoutGuide()
+        let middleGuide = UILayoutGuide()
+        let trailingGuide = UILayoutGuide()
+        
+        view.addLayoutGuide(leadingGuide)
+        view.addLayoutGuide(middleGuide)
+        view.addLayoutGuide(trailingGuide)
+        
+        NSLayoutConstraint.activate([
+            view.heightAnchor.constraint(equalTo: editButton.heightAnchor, multiplier: 2),
+            
+            view.leadingAnchor.constraint(equalTo: leadingGuide.leadingAnchor),
+            leadingGuide.trailingAnchor.constraint(equalTo: editButton.leadingAnchor),
+            editButton.trailingAnchor.constraint(equalTo: middleGuide.leadingAnchor),
+            middleGuide.trailingAnchor.constraint(equalTo: shareButton.leadingAnchor),
+            shareButton.trailingAnchor.constraint(equalTo: trailingGuide.leadingAnchor),
+            trailingGuide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            editButton.widthAnchor.constraint(equalTo: shareButton.widthAnchor, multiplier: 1),
+            leadingGuide.widthAnchor.constraint(equalTo: middleGuide.widthAnchor, multiplier: 1),
+            middleGuide.widthAnchor.constraint(equalTo: trailingGuide.widthAnchor, multiplier: 1),
+            editButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            shareButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
+        
+        return view
     }()
     
     // MARK: - LifeCycle
@@ -58,9 +92,6 @@ final class RecipeViewController: UIViewController {
         super.viewDidLoad()
         
         configureView()
-        let shareButton = UIBarButtonItem(image: UIImage(named: "plane"), style: .plain, target: self, action: #selector(shareButtonTapped))
-        let editButton = UIBarButtonItem(image: UIImage(named: "edit"), style: .plain, target: self, action: #selector(editButtonTapped))
-        navigationItem.rightBarButtonItems = [shareButton, editButton]
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -86,9 +117,8 @@ final class RecipeViewController: UIViewController {
         
         view.addSubview(nameLabel)
         view.addSubview(nameTextField)
-        //        view.addSubview(shareButton)
-        //        view.addSubview(editButton)
         view.addSubview(scrollView)
+        view.addSubview(containerView)
         
         view.directionalLayoutMargins = Metrics.Margins.recipeScreenMargins
         let margins = view.layoutMarginsGuide
@@ -96,15 +126,14 @@ final class RecipeViewController: UIViewController {
         let content = scrollView.contentLayoutGuide
         
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: margins.topAnchor),
+            
+            containerView.topAnchor.constraint(equalTo: margins.topAnchor),
+            containerView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            
+            nameLabel.topAnchor.constraint(equalToSystemSpacingBelow: containerView.bottomAnchor, multiplier: 1),
             nameLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             nameLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            
-            //            editButton.topAnchor.constraint(equalTo: margins.topAnchor),
-            //            editButton.trailingAnchor.constraint(equalTo: shareButton.leadingAnchor),
-            //
-            //            shareButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            //            shareButton.topAnchor.constraint(equalTo: margins.topAnchor),
             
             nameTextField.topAnchor.constraint(equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1),
             nameTextField.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
@@ -144,8 +173,8 @@ final class RecipeViewController: UIViewController {
             linkTextField.bottomAnchor.constraint(equalTo: content.bottomAnchor),
             linkTextField.heightAnchor.constraint(equalToConstant: linkLabel.font.pointSize * 1.5),
             
-            ingredientsTextView.heightAnchor.constraint(greaterThanOrEqualTo: margins.heightAnchor, multiplier: 0.3),
-            methodTextView.heightAnchor.constraint(greaterThanOrEqualTo: margins.heightAnchor, multiplier: 0.3)
+            ingredientsTextView.heightAnchor.constraint(greaterThanOrEqualTo: margins.heightAnchor, multiplier: 0.25),
+            methodTextView.heightAnchor.constraint(greaterThanOrEqualTo: margins.heightAnchor, multiplier: 0.25)
         ])
     }
     
@@ -174,8 +203,9 @@ final class RecipeViewController: UIViewController {
         methodTextView.isEditable = editing
         
         // Update edit button title
-        let newTitle = editing ? "Save" : "Edit"
-        editButton.setTitle(newTitle, for: .normal)
+//        let newImage = editing ? "shareImage" : "editImage"
+//        editButton.setImage(UIImage(named: newImage), for: .normal)
+//        shareButton.setImage(UIImage(named: <#T##String#>), for: <#T##UIControl.State#>)
         
         if editing {
             // Show keyboard and set cursor to nameTextField
