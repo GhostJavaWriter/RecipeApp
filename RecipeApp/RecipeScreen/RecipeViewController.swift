@@ -52,39 +52,7 @@ final class RecipeViewController: UIViewController {
         return button
     }()
     
-    private lazy var containerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(editButton)
-        view.addSubview(shareButton)
-        
-        let leadingGuide = UILayoutGuide()
-        let middleGuide = UILayoutGuide()
-        let trailingGuide = UILayoutGuide()
-        
-        view.addLayoutGuide(leadingGuide)
-        view.addLayoutGuide(middleGuide)
-        view.addLayoutGuide(trailingGuide)
-        
-        NSLayoutConstraint.activate([
-            view.heightAnchor.constraint(equalTo: editButton.heightAnchor, multiplier: 2),
-            
-            view.leadingAnchor.constraint(equalTo: leadingGuide.leadingAnchor),
-            leadingGuide.trailingAnchor.constraint(equalTo: editButton.leadingAnchor),
-            editButton.trailingAnchor.constraint(equalTo: middleGuide.leadingAnchor),
-            middleGuide.trailingAnchor.constraint(equalTo: shareButton.leadingAnchor),
-            shareButton.trailingAnchor.constraint(equalTo: trailingGuide.leadingAnchor),
-            trailingGuide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
-            editButton.widthAnchor.constraint(equalTo: shareButton.widthAnchor, multiplier: 1),
-            leadingGuide.widthAnchor.constraint(equalTo: middleGuide.widthAnchor, multiplier: 1),
-            middleGuide.widthAnchor.constraint(equalTo: trailingGuide.widthAnchor, multiplier: 1),
-            editButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            shareButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-        ])
-        
-        return view
-    }()
+    private lazy var containerView = ButtonsConteinerView(leftButton: editButton, rightButton: shareButton)
     
     // MARK: - LifeCycle
     

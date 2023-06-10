@@ -11,14 +11,10 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
     
     // MARK: - UI
     
-    private lazy var containerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private lazy var containerView = ButtonsConteinerView(leftButton: addButton, rightButton: trashButton)
     
-    private lazy var addButton = AddButton(frame: .zero)
-    private lazy var trashButton = TrashButton(frame: .zero)
+    private lazy var addButton = AddButton()
+    private lazy var trashButton = TrashButton()
     
     private lazy var tableView: UITableView = {
         let table = UITableView()
@@ -70,19 +66,8 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
         view.addSubview(tableView)
         view.addSubview(containerView)
         
-        containerView.addSubview(addButton)
-        containerView.addSubview(trashButton)
-        
         let margins = view.layoutMarginsGuide
-        
-        let leadingGuide = UILayoutGuide()
-        let middleGuide = UILayoutGuide()
-        let trailingGuide = UILayoutGuide()
-        
-        containerView.addLayoutGuide(leadingGuide)
-        containerView.addLayoutGuide(middleGuide)
-        containerView.addLayoutGuide(trailingGuide)
-        
+
         NSLayoutConstraint.activate([
             
             containerView.topAnchor.constraint(equalTo: margins.topAnchor),
@@ -91,19 +76,6 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
             tableView.topAnchor.constraint(equalToSystemSpacingBelow: containerView.bottomAnchor, multiplier: 1),
             
             containerView.heightAnchor.constraint(equalTo: addButton.heightAnchor, multiplier: 2),
-            
-            containerView.leadingAnchor.constraint(equalTo: leadingGuide.leadingAnchor),
-            leadingGuide.trailingAnchor.constraint(equalTo: addButton.leadingAnchor),
-            addButton.trailingAnchor.constraint(equalTo: middleGuide.leadingAnchor),
-            middleGuide.trailingAnchor.constraint(equalTo: trashButton.leadingAnchor),
-            trashButton.trailingAnchor.constraint(equalTo: trailingGuide.leadingAnchor),
-            trailingGuide.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            
-            addButton.widthAnchor.constraint(equalTo: trashButton.widthAnchor, multiplier: 1),
-            leadingGuide.widthAnchor.constraint(equalTo: middleGuide.widthAnchor, multiplier: 1),
-            middleGuide.widthAnchor.constraint(equalTo: trailingGuide.widthAnchor, multiplier: 1),
-            addButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            trashButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             
             tableView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),

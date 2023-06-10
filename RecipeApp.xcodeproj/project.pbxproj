@@ -31,6 +31,7 @@
 		DECB8B922A284CCC007D0409 /* Metrics+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B912A284CCC007D0409 /* Metrics+Colors.swift */; };
 		DEE083862A2C1DE400C0ECEC /* RecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083852A2C1DE400C0ECEC /* RecipeViewController.swift */; };
 		DEE0838B2A302EA700C0ECEC /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE0838A2A302EA700C0ECEC /* CustomTextField.swift */; };
+		DEE0838D2A35259900C0ECEC /* ButtonsConteinerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE0838C2A35259900C0ECEC /* ButtonsConteinerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		DECB8B912A284CCC007D0409 /* Metrics+Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Metrics+Colors.swift"; sourceTree = "<group>"; };
 		DEE083852A2C1DE400C0ECEC /* RecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeViewController.swift; sourceTree = "<group>"; };
 		DEE0838A2A302EA700C0ECEC /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		DEE0838C2A35259900C0ECEC /* ButtonsConteinerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsConteinerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +130,7 @@
 				DEE083872A2C1DF000C0ECEC /* RecipeScreen */,
 				DECB8B832A27ADD6007D0409 /* Helpers */,
 				DECB8B7C2A26D8A2007D0409 /* Fonts */,
+				DEE0838E2A35277700C0ECEC /* Common */,
 				DECB8B742A2672E0007D0409 /* Base */,
 			);
 			path = RecipeApp;
@@ -183,6 +186,14 @@
 				DEE0838A2A302EA700C0ECEC /* CustomTextField.swift */,
 			);
 			path = RecipeScreen;
+			sourceTree = "<group>";
+		};
+		DEE0838E2A35277700C0ECEC /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				DEE0838C2A35259900C0ECEC /* ButtonsConteinerView.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -264,6 +275,7 @@
 				DECB8B902A28415A007D0409 /* CategoriesFlowLayout.swift in Sources */,
 				DE8358CE2A2A5A6B00675966 /* AddButton.swift in Sources */,
 				DECB8B852A283309007D0409 /* CategoriesCollectionView.swift in Sources */,
+				DEE0838D2A35259900C0ECEC /* ButtonsConteinerView.swift in Sources */,
 				DE8358C92A294C1A00675966 /* RecipesListTableViewDelegate.swift in Sources */,
 				DE8358C52A29471000675966 /* RecipesListTableViewDataSource.swift in Sources */,
 				DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */,
