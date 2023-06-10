@@ -12,30 +12,12 @@ final class RecipeViewController: UIViewController {
     // MARK: - UI
     
     // TODO: add dots as placeholder?
-    
     private let nameLabel = UILabel.makeLabel(text: "Name")
-    private let ingredientsLabel = UILabel.makeLabel(text: "Ingredients")
-    private let methodLabel = UILabel.makeLabel(text: "Method")
-    private let linkLabel = UILabel.makeLabel(text: "Link")
-    private lazy var nameTextField = CustomTextField.makeTextField()
-    private lazy var linkTextField = CustomTextField.makeTextField()
-    private lazy var ingredientsTextView = UITextView.makeTextView()
-    private lazy var methodTextView = UITextView.makeTextView()
+    private let nameTextField = CustomTextField.makeTextField()
+    private let scrollView = CustomScrollView()
     
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.addSubview(ingredientsLabel)
-        scrollView.addSubview(ingredientsTextView)
-        scrollView.addSubview(methodLabel)
-        scrollView.addSubview(methodTextView)
-        scrollView.addSubview(linkLabel)
-        scrollView.addSubview(linkTextField)
-        return scrollView
-    }()
-    
-    private lazy var rightButton = UIButton.makeButton(withImage: "shareImage")
-    private lazy var leftButton = UIButton.makeButton(withImage: "editImage")
+    private let rightButton = UIButton.makeButton(withImage: "shareImage")
+    private let leftButton = UIButton.makeButton(withImage: "editImage")
     private lazy var containerView = ButtonsConteinerView(leftButton: leftButton, rightButton: rightButton)
     
     private lazy var isEditingMode = false {
@@ -53,12 +35,13 @@ final class RecipeViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification,
+                                                  object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification,
+                                                  object: nil)
     }
     
     
@@ -77,7 +60,6 @@ final class RecipeViewController: UIViewController {
         
         view.directionalLayoutMargins = Metrics.Margins.recipeScreenMargins
         let margins = view.layoutMarginsGuide
-        
         let content = scrollView.contentLayoutGuide
         
         NSLayoutConstraint.activate([
@@ -101,51 +83,20 @@ final class RecipeViewController: UIViewController {
             scrollView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
-            
-            ingredientsLabel.topAnchor.constraint(equalTo: content.topAnchor),
-            ingredientsLabel.leadingAnchor.constraint(equalTo: content.leadingAnchor),
-            ingredientsLabel.trailingAnchor.constraint(equalTo: content.trailingAnchor),
-            
-            ingredientsTextView.topAnchor.constraint(equalToSystemSpacingBelow: ingredientsLabel.bottomAnchor, multiplier: 1),
-            ingredientsTextView.leadingAnchor.constraint(equalTo: content.leadingAnchor),
-            ingredientsTextView.trailingAnchor.constraint(equalTo: content.trailingAnchor),
-            
-            methodLabel.topAnchor.constraint(equalToSystemSpacingBelow: ingredientsTextView.bottomAnchor, multiplier: 1),
-            methodLabel.leadingAnchor.constraint(equalTo: content.leadingAnchor),
-            methodLabel.trailingAnchor.constraint(equalTo: content.trailingAnchor),
-            
-            methodTextView.topAnchor.constraint(equalToSystemSpacingBelow: methodLabel.bottomAnchor, multiplier: 1),
-            methodTextView.leadingAnchor.constraint(equalTo: content.leadingAnchor),
-            methodTextView.trailingAnchor.constraint(equalTo: content.trailingAnchor),
-            
-            linkLabel.topAnchor.constraint(equalToSystemSpacingBelow: methodTextView.bottomAnchor, multiplier: 1),
-            linkLabel.leadingAnchor.constraint(equalTo: content.leadingAnchor),
-            linkLabel.trailingAnchor.constraint(equalTo: content.trailingAnchor),
-            
-            linkTextField.topAnchor.constraint(equalToSystemSpacingBelow: linkLabel.bottomAnchor, multiplier: 1),
-            linkTextField.leadingAnchor.constraint(equalTo: content.leadingAnchor),
-            linkTextField.trailingAnchor.constraint(equalTo: content.trailingAnchor),
-            linkTextField.bottomAnchor.constraint(equalTo: content.bottomAnchor),
-            linkTextField.heightAnchor.constraint(equalToConstant: linkLabel.font.pointSize * 1.5),
-            
-            ingredientsTextView.heightAnchor.constraint(greaterThanOrEqualTo: margins.heightAnchor, multiplier: 0.25),
-            methodTextView.heightAnchor.constraint(greaterThanOrEqualTo: margins.heightAnchor, multiplier: 0.25)
         ])
     }
     
     @objc private func shareButtonTapped() {
         // Prepare the text to share
         let recipeName = nameTextField.text ?? ""
-        let recipeIngredients = ingredientsTextView.text ?? ""
-        let recipeMethod = methodTextView.text ?? ""
-        let recipeLink = linkTextField.text ?? ""
+//        let recipeIngredients = ingredientsTextView.text ?? ""
+//        let recipeMethod = methodTextView.text ?? ""
+//        let recipeLink = linkTextField.text ?? ""
         
-        let shareText = "Recipe Name: \(recipeName)\nIngredients: \(recipeIngredients)\nMethod: \(recipeMethod)\nLink: \(recipeLink)"
+        let shareText = "Recipe Name: \(recipeName)"
         
-        // Create an instance of UIActivityViewController and pass the sharing text to it
-        let activityViewController = UIActivityViewController(activityItems: [shareText], applicationActivities: nil)
-        
-        // Present the view controller
+        let activityViewController = UIActivityViewController(activityItems: [shareText],
+                                                              applicationActivities: nil)
         self.present(activityViewController, animated: true, completion: nil)
     }
     
@@ -221,24 +172,11 @@ private extension UILabel {
     }
 }
 
-private extension UITextView {
-    
-    static func makeTextView() -> UITextView {
-        let textView = UITextView()
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.backgroundColor = Colors.RecipeCell.backgroundColor
-        textView.layer.cornerRadius = 10
-        textView.font = UIFont(name: Fonts.AmericanTypewriter, size: 18)
-        textView.textColor = UIColor(hex: "#434443")
-        textView.isScrollEnabled = false
-        return textView
-    }
-}
-
 private extension UIButton {
     static func makeButton(withImage image: String) -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.setContentHuggingPriority(.defaultHigh, for: .vertical)
         button.setImage(UIImage(named: image), for: .normal)
         return button
     }

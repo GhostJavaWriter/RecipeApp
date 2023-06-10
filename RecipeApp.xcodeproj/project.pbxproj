@@ -32,6 +32,7 @@
 		DEE083862A2C1DE400C0ECEC /* RecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083852A2C1DE400C0ECEC /* RecipeViewController.swift */; };
 		DEE0838B2A302EA700C0ECEC /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE0838A2A302EA700C0ECEC /* CustomTextField.swift */; };
 		DEE0838D2A35259900C0ECEC /* ButtonsConteinerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE0838C2A35259900C0ECEC /* ButtonsConteinerView.swift */; };
+		DEE083902A35401900C0ECEC /* CustomScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE0838F2A35401900C0ECEC /* CustomScrollView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		DEE083852A2C1DE400C0ECEC /* RecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeViewController.swift; sourceTree = "<group>"; };
 		DEE0838A2A302EA700C0ECEC /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		DEE0838C2A35259900C0ECEC /* ButtonsConteinerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsConteinerView.swift; sourceTree = "<group>"; };
+		DEE0838F2A35401900C0ECEC /* CustomScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomScrollView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +186,7 @@
 			children = (
 				DEE083852A2C1DE400C0ECEC /* RecipeViewController.swift */,
 				DEE0838A2A302EA700C0ECEC /* CustomTextField.swift */,
+				DEE0838F2A35401900C0ECEC /* CustomScrollView.swift */,
 			);
 			path = RecipeScreen;
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 				DECB8B872A28336E007D0409 /* CategoryCollectionViewCell.swift in Sources */,
 				DE8358D02A2A636B00675966 /* TrashButton.swift in Sources */,
 				DECB8B922A284CCC007D0409 /* Metrics+Colors.swift in Sources */,
+				DEE083902A35401900C0ECEC /* CustomScrollView.swift in Sources */,
 				DECB8B762A26B8DE007D0409 /* Extension+UIColor.swift in Sources */,
 				DE8358C22A29221700675966 /* RecipesListViewController.swift in Sources */,
 				DEE083862A2C1DE400C0ECEC /* RecipeViewController.swift in Sources */,
