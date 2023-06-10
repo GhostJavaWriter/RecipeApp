@@ -34,25 +34,15 @@ final class RecipeViewController: UIViewController {
         return scrollView
     }()
     
-    private lazy var shareButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "shareImage"), for: .normal)
-        button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        button.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
-        return button
-    }()
+    private lazy var rightButton = UIButton.makeButton(withImage: "shareImage")
+    private lazy var leftButton = UIButton.makeButton(withImage: "editImage")
+    private lazy var containerView = ButtonsConteinerView(leftButton: leftButton, rightButton: rightButton)
     
-    private lazy var editButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "editImage"), for: .normal)
-        button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var containerView = ButtonsConteinerView(leftButton: editButton, rightButton: shareButton)
+    private lazy var isEditingMode = false {
+        didSet {
+            setButtons(isEditing: isEditingMode)
+        }
+    }
     
     // MARK: - LifeCycle
     
@@ -76,10 +66,7 @@ final class RecipeViewController: UIViewController {
     
     private func configureView() {
         
-        nameTextField.isUserInteractionEnabled = false
-        linkTextField.isUserInteractionEnabled = false
-        ingredientsTextView.isEditable = false
-        methodTextView.isEditable = false
+        isEditingMode = false
         
         view.backgroundColor = Colors.mainBackgroundColor
         
@@ -164,24 +151,20 @@ final class RecipeViewController: UIViewController {
     
     @objc private func editButtonTapped() {
         // Toggle editing
-        let editing = !nameTextField.isUserInteractionEnabled
-        nameTextField.isUserInteractionEnabled = editing
-        linkTextField.isUserInteractionEnabled = editing
-        ingredientsTextView.isEditable = editing
-        methodTextView.isEditable = editing
-        
-        // Update edit button title
-//        let newImage = editing ? "shareImage" : "editImage"
-//        editButton.setImage(UIImage(named: newImage), for: .normal)
-//        shareButton.setImage(UIImage(named: <#T##String#>), for: <#T##UIControl.State#>)
-        
-        if editing {
-            // Show keyboard and set cursor to nameTextField
-            nameTextField.becomeFirstResponder()
-        } else {
-            // Hide keyboard
-            view.endEditing(true)
-        }
+        isEditingMode.toggle()
+        nameTextField.becomeFirstResponder()
+    }
+    
+    @objc func cancelChanges() {
+        print("cancel")
+        isEditingMode.toggle()
+        view.endEditing(true)
+    }
+    
+    @objc func saveRecipe() {
+        print("save recipe")
+        isEditingMode.toggle()
+        view.endEditing(true)
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -200,6 +183,26 @@ final class RecipeViewController: UIViewController {
         let contentInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInsets
         scrollView.scrollIndicatorInsets = contentInsets
+    }
+    
+    private func setButtons(isEditing: Bool) {
+        
+        let leftButtonImageName = isEditing ? "saveImage" : "editImage"
+        let rightButtonImageName = isEditing ? "cancelImage" : "shareImage"
+        leftButton.setImage(UIImage(named: leftButtonImageName), for: .normal)
+        rightButton.setImage(UIImage(named: rightButtonImageName), for: .normal)
+        
+        if isEditing {
+            leftButton.removeTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+            leftButton.addTarget(self, action: #selector(saveRecipe), for: .touchUpInside)
+            rightButton.removeTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
+            rightButton.addTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
+        } else {
+            leftButton.removeTarget(self, action: #selector(saveRecipe), for: .touchUpInside)
+            leftButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+            rightButton.removeTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
+            rightButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
+        }
     }
     
 }
@@ -229,5 +232,14 @@ private extension UITextView {
         textView.textColor = UIColor(hex: "#434443")
         textView.isScrollEnabled = false
         return textView
+    }
+}
+
+private extension UIButton {
+    static func makeButton(withImage image: String) -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: image), for: .normal)
+        return button
     }
 }
