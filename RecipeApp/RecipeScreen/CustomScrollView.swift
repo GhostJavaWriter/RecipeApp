@@ -30,6 +30,12 @@ final class CustomScrollView: UIScrollView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setEditable(isEditing: Bool) {
+        ingredientsTextView.isEditable = isEditing
+        methodTextView.isEditable = isEditing
+        linkTextField.isUserInteractionEnabled = isEditing
+    }
+    
     private func configureView() {
         
         translatesAutoresizingMaskIntoConstraints = false

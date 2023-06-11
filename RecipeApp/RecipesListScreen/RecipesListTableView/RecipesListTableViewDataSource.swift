@@ -26,7 +26,7 @@ final class RecipesListTableViewDataSource: NSObject, UITableViewDataSource {
         cell.selectionStyle = .none
         if let recipesList = recipesList {
             cell.configureCell(withText: recipesList[indexPath.row])
-        } 
+        }
         return cell
     }
     

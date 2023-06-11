@@ -9,7 +9,7 @@ import UIKit
 
 enum RecipeViewControllerMode {
     case view
-    case edit
+    case newRecipe
 }
 
 final class RecipeViewController: UIViewController {
@@ -69,7 +69,7 @@ final class RecipeViewController: UIViewController {
         switch mode {
         case .view:
             isEditingMode = false
-        case .edit:
+        case .newRecipe:
             isEditingMode = true
         }
         
@@ -109,12 +109,8 @@ final class RecipeViewController: UIViewController {
     }
     
     @objc private func shareButtonTapped() {
-        // Prepare the text to share
-        let recipeName = nameTextField.text ?? ""
-        //        let recipeIngredients = ingredientsTextView.text ?? ""
-        //        let recipeMethod = methodTextView.text ?? ""
-        //        let recipeLink = linkTextField.text ?? ""
         
+        let recipeName = nameTextField.text ?? ""
         let shareText = "Recipe Name: \(recipeName)"
         
         let activityViewController = UIActivityViewController(activityItems: [shareText],
@@ -135,7 +131,7 @@ final class RecipeViewController: UIViewController {
             // cancel changes
             isEditingMode.toggle()
             view.endEditing(true)
-        case .edit:
+        case .newRecipe:
             dismiss(animated: true)
         }
     }
@@ -147,7 +143,7 @@ final class RecipeViewController: UIViewController {
             // save and toggle
             isEditingMode.toggle()
             view.endEditing(true)
-        case .edit:
+        case .newRecipe:
             // save and dismiss
             dismiss(animated: true)
         }
@@ -172,6 +168,9 @@ final class RecipeViewController: UIViewController {
     }
     
     private func setButtons(isEditing: Bool) {
+        
+        nameTextField.isUserInteractionEnabled = isEditing
+        scrollView.setEditable(isEditing: isEditing)
         
         let leftButtonImageName = isEditing ? "saveImage" : "editImage"
         let rightButtonImageName = isEditing ? "cancelImage" : "shareImage"

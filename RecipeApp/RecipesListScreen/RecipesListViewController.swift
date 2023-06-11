@@ -53,7 +53,7 @@ final class RecipesListViewController: UIViewController, UITableViewDragDelegate
         delegate.navigationController = navigationController
         trashButton.addInteraction(UIDropInteraction(delegate: self))
         addButton.addButtonTapped = { [weak self] in
-            let newRecipeVC = RecipeViewController(mode: .edit)
+            let newRecipeVC = RecipeViewController(mode: .newRecipe)
             self?.present(newRecipeVC, animated: true)
         }
     }
