@@ -9,6 +9,8 @@ import UIKit
 
 final class TrashButton: UIButton {
     
+    var trashButtonTapped: (() -> Void)?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -28,7 +30,7 @@ final class TrashButton: UIButton {
         if let touch = touches.first, self.bounds.contains(touch.location(in: self)) {
             scaleIdentity()
         
-            print("button aciton")
+            trashButtonTapped?()
         }
     }
     
