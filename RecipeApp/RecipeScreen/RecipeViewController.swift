@@ -7,11 +7,15 @@
 
 import UIKit
 
+enum RecipeViewControllerMode {
+    case view
+    case edit
+}
+
 final class RecipeViewController: UIViewController {
     
     // MARK: - UI
     
-    // TODO: add dots as placeholder?
     private let nameLabel = UILabel.makeLabel(text: "Name")
     private let nameTextField = CustomTextField.makeTextField()
     private let scrollView = CustomScrollView()
@@ -20,10 +24,31 @@ final class RecipeViewController: UIViewController {
     private let leftButton = UIButton.makeButton(withImage: "editImage")
     private lazy var containerView = ButtonsConteinerView(leftButton: leftButton, rightButton: rightButton)
     
+    // MARK: - Properties
+    
+    private var mode: RecipeViewControllerMode
     private lazy var isEditingMode = false {
         didSet {
             setButtons(isEditing: isEditingMode)
         }
+    }
+    
+    // MARK: - Init
+    
+    init(mode: RecipeViewControllerMode) {
+        self.mode = mode
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification,
+                                                  object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification,
+                                                  object: nil)
     }
     
     // MARK: - LifeCycle
@@ -37,19 +62,16 @@ final class RecipeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification,
-                                                  object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification,
-                                                  object: nil)
-    }
-    
-    
     // MARK: - Private methods
     
     private func configureView() {
         
-        isEditingMode = false
+        switch mode {
+        case .view:
+            isEditingMode = false
+        case .edit:
+            isEditingMode = true
+        }
         
         view.backgroundColor = Colors.mainBackgroundColor
         
@@ -89,9 +111,9 @@ final class RecipeViewController: UIViewController {
     @objc private func shareButtonTapped() {
         // Prepare the text to share
         let recipeName = nameTextField.text ?? ""
-//        let recipeIngredients = ingredientsTextView.text ?? ""
-//        let recipeMethod = methodTextView.text ?? ""
-//        let recipeLink = linkTextField.text ?? ""
+        //        let recipeIngredients = ingredientsTextView.text ?? ""
+        //        let recipeMethod = methodTextView.text ?? ""
+        //        let recipeLink = linkTextField.text ?? ""
         
         let shareText = "Recipe Name: \(recipeName)"
         
@@ -107,15 +129,28 @@ final class RecipeViewController: UIViewController {
     }
     
     @objc func cancelChanges() {
-        print("cancel")
-        isEditingMode.toggle()
-        view.endEditing(true)
+        
+        switch mode {
+        case .view:
+            // cancel changes
+            isEditingMode.toggle()
+            view.endEditing(true)
+        case .edit:
+            dismiss(animated: true)
+        }
     }
     
     @objc func saveRecipe() {
-        print("save recipe")
-        isEditingMode.toggle()
-        view.endEditing(true)
+        
+        switch mode {
+        case .view:
+            // save and toggle
+            isEditingMode.toggle()
+            view.endEditing(true)
+        case .edit:
+            // save and dismiss
+            dismiss(animated: true)
+        }
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {

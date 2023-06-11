@@ -23,7 +23,7 @@ final class RecipesListTableViewDelegate: NSObject, UITableViewDelegate
             cell.transform = originalTransform
         }, completion: nil)
         
-        let recipeVC = RecipeViewController()
+        let recipeVC = RecipeViewController(mode: .view)
         navigationController?.pushViewController(recipeVC, animated: true)
     }
 
