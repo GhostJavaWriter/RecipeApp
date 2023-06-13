@@ -44,8 +44,8 @@ final class RecipeCollectionViewCell: UICollectionViewCell {
         
         contentView.addSubview(recipeNameLabel)
         contentView.addSubview(dragImageView)
-        contentView.layer.cornerRadius = Metrics.RecipeItem.cornerRadius
-        contentView.backgroundColor = Colors.RecipeCell.backgroundColor
+        self.layer.cornerRadius = Metrics.RecipeItem.cornerRadius
+        self.backgroundColor = Colors.RecipeCell.backgroundColor
         
         NSLayoutConstraint.activate([
 
