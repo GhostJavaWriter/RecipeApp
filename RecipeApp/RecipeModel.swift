@@ -8,9 +8,28 @@
 import UIKit
 import UniformTypeIdentifiers
 
-final class RecipeModel: NSObject, Codable, NSItemProviderReading, NSItemProviderWriting {
+final class RecipeModel: NSObject, Codable {
     
-    // MARK: - NSItemProviderReading, NSItemProviderWriting
+    // MARK: - Properties
+    
+    let name: String
+    let categorie: Categories
+    let ingredients: String
+    let method: String
+    let link: String?
+    
+    // MARK: - Init
+    
+    init(name: String, categorie: Categories, ingredients: String, method: String, link: String?) {
+        self.name = name
+        self.categorie = categorie
+        self.ingredients = ingredients
+        self.method = method
+        self.link = link
+    }
+}
+
+extension RecipeModel: NSItemProviderReading, NSItemProviderWriting {
     
     static var writableTypeIdentifiersForItemProvider: [String] {
         return [(UTType.utf8PlainText.identifier) as String]
@@ -38,7 +57,7 @@ final class RecipeModel: NSObject, Codable, NSItemProviderReading, NSItemProvide
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
             let data = try encoder.encode(self)
-            let json = String(data: data, encoding: String.Encoding.utf8)
+//            let json = String(data: data, encoding: String.Encoding.utf8)
             progress.completedUnitCount = 100
             completionHandler(data, nil)
         } catch {
@@ -46,21 +65,5 @@ final class RecipeModel: NSObject, Codable, NSItemProviderReading, NSItemProvide
         }
         
         return progress
-    }
-    
-    // MARK: - Properties
-    
-    let name: String
-    let ingredients: String
-    let method: String
-    let link: String?
-    
-    // MARK: - Init
-    
-    init(name: String, ingredients: String, method: String, link: String?) {
-        self.name = name
-        self.ingredients = ingredients
-        self.method = method
-        self.link = link
     }
 }

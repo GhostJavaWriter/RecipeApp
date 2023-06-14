@@ -1,30 +1,29 @@
 //
-//  RecipesCollectionViewDataSource.swift
+//  TrashRecipesCollectionViewDataSource.swift
 //  RecipeApp
 //
-//  Created by Bair Nadtsalov on 10.06.2023.
+//  Created by Bair Nadtsalov on 12.06.2023.
 //
 
 import UIKit
 
-class RecipesCollectionViewDataSource: NSObject, UICollectionViewDataSource {
+class TrashRecipesCollectionViewDataSource: NSObject, UICollectionViewDataSource {
     
-    private let dataManager: RecipesDataManager
+    var recipesList: [String] = []
+
     private let reuseIdentifier = String(describing: RecipeCollectionViewCell.self)
     
-    init(dataManager: RecipesDataManager) {
-        self.dataManager = dataManager
-    }
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dataManager.
+        return recipesList.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? RecipeCollectionViewCell else { return UICollectionViewCell()}
         
-        cell.configureCell(withText: recipesList[indexPath.item]) 
+        cell.configureCell(withText: recipesList[indexPath.item])
         
         return cell
     }
+
 }
+

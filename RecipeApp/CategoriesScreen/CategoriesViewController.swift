@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CategoriesViewController: UIViewController {
+final class CategoriesViewController: UIViewController, RecipesDataManaging {
 
     // MARK: - UI
     
@@ -34,14 +34,25 @@ final class CategoriesViewController: UIViewController {
     private lazy var collectionView: CategoriesCollectionView = {
         let collectionView = CategoriesCollectionView()
         collectionView.dataSource = dataSource
-        collectionView.delegate = delegate
+        collectionView.delegate = self
         return collectionView
     }()
     
     // MARK: - Properties
-        
-    private let dataSource = CategoriesCollectionViewDataSource()
-    private let delegate = CategoriesCollectionViewDelegate()
+    
+    var dataManager: RecipesDataManager
+    private lazy var dataSource = CategoriesCollectionViewDataSource(dataManager: dataManager)
+    
+    // MARK: - Init
+    
+    init(dataManager: RecipesDataManager) {
+        self.dataManager = dataManager
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - LifeCycle
     
@@ -49,7 +60,6 @@ final class CategoriesViewController: UIViewController {
         super.viewDidLoad()
         
         configureView()
-        delegate.navigationController = navigationController
     }
 
     // MARK: - Private methods
@@ -88,5 +98,27 @@ final class CategoriesViewController: UIViewController {
         ])
         
     }
+}
+
+extension CategoriesViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
+        
+        let originalTransform = cell.transform
+        let scaledTransform = originalTransform.scaledBy(x: 0.95, y: 0.95)
+        
+        cell.transform = scaledTransform
+        
+        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [], animations: {
+            cell.transform = originalTransform
+        }, completion: nil)
+        
+        let currentCat = dataManager.getCategories()[indexPath.row]
+        let recipesVC = RecipesListViewController(dataManager: dataManager, categorie: currentCat)
+        navigationController?.pushViewController(recipesVC, animated: true)
+    }
+    
+    
 }
 

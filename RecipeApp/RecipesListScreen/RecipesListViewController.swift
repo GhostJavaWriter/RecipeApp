@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class RecipesListViewController: UIViewController, UICollectionViewDragDelegate, UICollectionViewDropDelegate, UIDropInteractionDelegate {
+final class RecipesListViewController: UIViewController, UICollectionViewDragDelegate, UICollectionViewDropDelegate, UIDropInteractionDelegate, RecipesDataManaging {
     
     // MARK: - UI
     
@@ -26,17 +26,23 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
     }()
     
     // MARK: - Properties
-    private let dataSource = RecipesCollectionViewDataSource()
+    
+    var dataManager: RecipesDataManager
+    private let currentCategorie: Categories
+    private lazy var recipesList = dataManager.getRecipesWith(currentCategorie)
+    private lazy var dataSource = RecipesCollectionViewDataSource(dataManager: dataManager)
     private let delegate = RecipesCollectionViewDelegate()
     private let reuseIdentifier = String(describing: RecipeCollectionViewCell.self)
     
-    var recipesList = ["• Summer pie","• Carrot cake","• disdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsh 3","• dish 4", "• dish 5", "• dish 6", "• dish 7", "• dish 8", "• dish 9", "• dish 10"] {
-        didSet {
-            dataSource.recipesList = recipesList
-        }
+    init(dataManager: RecipesDataManager, categorie: Categories) {
+        self.dataManager = dataManager
+        self.currentCategorie = categorie
+        super.init(nibName: nil, bundle: nil)
     }
     
-    var trashRecipes: [String] = []
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - LifeCycle
     
@@ -44,7 +50,7 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
         super.viewDidLoad()
         
         configureView()
-        dataSource.recipesList = recipesList
+        
         delegate.navigationController = navigationController
         trashButton.addInteraction(UIDropInteraction(delegate: self))
         
@@ -54,7 +60,9 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
         }
         
         trashButton.trashButtonTapped = { [weak self] in
-            print(self?.trashRecipes.count)
+            let trashRecipesVC = TrashRecipesViewController()
+            trashRecipesVC.trashRecipes = self?.trashRecipes
+            self?.navigationController?.pushViewController(trashRecipesVC, animated: true)
         }
     }
     
@@ -116,7 +124,7 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
         
         for item in coordinator.items {
             if let sourceIndexPath = item.sourceIndexPath {
-                if let recipeName = item.dragItem.localObject as? String {
+                if let recipeName = item.dragItem.localObject as? RecipeModel {
                     
                     collectionView.performBatchUpdates {
                         recipesList.remove(at: sourceIndexPath.row)
@@ -137,18 +145,6 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
     
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
-        let parameters = UIDragPreviewParameters()
-        parameters.backgroundColor = .clear
-        return parameters
-    }
-
-    func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
-        let parameters = UIDragPreviewParameters()
-        parameters.backgroundColor = .clear
-        return parameters
     }
 
     // MARK: - UIDropInteractionDelegate

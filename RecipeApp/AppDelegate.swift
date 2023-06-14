@@ -16,7 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let categoriesVC = CategoriesViewController()
+        let dataManager = RecipesDataManager()
+        let categoriesVC = CategoriesViewController(dataManager: dataManager)
         let navController = UINavigationController(rootViewController: categoriesVC)
         UINavigationBar.appearance().tintColor = Colors.CategorieItem.backgroundColor
         window?.rootViewController = navController
