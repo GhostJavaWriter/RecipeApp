@@ -14,9 +14,9 @@ final class CustomScrollView: UIScrollView {
     private let methodLabel = UILabel.makeLabel(text: "Method")
     private let ingredientsLabel = UILabel.makeLabel(text: "Ingredients")
     private let linkLabel = UILabel.makeLabel(text: "Link")
-    private lazy var linkTextField = CustomTextField.makeTextField()
-    private lazy var ingredientsTextView = UITextView.makeTextView()
-    private lazy var methodTextView = UITextView.makeTextView()
+    private(set) lazy var linkTextField = CustomTextField.makeTextField()
+    private(set) lazy var ingredientsTextView = UITextView.makeTextView()
+    private(set) lazy var methodTextView = UITextView.makeTextView()
     
     // MARK: - Init
     

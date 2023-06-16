@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class RecipesListViewController: UIViewController, UICollectionViewDragDelegate, UICollectionViewDropDelegate, UIDropInteractionDelegate, RecipesDataManaging {
+final class RecipesListViewController: UIViewController, UICollectionViewDragDelegate, UICollectionViewDropDelegate, RecipesDataManaging {
     
     // MARK: - UI
     
@@ -28,15 +28,17 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
     // MARK: - Properties
     
     var dataManager: RecipesDataManager
-    private let currentCategorie: Categories
-    private lazy var recipesList = dataManager.getRecipesWith(currentCategorie)
-    private lazy var dataSource = RecipesCollectionViewDataSource(dataManager: dataManager)
+    private let currentGroup: RecipesGroup
+    private lazy var recipesList = currentGroup.recipes?.array as? [Recipe]
+    private lazy var dataSource = RecipesCollectionViewDataSource(dataManager: dataManager, categorie: currentGroup)
     private let delegate = RecipesCollectionViewDelegate()
     private let reuseIdentifier = String(describing: RecipeCollectionViewCell.self)
     
-    init(dataManager: RecipesDataManager, categorie: Categories) {
+    private lazy var newRecipeVC = RecipeViewController(mode: .newRecipe, dataManager: self.dataManager, currentGroup: self.currentGroup)
+    
+    init(dataManager: RecipesDataManager, categorie: RecipesGroup) {
         self.dataManager = dataManager
-        self.currentCategorie = categorie
+        self.currentGroup = categorie
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -52,18 +54,24 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
         configureView()
         
         delegate.navigationController = navigationController
-        trashButton.addInteraction(UIDropInteraction(delegate: self))
+        let dropDelegate = DropInteractionDelegate(for: trashButton)
+        trashButton.addInteraction(UIDropInteraction(delegate: dropDelegate))
+        
+        newRecipeVC.updateData = { [weak self] in
+            self?.collectionView.reloadData()
+        }
         
         addButton.addButtonTapped = { [weak self] in
-            let newRecipeVC = RecipeViewController(mode: .newRecipe)
-            self?.present(newRecipeVC, animated: true)
+            guard let self = self else { return }
+            self.present(newRecipeVC, animated: true)
         }
         
         trashButton.trashButtonTapped = { [weak self] in
             let trashRecipesVC = TrashRecipesViewController()
-            trashRecipesVC.trashRecipes = self?.trashRecipes
+//            trashRecipesVC.trashRecipes = self?.dataManager.getDeletedRecipes()
             self?.navigationController?.pushViewController(trashRecipesVC, animated: true)
         }
+        
     }
     
     // MARK: - Private methods
@@ -98,7 +106,7 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
                         at indexPath: IndexPath) -> [UIDragItem] {
         return dragItems(at: indexPath)
     }
-    
+
     func collectionView(_ collectionView: UICollectionView,
                         itemsForAddingTo session: UIDragSession,
                         at indexPath: IndexPath,
@@ -107,10 +115,10 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
     }
     
     private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
-        if let recipeName = (collectionView.cellForItem(at: indexPath) as? RecipeCollectionViewCell)?.getRecipeName() as? NSString {
-            let dragItem = UIDragItem(itemProvider: NSItemProvider(object: recipeName as NSItemProviderWriting))
-            dragItem.localObject = recipeName
-            
+        if let recipe = (collectionView.cellForItem(at: indexPath) as? RecipeCollectionViewCell)?.getRecipeName() {
+            let dragItem = UIDragItem(itemProvider: NSItemProvider(object: recipe as NSItemProviderWriting))
+            dragItem.localObject = recipe
+
             return [dragItem]
         } else {
             return []
@@ -121,74 +129,30 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
     
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
-        
+
         for item in coordinator.items {
             if let sourceIndexPath = item.sourceIndexPath {
-                if let recipeName = item.dragItem.localObject as? RecipeModel {
-                    
+                if let recipe = item.dragItem.localObject as? Recipe {
+
                     collectionView.performBatchUpdates {
-                        recipesList.remove(at: sourceIndexPath.row)
-                        recipesList.insert(recipeName, at: destinationIndexPath.row)
+                        recipesList?.remove(at: sourceIndexPath.row)
+                        recipesList?.insert(recipe, at: destinationIndexPath.row)
                         collectionView.deleteItems(at: [sourceIndexPath])
                         collectionView.insertItems(at: [destinationIndexPath])
                     }
-                    
+
                     coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
                 }
             }
         }
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
         return session.canLoadObjects(ofClass: NSString.self)
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
-    }
-
-    // MARK: - UIDropInteractionDelegate
-    
-    func dropInteraction(_ interaction: UIDropInteraction,
-                         canHandle session: UIDropSession) -> Bool
-    {
-        return session.canLoadObjects(ofClass: NSString.self)
-    }
-    
-    func dropInteraction(_ interaction: UIDropInteraction,
-                         sessionDidUpdate session: UIDropSession) -> UIDropProposal
-    {
-        
-        UIView.animate(withDuration: 0.3) {
-            self.trashButton.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-        }
-        return UIDropProposal(operation: .copy)
-    }
-    
-    func dropInteraction(_ interaction: UIDropInteraction,
-                         sessionDidExit session: UIDropSession) {
-        UIView.animate(withDuration: 0.3) {
-            self.trashButton.transform = .identity
-        }
-    }
-    
-    func dropInteraction(_ interaction: UIDropInteraction,
-                         performDrop session: UIDropSession) {
-        
-        UIView.animate(withDuration: 0.3) {
-            self.trashButton.transform = .identity
-        }
-        
-        session.loadObjects(ofClass: NSString.self) { [weak self] recipes in
-            if let recipe = recipes.first as? String {
-                if let index = self?.recipesList.firstIndex(of: recipe) {
-                    self?.recipesList.remove(at: index)
-                    let indexPath = IndexPath(row: index, section: 0)
-                    self?.collectionView.deleteItems(at: [indexPath])
-                    self?.trashRecipes.append(recipe)
-                }
-            }
-        }
     }
     
 }

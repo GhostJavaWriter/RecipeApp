@@ -9,6 +9,12 @@ import UIKit
 
 final class RecipeCollectionViewCell: UICollectionViewCell {
     
+    private var recipeModel: Recipe? {
+        didSet {
+            recipeNameLabel.text = recipeModel?.name
+        }
+    }
+    
     private let recipeNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
@@ -32,12 +38,16 @@ final class RecipeCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func getCellModel() -> Recipe? {
+        return recipeModel
+    }
+    
     func getRecipeName() -> String {
         return recipeNameLabel.text ?? "default"
     }
-    func configureCell(withText text: String) {
-        
-        recipeNameLabel.text = text
+    
+    func setupCell(with model: Recipe) {
+        self.recipeModel = model
     }
     
     private func configureView() {

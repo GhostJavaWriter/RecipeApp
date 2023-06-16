@@ -20,7 +20,7 @@ class TrashRecipesCollectionViewDataSource: NSObject, UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? RecipeCollectionViewCell else { return UICollectionViewCell()}
         
-        cell.configureCell(withText: recipesList[indexPath.item])
+//        cell.configureCell(withText: recipesList[indexPath.item])
         
         return cell
     }

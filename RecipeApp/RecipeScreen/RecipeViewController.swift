@@ -12,7 +12,7 @@ enum RecipeViewControllerMode {
     case newRecipe
 }
 
-final class RecipeViewController: UIViewController {
+final class RecipeViewController: UIViewController, RecipesDataManaging {
     
     // MARK: - UI
     
@@ -26,6 +26,10 @@ final class RecipeViewController: UIViewController {
     
     // MARK: - Properties
     
+    var updateData: (() -> Void)?
+    
+    var dataManager: RecipesDataManager
+    private var currentGroup: RecipesGroup
     private var mode: RecipeViewControllerMode
     private lazy var isEditingMode = false {
         didSet {
@@ -35,8 +39,10 @@ final class RecipeViewController: UIViewController {
     
     // MARK: - Init
     
-    init(mode: RecipeViewControllerMode) {
+    init(mode: RecipeViewControllerMode, dataManager: RecipesDataManager, currentGroup: RecipesGroup) {
         self.mode = mode
+        self.dataManager = dataManager
+        self.currentGroup = currentGroup
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -136,16 +142,36 @@ final class RecipeViewController: UIViewController {
         }
     }
     
-    @objc func saveRecipe() {
+    @objc func saveButtonTapped() {
         
         switch mode {
         case .view:
-            // save and toggle
+            // edit and save
             isEditingMode.toggle()
             view.endEditing(true)
         case .newRecipe:
-            // save and dismiss
+            createNewRecipe()
+            sleep(3)
+            self.updateData?()
             dismiss(animated: true)
+        }
+    }
+    
+    private func createNewRecipe() {
+        if let name = nameTextField.text,
+           let ingedients = scrollView.ingredientsTextView.text,
+           let method = scrollView.methodTextView.text,
+           let link = scrollView.linkTextField.text
+        {
+            let newRecipe = Recipe(context: dataManager.getContext())
+            newRecipe.id = UUID().uuidString
+            newRecipe.name = name
+            newRecipe.ingredients = ingedients
+            newRecipe.cookMethod = method
+            newRecipe.link = link
+            newRecipe.recipesGroup = currentGroup
+            
+            dataManager.saveContext()
         }
     }
     
@@ -179,11 +205,11 @@ final class RecipeViewController: UIViewController {
         
         if isEditing {
             leftButton.removeTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-            leftButton.addTarget(self, action: #selector(saveRecipe), for: .touchUpInside)
+            leftButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
             rightButton.removeTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
             rightButton.addTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
         } else {
-            leftButton.removeTarget(self, action: #selector(saveRecipe), for: .touchUpInside)
+            leftButton.removeTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
             leftButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
             rightButton.removeTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
             rightButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)

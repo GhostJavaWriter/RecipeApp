@@ -114,8 +114,9 @@ extension CategoriesViewController: UICollectionViewDelegate {
             cell.transform = originalTransform
         }, completion: nil)
         
-        let currentCat = dataManager.getCategories()[indexPath.row]
-        let recipesVC = RecipesListViewController(dataManager: dataManager, categorie: currentCat)
+        let recipesGroups = dataManager.getRecipesGroups()
+        let currentGroup = recipesGroups[indexPath.row]
+        let recipesVC = RecipesListViewController(dataManager: dataManager, categorie: currentGroup)
         navigationController?.pushViewController(recipesVC, animated: true)
     }
     

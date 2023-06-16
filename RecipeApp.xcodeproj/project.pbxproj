@@ -7,10 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DE60F3462A3B781900225566 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DE60F3442A3B781900225566 /* CoreDataModel.xcdatamodeld */; };
 		DE8358C22A29221700675966 /* RecipesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358C12A29221700675966 /* RecipesListViewController.swift */; };
 		DE8358CC2A2966BC00675966 /* AmericanTypewriterRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE8358CB2A2966BC00675966 /* AmericanTypewriterRegular.ttf */; };
 		DE8358CE2A2A5A6B00675966 /* AddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358CD2A2A5A6B00675966 /* AddButton.swift */; };
 		DE8358D02A2A636B00675966 /* TrashButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358CF2A2A636B00675966 /* TrashButton.swift */; };
+		DE9D3A6E2A3BC0AF00EC7299 /* DropInteractionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9D3A6D2A3BC0AF00EC7299 /* DropInteractionDelegate.swift */; };
 		DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B602A26724A007D0409 /* AppDelegate.swift */; };
 		DECB8B652A26724A007D0409 /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B642A26724A007D0409 /* CategoriesViewController.swift */; };
 		DECB8B6A2A26724A007D0409 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B692A26724A007D0409 /* Assets.xcassets */; };
@@ -34,7 +36,6 @@
 		DEE083972A35621100C0ECEC /* RecipesCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083962A35621100C0ECEC /* RecipesCollectionViewDataSource.swift */; };
 		DEE083992A35623F00C0ECEC /* RecipesCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083982A35623F00C0ECEC /* RecipesCollectionViewDelegate.swift */; };
 		DEE0839B2A35627700C0ECEC /* RecipesCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE0839A2A35627700C0ECEC /* RecipesCollectionViewFlowLayout.swift */; };
-		DEE0839D2A3682DA00C0ECEC /* RecipeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE0839C2A3682DA00C0ECEC /* RecipeModel.swift */; };
 		DEE0839F2A36948800C0ECEC /* TrashRecipesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE0839E2A36948800C0ECEC /* TrashRecipesViewController.swift */; };
 		DEE083A22A37F02200C0ECEC /* TrashRecipeCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083A12A37F02200C0ECEC /* TrashRecipeCollectionViewDelegate.swift */; };
 		DEE083A42A37F14300C0ECEC /* TrashRecipesCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083A32A37F14300C0ECEC /* TrashRecipesCollectionViewDataSource.swift */; };
@@ -42,10 +43,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DE60F3452A3B781900225566 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		DE8358C12A29221700675966 /* RecipesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesListViewController.swift; sourceTree = "<group>"; };
 		DE8358CB2A2966BC00675966 /* AmericanTypewriterRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AmericanTypewriterRegular.ttf; sourceTree = "<group>"; };
 		DE8358CD2A2A5A6B00675966 /* AddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButton.swift; sourceTree = "<group>"; };
 		DE8358CF2A2A636B00675966 /* TrashButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashButton.swift; sourceTree = "<group>"; };
+		DE9D3A6D2A3BC0AF00EC7299 /* DropInteractionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropInteractionDelegate.swift; sourceTree = "<group>"; };
 		DECB8B5D2A26724A007D0409 /* RecipeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecipeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DECB8B602A26724A007D0409 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DECB8B642A26724A007D0409 /* CategoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewController.swift; sourceTree = "<group>"; };
@@ -71,7 +74,6 @@
 		DEE083962A35621100C0ECEC /* RecipesCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesCollectionViewDataSource.swift; sourceTree = "<group>"; };
 		DEE083982A35623F00C0ECEC /* RecipesCollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesCollectionViewDelegate.swift; sourceTree = "<group>"; };
 		DEE0839A2A35627700C0ECEC /* RecipesCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
-		DEE0839C2A3682DA00C0ECEC /* RecipeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeModel.swift; sourceTree = "<group>"; };
 		DEE0839E2A36948800C0ECEC /* TrashRecipesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashRecipesViewController.swift; sourceTree = "<group>"; };
 		DEE083A12A37F02200C0ECEC /* TrashRecipeCollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashRecipeCollectionViewDelegate.swift; sourceTree = "<group>"; };
 		DEE083A32A37F14300C0ECEC /* TrashRecipesCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashRecipesCollectionViewDataSource.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				DE8358C12A29221700675966 /* RecipesListViewController.swift */,
+				DE9D3A6D2A3BC0AF00EC7299 /* DropInteractionDelegate.swift */,
 				DE8358CD2A2A5A6B00675966 /* AddButton.swift */,
 				DE8358CF2A2A636B00675966 /* TrashButton.swift */,
 				DEE083932A35610100C0ECEC /* RecipesCollectionView */,
@@ -129,8 +132,8 @@
 			isa = PBXGroup;
 			children = (
 				DECB8B602A26724A007D0409 /* AppDelegate.swift */,
-				DEE0839C2A3682DA00C0ECEC /* RecipeModel.swift */,
 				DEE083CD2A393D8100C0ECEC /* RecipesDataManager.swift */,
+				DE60F3442A3B781900225566 /* CoreDataModel.xcdatamodeld */,
 				DE8358C02A29215200675966 /* CategoriesScreen */,
 				DE8358C32A29221E00675966 /* RecipesListScreen */,
 				DEE083A02A36948D00C0ECEC /* TrashRecipesScreen */,
@@ -307,15 +310,16 @@
 				DE8358CE2A2A5A6B00675966 /* AddButton.swift in Sources */,
 				DECB8B852A283309007D0409 /* CategoriesCollectionView.swift in Sources */,
 				DEE083972A35621100C0ECEC /* RecipesCollectionViewDataSource.swift in Sources */,
+				DE9D3A6E2A3BC0AF00EC7299 /* DropInteractionDelegate.swift in Sources */,
 				DEE0839F2A36948800C0ECEC /* TrashRecipesViewController.swift in Sources */,
 				DEE0838D2A35259900C0ECEC /* ButtonsConteinerView.swift in Sources */,
 				DEE0839B2A35627700C0ECEC /* RecipesCollectionViewFlowLayout.swift in Sources */,
 				DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */,
 				DEE0838B2A302EA700C0ECEC /* CustomTextField.swift in Sources */,
 				DECB8B802A27AD42007D0409 /* ScaledFont.swift in Sources */,
-				DEE0839D2A3682DA00C0ECEC /* RecipeModel.swift in Sources */,
 				DECB8B872A28336E007D0409 /* CategoryCollectionViewCell.swift in Sources */,
 				DE8358D02A2A636B00675966 /* TrashButton.swift in Sources */,
+				DE60F3462A3B781900225566 /* CoreDataModel.xcdatamodeld in Sources */,
 				DECB8B922A284CCC007D0409 /* Metrics+Colors.swift in Sources */,
 				DEE083902A35401900C0ECEC /* CustomScrollView.swift in Sources */,
 				DEE083A22A37F02200C0ECEC /* TrashRecipeCollectionViewDelegate.swift in Sources */,
@@ -540,6 +544,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		DE60F3442A3B781900225566 /* CoreDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				DE60F3452A3B781900225566 /* CoreDataModel.xcdatamodel */,
+			);
+			currentVersion = DE60F3452A3B781900225566 /* CoreDataModel.xcdatamodel */;
+			path = CoreDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = DECB8B552A26724A007D0409 /* Project object */;
 }

@@ -17,14 +17,14 @@ class CategoriesCollectionViewDataSource: NSObject, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dataManager.getCategories().count
+        return dataManager.getRecipesGroups().count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? CategoryCollectionViewCell else { return UICollectionViewCell()}
         
-        let categories = dataManager.getCategories()
-        cell.categoryNameLabel.text = categories[indexPath.item].rawValue
+        let categories = dataManager.getRecipesGroups()
+        cell.categoryNameLabel.text = categories[indexPath.item].name
         
         return cell
     }

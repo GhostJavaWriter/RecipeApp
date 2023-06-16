@@ -5,7 +5,8 @@
 //  Created by Bair Nadtsalov on 13.06.2023.
 //
 
-import Foundation
+import UIKit
+import CoreData
 
 enum Categories: String, CaseIterable, Codable {
     
@@ -23,99 +24,66 @@ protocol RecipesDataManaging {
 
 final class RecipesDataManager {
     
-    private let categories = [Categories.BakingNDesserts,
-                              Categories.SoupsNBroths,
-                              Categories.SaladsNAppetizers,
-                              Categories.MainNCourses,
-                              Categories.BeveragesNCocktails,
-                              Categories.SaucesNCreams]
-    
-    private var recipes: [RecipeModel] = []
-    private var deletedRecipes: [RecipeModel] = []
-    
-    /// Returns the categories of recipes
-    func getCategories() -> [Categories] {
-        return categories
+    private var context: NSManagedObjectContext {
+        return (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     }
     
-    /// Returns the current list of recipes
-    func getRecipes() -> [RecipeModel] {
-        return recipes
+    // MARK: - Public methods
+    
+    func getContext() -> NSManagedObjectContext {
+        return context
     }
     
-    /// Returns the list of deleted recipes
-    func getDeletedRecipes() -> [RecipeModel] {
-        return deletedRecipes
-    }
-    
-    /// Returns the list of recipes from chosen categorie
-    func getRecipesWith(_ categorie: Categories) -> [RecipeModel] {
-        var recipesWithCategorie: [RecipeModel] = []
-        for recipe in recipes {
-            if recipe.categorie == categorie {
-                recipesWithCategorie.append(recipe)
-            }
-        }
-        return recipesWithCategorie
-    }
-    
-    /**
-         Removes a recipe from the list of current recipes and adds it to the deleted recipes.
-         
-         If the recipe is not found in the current list, an error message will be logged.
-
-         - Parameter recipe: The recipe to be removed.
-        */
-    func removeRecipe(_ recipe: RecipeModel) {
-        if let index = recipes.firstIndex(of: recipe) {
-            recipes.remove(at: index)
-            deletedRecipes.append(recipe)
-        } else {
-            NSLog("cannot find recipe", #function)
+    func saveContext() {
+        do {
+            try context.save()
+        } catch let error {
+            print("Failed to save context: \(error)")
         }
     }
     
-    /**
-         Removes a deleted recipe from the list of deleted recipes.
-         
-         If the recipe is not found in the deleted list, an error message will be logged.
-
-         - Parameter recipe: The deleted recipe to be removed.
-        */
-    func removeDeletedRecipe(_ recipe: RecipeModel) {
-        if let index = deletedRecipes.firstIndex(of: recipe) {
-            deletedRecipes.remove(at: index)
-        } else {
-            NSLog("cannot find recipe", #function)
+    func updateData() {
+        
+    }
+    
+    func getRecipesGroups() -> [RecipesGroup] {
+        let fetchRequest: NSFetchRequest<RecipesGroup> = RecipesGroup.fetchRequest()
+        do {
+            let recipesGroups = try context.fetch(fetchRequest)
+            return recipesGroups
+        } catch {
+            print("Failed to fetch recipes groups: \(error.localizedDescription)")
+            return []
         }
     }
     
-    /**
-         Restores a deleted recipe back to the list of current recipes.
-         
-         If the recipe is not found in the deleted list, an error message will be logged.
-
-         - Parameter recipe: The recipe to be restored.
-        */
-    func restoreDeletedRecipe(_ recipe: RecipeModel) {
-        if let index = deletedRecipes.firstIndex(of: recipe) {
-            deletedRecipes.remove(at: index)
-            recipes.append(recipe)
-        } else {
-            NSLog("cannot find recipe", #function)
+    func getRecipesInGroup(_ group: RecipesGroup) -> [Recipe] {
+        let name = group.name!
+        let fetchRequest: NSFetchRequest<Recipe> = Recipe.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "recipesGroup.name == %@", name)
+        do {
+            let recipes = try context.fetch(fetchRequest)
+            return recipes
+        } catch {
+            print("Failed to fetch recipes groups: \(error.localizedDescription)")
+            return []
         }
     }
     
-    /**
-         Adds a new recipe to the list of current recipes.
-
-         This method allows you to add a new recipe to the current list.
-         The new recipe will be appended to the end of the list.
-
-         - Parameter recipe: The recipe to be added.
-        */
-    func addNewRecipe(_ recipe: RecipeModel) {
-        recipes.append(recipe)
+    func createDefaultCategories() {
+        
+        let recipesGroupNames = ["Baking\nDesserts",
+                                 "Soups\nBroths",
+                                 "Salads\nAppetizers",
+                                 "Main\nCourses",
+                                 "Beverages\nCocktails",
+                                 "Sauces\nCreams"]
+        
+        for name in recipesGroupNames {
+            let group = RecipesGroup(context: context)
+            group.name = name
+        }
+        saveContext()
     }
-
+    
 }
