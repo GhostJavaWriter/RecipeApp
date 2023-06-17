@@ -56,6 +56,18 @@ final class RecipesDataManager {
         }
     }
     
+    func getDeletedRecipes() -> [Recipe] {
+        let fetchRequest: NSFetchRequest<Recipe> = Recipe.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "deletedDate != nil")
+        do {
+            let recipes = try context.fetch(fetchRequest)
+            return recipes
+        } catch {
+            print("Failed to fetch recipes groups: \(error.localizedDescription)")
+            return []
+        }
+    }
+    
     func getRecipesGroups() -> [RecipesGroup] {
         let fetchRequest: NSFetchRequest<RecipesGroup> = RecipesGroup.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(RecipesGroup.name), ascending: true)]

@@ -6,21 +6,24 @@
 //
 
 import UIKit
+import CoreData
 
 class TrashRecipesCollectionViewDataSource: NSObject, UICollectionViewDataSource {
     
-    var recipesList: [String] = []
+    var fetchedResultsController: NSFetchedResultsController<Recipe>!
 
     private let reuseIdentifier = String(describing: RecipeCollectionViewCell.self)
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return recipesList.count
+        return fetchedResultsController.fetchedObjects?.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? RecipeCollectionViewCell else { return UICollectionViewCell()}
         
-//        cell.configureCell(withText: recipesList[indexPath.item])
+        if let recipe = fetchedResultsController.fetchedObjects?[indexPath.row] {
+            cell.setupCell(with: recipe)
+        }
         
         return cell
     }

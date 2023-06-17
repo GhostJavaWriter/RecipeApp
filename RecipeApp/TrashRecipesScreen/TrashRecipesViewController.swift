@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import CoreData
 
-final class TrashRecipesViewController: UIViewController {
+final class TrashRecipesViewController: UIViewController, NSFetchedResultsControllerDelegate {
     
     private lazy var collectionView: RecipesCollectionView = {
         let collectionView = RecipesCollectionView()
@@ -18,28 +19,64 @@ final class TrashRecipesViewController: UIViewController {
     
     private let delegate = TrashRecipeCollectionViewDelegate()
     private let dataSource = TrashRecipesCollectionViewDataSource()
+    private var dataManager: RecipesDataManager
     
-    var trashRecipes: [String]?
-    var recipesList: [String]?
+    
+    private lazy var recipesFetchedResultsController: NSFetchedResultsController = {
+        
+        let fetchRequest = Recipe.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "deletedDate", ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "deletedDate != nil")
+        let context = dataManager.getContext()
+        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                                managedObjectContext: context,
+                                                                sectionNameKeyPath: nil,
+                                                                cacheName: nil)
+        fetchResultsController.delegate = self
+        return fetchResultsController
+    }()
+    
+    init(dataManager: RecipesDataManager) {
+        self.dataManager = dataManager
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let recipes = trashRecipes {
-            dataSource.recipesList = recipes
-            delegate.deletedRecipesList = recipes
+        do {
+            try recipesFetchedResultsController.performFetch()
+            
+        } catch let error as NSError {
+            print(error.localizedDescription)
         }
         
-        delegate.restoreRecipe = { [weak self] recipe in
-            if let index = self?.trashRecipes?.firstIndex(of: recipe) {
-                let indexPath = IndexPath(item: index, section: 0)
-                self?.dataSource.recipesList.remove(at: index)
-
-                self?.collectionView.deleteItems(at: [indexPath])
+        delegate.fetchedResultsController = recipesFetchedResultsController
+        dataSource.fetchedResultsController = recipesFetchedResultsController
+        delegate.restoreRecipe = { [weak self] indexPath in
+            if let object = self?.recipesFetchedResultsController.object(at: indexPath) {
+                DispatchQueue.main.async {
+                    object.deletedDate = nil
+                    self?.dataManager.saveContext()
+                }
+            } else {
+                print("dfdf")
             }
         }
         
         configureView()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        
+        if let indexPath = indexPath {
+            collectionView.deleteItems(at: [indexPath])
+        }
     }
     
     private func configureView() {

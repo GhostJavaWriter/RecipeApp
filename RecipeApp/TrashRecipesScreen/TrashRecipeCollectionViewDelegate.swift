@@ -6,11 +6,12 @@
 //
 
 import UIKit
+import CoreData
 
 final class TrashRecipeCollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    var deletedRecipesList: [String]?
-    var restoreRecipe: ((String) -> Void)?
+    var fetchedResultsController: NSFetchedResultsController<Recipe>!
+    var restoreRecipe: ((IndexPath) -> Void)?
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
@@ -38,15 +39,16 @@ final class TrashRecipeCollectionViewDelegate: NSObject, UICollectionViewDelegat
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { suggestedActions in
             
             let indexPath = indexPaths[0]
-            guard let recipe = self.deletedRecipesList?[indexPath.row] else { return UIMenu() }
             
-            let restore = UIAction(title: "\(recipe)", image: UIImage(systemName: "arrowshape.turn.up.left")) { action in
+            if let recipe = self.fetchedResultsController.fetchedObjects?[indexPath.row] {
                 
-                self.restoreRecipe?(recipe)
+                let restore = UIAction(title: "\(recipe.name!)", image: UIImage(systemName: "arrowshape.turn.up.left")) { action in
+                    
+                    self.restoreRecipe?(indexPath)
+                }
+                return UIMenu(title: "Rectore recipe", children: [restore])
             }
-            
-            // Create and return a UIMenu with the share action
-            return UIMenu(title: "Rectore recipe", children: [restore])
+            return UIMenu()
         })
     }
 }

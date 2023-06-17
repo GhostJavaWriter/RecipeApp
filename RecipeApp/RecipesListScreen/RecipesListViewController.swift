@@ -83,8 +83,9 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
         }
         
         trashButton.trashButtonTapped = { [weak self] in
-            let trashRecipesVC = TrashRecipesViewController()
-            self?.navigationController?.pushViewController(trashRecipesVC, animated: true)
+            guard let self = self else { return }
+            let trashRecipesVC = TrashRecipesViewController(dataManager: self.dataManager)
+            self.navigationController?.pushViewController(trashRecipesVC, animated: true)
         }
         
     }
