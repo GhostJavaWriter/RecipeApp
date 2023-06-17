@@ -151,7 +151,6 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
             view.endEditing(true)
         case .newRecipe:
             createNewRecipe()
-            sleep(3)
             self.updateData?()
             dismiss(animated: true)
         }

@@ -6,30 +6,27 @@
 //
 
 import UIKit
+import CoreData
 
 class RecipesCollectionViewDataSource: NSObject, UICollectionViewDataSource {
     
-    private let dataManager: RecipesDataManager
-    private let currentCategorie: RecipesGroup
+    var fetchedResultsController: NSFetchedResultsController<Recipe>
     private let reuseIdentifier = String(describing: RecipeCollectionViewCell.self)
     
-    private lazy var recipes: [Recipe] = {
-        return dataManager.getRecipesInGroup(currentCategorie)
-    }()
-    
-    init(dataManager: RecipesDataManager, categorie: RecipesGroup) {
-        self.dataManager = dataManager
-        self.currentCategorie = categorie
+    init(fetchedResultsController: NSFetchedResultsController<Recipe>) {
+        self.fetchedResultsController = fetchedResultsController
+        
+        super.init()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return recipes.count
+        return fetchedResultsController.fetchedObjects?.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? RecipeCollectionViewCell else { return UICollectionViewCell()}
         
-        let recipeModel = recipes[indexPath.row]
+        let recipeModel = fetchedResultsController.object(at: indexPath)
         cell.setupCell(with: recipeModel)
         
         return cell

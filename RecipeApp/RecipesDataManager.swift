@@ -28,7 +28,21 @@ final class RecipesDataManager {
         return (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     }
     
-    // MARK: - Public methods
+    func getPersistentContainer() -> NSPersistentContainer {
+        return (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+    }
+    
+    func getAllRecipes() -> [Recipe] {
+        
+        let fetchRequest: NSFetchRequest<Recipe> = Recipe.fetchRequest()
+        do {
+            let recipes = try context.fetch(fetchRequest)
+            return recipes
+        } catch {
+            print("Failed to fetch recipes groups: \(error.localizedDescription)")
+            return []
+        }
+    }
     
     func getContext() -> NSManagedObjectContext {
         return context
@@ -42,12 +56,9 @@ final class RecipesDataManager {
         }
     }
     
-    func updateData() {
-        
-    }
-    
     func getRecipesGroups() -> [RecipesGroup] {
         let fetchRequest: NSFetchRequest<RecipesGroup> = RecipesGroup.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(RecipesGroup.name), ascending: true)]
         do {
             let recipesGroups = try context.fetch(fetchRequest)
             return recipesGroups
