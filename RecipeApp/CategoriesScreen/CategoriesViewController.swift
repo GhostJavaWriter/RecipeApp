@@ -116,7 +116,7 @@ extension CategoriesViewController: UICollectionViewDelegate {
         
         let recipesGroups = dataManager.getRecipesGroups()
         let currentGroup = recipesGroups[indexPath.row]
-        let recipesVC = RecipesListViewController(dataManager: dataManager, categorie: currentGroup)
+        let recipesVC = RecipesListViewController(dataManager: dataManager, currentGroup: currentGroup)
         navigationController?.pushViewController(recipesVC, animated: true)
     }
     

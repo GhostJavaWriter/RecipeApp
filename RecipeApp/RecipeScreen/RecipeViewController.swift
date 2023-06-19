@@ -156,22 +156,32 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
         }
     }
     
+    // TODO: refactor this method
+    /*
+     - empty fields (which fields should be optional?)
+     - create alert controller that will tell to user about errors or do something else
+     -
+     */
     private func createNewRecipe() {
-        if let name = nameTextField.text,
-           let ingedients = scrollView.ingredientsTextView.text,
-           let method = scrollView.methodTextView.text,
-           let link = scrollView.linkTextField.text
-        {
-            let newRecipe = Recipe(context: dataManager.getContext())
-            newRecipe.id = UUID().uuidString
-            newRecipe.name = name
-            newRecipe.ingredients = ingedients
-            newRecipe.cookMethod = method
-            newRecipe.link = link
-            newRecipe.recipesGroup = currentGroup
-            
-            dataManager.saveContext()
+        
+        guard let name = nameTextField.text, name.count >= 3,
+              let ingedients = scrollView.ingredientsTextView.text, ingedients.count >= 3,
+              let method = scrollView.methodTextView.text, method.count >= 3,
+              let link = scrollView.linkTextField.text,
+              let url = URL(string: link), UIApplication.shared.canOpenURL(url)
+        else {
+            // TODO: turn on button (it off by default)
+            return
         }
+        let newRecipe = Recipe(context: dataManager.getContext())
+        newRecipe.id = UUID().uuidString
+        newRecipe.name = name
+        newRecipe.ingredients = ingedients
+        newRecipe.cookMethod = method
+        newRecipe.link = link
+        newRecipe.recipesGroup = currentGroup
+        
+        dataManager.saveContext()
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {

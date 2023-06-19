@@ -46,7 +46,7 @@ final class TrashRecipeCollectionViewDelegate: NSObject, UICollectionViewDelegat
                     
                     self.restoreRecipe?(indexPath)
                 }
-                return UIMenu(title: "Rectore recipe", children: [restore])
+                return UIMenu(title: "Restore recipe", children: [restore])
             }
             return UIMenu()
         })

@@ -65,7 +65,7 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
                     self?.dataManager.saveContext()
                 }
             } else {
-                print("dfdf")
+                NSLog("object nil, \(#function)")
             }
         }
         

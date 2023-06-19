@@ -50,9 +50,9 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
     private let delegate = RecipesCollectionViewDelegate()
     private let reuseIdentifier = String(describing: RecipeCollectionViewCell.self)
     
-    init(dataManager: RecipesDataManager, categorie: RecipesGroup) {
+    init(dataManager: RecipesDataManager, currentGroup: RecipesGroup) {
         self.dataManager = dataManager
-        self.currentGroup = categorie
+        self.currentGroup = currentGroup
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -75,6 +75,8 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
         configureView()
         
         delegate.navigationController = navigationController
+        delegate.currentGroup = currentGroup
+        delegate.dataManager = dataManager
         
         addButton.addButtonTapped = { [weak self] in
             guard let self = self else { return }

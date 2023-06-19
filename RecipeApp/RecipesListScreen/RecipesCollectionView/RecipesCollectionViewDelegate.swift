@@ -10,6 +10,8 @@ import UIKit
 final class RecipesCollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     var navigationController: UINavigationController?
+    var dataManager: RecipesDataManager!
+    var currentGroup: RecipesGroup!
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
@@ -23,8 +25,8 @@ final class RecipesCollectionViewDelegate: NSObject, UICollectionViewDelegate, U
             cell.transform = originalTransform
         }, completion: nil)
         
-//        let recipesVC = RecipeViewController(mode: .view, dataManager: <#T##RecipesDataManager#>)
-//        navigationController?.pushViewController(recipesVC, animated: true)
+        let recipesVC = RecipeViewController(mode: .view, dataManager: dataManager, currentGroup: currentGroup)
+        navigationController?.pushViewController(recipesVC, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
