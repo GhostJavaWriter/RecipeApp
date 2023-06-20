@@ -26,10 +26,9 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
     
     // MARK: - Properties
     
-    var updateData: (() -> Void)?
-    
     var dataManager: RecipesDataManager
     private var currentGroup: RecipesGroup
+    private var currentRecipe: Recipe?
     private var mode: RecipeViewControllerMode
     private lazy var isEditingMode = false {
         didSet {
@@ -68,6 +67,16 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    // MARK: - Public methods
+    
+    func configureRecipe(withModel model: Recipe) {
+        currentRecipe = model
+        nameTextField.text = model.name
+        scrollView.ingredientsTextView.text = model.ingredients
+        scrollView.methodTextView.text = model.cookMethod
+        scrollView.linkTextField.text = model.link
+    }
+    
     // MARK: - Private methods
     
     private func configureView() {
@@ -76,6 +85,7 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
         case .view:
             isEditingMode = false
         case .newRecipe:
+            leftButton.isEnabled = false
             isEditingMode = true
         }
         
@@ -125,16 +135,15 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
     }
     
     @objc private func editButtonTapped() {
-        // Toggle editing
+        
         isEditingMode.toggle()
         nameTextField.becomeFirstResponder()
     }
     
-    @objc func cancelChanges() {
+    @objc private func cancelChanges() {
         
         switch mode {
         case .view:
-            // cancel changes
             isEditingMode.toggle()
             view.endEditing(true)
         case .newRecipe:
@@ -142,17 +151,37 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
         }
     }
     
-    @objc func saveButtonTapped() {
+    @objc private func saveButtonTapped() {
         
         switch mode {
         case .view:
-            // edit and save
             isEditingMode.toggle()
+            saveChanges()
             view.endEditing(true)
         case .newRecipe:
             createNewRecipe()
-            self.updateData?()
             dismiss(animated: true)
+        }
+    }
+    
+    private func saveChanges() {
+        if let currentRecipe = currentRecipe {
+            guard let name = nameTextField.text, name.count >= 3,
+                  let ingedients = scrollView.ingredientsTextView.text, ingedients.count >= 3,
+                  let method = scrollView.methodTextView.text, method.count >= 3
+            else {
+                return
+            }
+            if let link = scrollView.linkTextField.text,
+               let url = URL(string: link),
+               UIApplication.shared.canOpenURL(url) {
+                currentRecipe.link = link
+            }
+            currentRecipe.name = name
+            currentRecipe.ingredients = ingedients
+            currentRecipe.cookMethod = method
+           
+            dataManager.saveContext()
         }
     }
     
@@ -160,31 +189,33 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
     /*
      - empty fields (which fields should be optional?)
      - create alert controller that will tell to user about errors or do something else
-     -
      */
     private func createNewRecipe() {
         
         guard let name = nameTextField.text, name.count >= 3,
               let ingedients = scrollView.ingredientsTextView.text, ingedients.count >= 3,
-              let method = scrollView.methodTextView.text, method.count >= 3,
-              let link = scrollView.linkTextField.text,
-              let url = URL(string: link), UIApplication.shared.canOpenURL(url)
+              let method = scrollView.methodTextView.text, method.count >= 3
         else {
             // TODO: turn on button (it off by default)
+            leftButton.isEnabled = true
             return
         }
         let newRecipe = Recipe(context: dataManager.getContext())
+        if let link = scrollView.linkTextField.text,
+           let url = URL(string: link),
+           UIApplication.shared.canOpenURL(url) {
+            newRecipe.link = link
+        }
         newRecipe.id = UUID().uuidString
         newRecipe.name = name
         newRecipe.ingredients = ingedients
         newRecipe.cookMethod = method
-        newRecipe.link = link
         newRecipe.recipesGroup = currentGroup
         
         dataManager.saveContext()
     }
     
-    @objc func keyboardWillShow(notification: NSNotification) {
+    @objc private func keyboardWillShow(notification: NSNotification) {
         guard let userInfo = notification.userInfo,
               let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
         else {
@@ -196,7 +227,7 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
         scrollView.scrollIndicatorInsets = contentInsets
     }
     
-    @objc func keyboardWillHide(notification: NSNotification) {
+    @objc private func keyboardWillHide(notification: NSNotification) {
         let contentInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInsets
         scrollView.scrollIndicatorInsets = contentInsets

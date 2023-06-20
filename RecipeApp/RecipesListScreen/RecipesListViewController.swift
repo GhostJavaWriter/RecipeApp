@@ -77,6 +77,7 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
         delegate.navigationController = navigationController
         delegate.currentGroup = currentGroup
         delegate.dataManager = dataManager
+        delegate.fetchedResultsController = recipesFetchedResultsController
         
         addButton.addButtonTapped = { [weak self] in
             guard let self = self else { return }
@@ -121,12 +122,12 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
-        if let indexPath = indexPath {
-            collectionView.deleteItems(at: [indexPath])
-        }
-        
-        if let newIndexPath = newIndexPath {
-            collectionView.insertItems(at: [newIndexPath])
+        switch type {
+        case .delete: collectionView.deleteItems(at: [indexPath!])
+        case .insert: collectionView.insertItems(at: [newIndexPath!])
+        case .update: collectionView.reloadItems(at: [indexPath!])
+        case .move: collectionView.reloadData()
+        default: collectionView.reloadData()
         }
     }
     

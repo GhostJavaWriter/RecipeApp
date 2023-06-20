@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import CoreData
 
 final class RecipesCollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     var navigationController: UINavigationController?
     var dataManager: RecipesDataManager!
     var currentGroup: RecipesGroup!
+    var fetchedResultsController: NSFetchedResultsController<Recipe>!
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
@@ -25,7 +27,9 @@ final class RecipesCollectionViewDelegate: NSObject, UICollectionViewDelegate, U
             cell.transform = originalTransform
         }, completion: nil)
         
+        
         let recipesVC = RecipeViewController(mode: .view, dataManager: dataManager, currentGroup: currentGroup)
+        recipesVC.configureRecipe(withModel: fetchedResultsController.object(at: indexPath))
         navigationController?.pushViewController(recipesVC, animated: true)
     }
     
