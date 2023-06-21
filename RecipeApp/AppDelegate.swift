@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         
         let dataManager = RecipesDataManager()
-        
+        dataManager.emptyTrash()
         let categoriesVC = CategoriesViewController(dataManager: dataManager)
         let navController = UINavigationController(rootViewController: categoriesVC)
         

@@ -81,8 +81,8 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
         
         addButton.addButtonTapped = { [weak self] in
             guard let self = self else { return }
-            let newRecipeVC = RecipeViewController(mode: .newRecipe, dataManager: self.dataManager, currentGroup: currentGroup)
-            self.present(newRecipeVC, animated: true)
+            let newRecipeVC = RecipeViewController(mode: .newRecipe, dataManager: dataManager, currentGroup: currentGroup)
+            present(newRecipeVC, animated: true)
         }
         
         trashButton.trashButtonTapped = { [weak self] in

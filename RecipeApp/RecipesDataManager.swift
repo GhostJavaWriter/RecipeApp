@@ -109,4 +109,23 @@ final class RecipesDataManager {
         saveContext()
     }
     
+    func emptyTrash() {
+        let fetchRequest: NSFetchRequest<Recipe> = Recipe.fetchRequest()
+        if let thirtyDaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date()) as? NSDate {
+            fetchRequest.predicate = NSPredicate(format: "deletedDate <= %@", thirtyDaysAgo)
+            
+            do {
+                let recipes = try context.fetch(fetchRequest)
+                for recipe in recipes {
+                    context.delete(recipe)
+                }
+                saveContext()
+            } catch let error as NSError {
+                print("Could not fetch. \(error), \(error.userInfo)")
+            }
+        } else {
+            NSLog("NSDate error \(#function)")
+        }
+    }
+    
 }
