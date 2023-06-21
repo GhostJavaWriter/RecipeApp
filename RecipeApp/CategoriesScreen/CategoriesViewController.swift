@@ -17,17 +17,28 @@ final class CategoriesViewController: UIViewController, RecipesDataManaging {
         return view
     }()
     
-    private lazy var welcomeLabel: UILabel = {
+    private lazy var welcomeLabelP1: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "What will we cook?"
+        label.text = "What will"
         label.textColor = Colors.welcomeLabelColor
         label.font = UIFont(name: Fonts.welcomeLabelFont,
                             size: Fonts.Sizes.welcomeLabel)
-        label.numberOfLines = 0
-        label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.7
-        label.textAlignment = .center
+//        label.adjustsFontSizeToFitWidth = true
+//        label.minimumScaleFactor = 0.7
+        label.textAlignment = .left
+        return label
+    }()
+    private lazy var welcomeLabelP2: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "we cook?"
+        label.textColor = Colors.welcomeLabelColor
+        label.font = UIFont(name: Fonts.welcomeLabelFont,
+                            size: Fonts.Sizes.welcomeLabel)
+//        label.adjustsFontSizeToFitWidth = true
+//        label.minimumScaleFactor = 0.7
+        label.textAlignment = .right
         return label
     }()
     
@@ -70,7 +81,8 @@ final class CategoriesViewController: UIViewController, RecipesDataManaging {
         
         view.addSubview(containerView)
         view.addSubview(collectionView)
-        containerView.addSubview(welcomeLabel)
+        containerView.addSubview(welcomeLabelP1)
+        containerView.addSubview(welcomeLabelP2)
         
         let margins = view.layoutMarginsGuide
         view.directionalLayoutMargins = Metrics.Margins.screenMargins
@@ -84,10 +96,14 @@ final class CategoriesViewController: UIViewController, RecipesDataManaging {
             containerView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             containerView.heightAnchor.constraint(equalTo: margins.heightAnchor, multiplier: 0.25),
             
-            welcomeLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            welcomeLabel.topAnchor.constraint(equalTo: containerView.topAnchor),
-            welcomeLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-            containerView.trailingAnchor.constraint(equalTo: welcomeLabel.trailingAnchor),
+            welcomeLabelP1.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            welcomeLabelP1.topAnchor.constraint(equalTo: containerView.topAnchor),
+            containerView.trailingAnchor.constraint(equalTo: welcomeLabelP1.trailingAnchor),
+            welcomeLabelP1.bottomAnchor.constraint(equalTo: welcomeLabelP2.topAnchor),
+            
+            welcomeLabelP2.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            welcomeLabelP2.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            welcomeLabelP2.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             
             // configure collection view
             

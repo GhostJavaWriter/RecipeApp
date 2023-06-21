@@ -89,7 +89,7 @@ private extension UITextView {
         textView.backgroundColor = Colors.RecipeCell.backgroundColor
         textView.layer.cornerRadius = 10
         textView.font = UIFont(name: Fonts.AmericanTypewriter, size: 18)
-        textView.textColor = UIColor(hex: "#434443")
+        textView.textColor = Colors.textsViewsColor
         textView.isScrollEnabled = false
         return textView
     }

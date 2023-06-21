@@ -211,7 +211,7 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
             nameTextField.topAnchor.constraint(equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1),
             nameTextField.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             nameTextField.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            nameTextField.heightAnchor.constraint(equalToConstant: nameLabel.font.pointSize * 1.5),
+            nameTextField.heightAnchor.constraint(equalToConstant: nameLabel.font.pointSize * 2.27),
             
             scrollView.widthAnchor.constraint(equalTo: content.widthAnchor, multiplier: 1),
             

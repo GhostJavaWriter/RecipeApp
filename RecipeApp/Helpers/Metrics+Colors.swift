@@ -51,6 +51,7 @@ enum Colors {
         static let backgroundColor = UIColor(hex: "#FFE27C") ?? .clear
     }
     
+    static let textsViewsColor = UIColor(hex: "#434443")
     static let welcomeLabelColor = UIColor.white
     static let mainBackgroundColor = UIColor(hex: "#E8B634") ?? .clear
 }

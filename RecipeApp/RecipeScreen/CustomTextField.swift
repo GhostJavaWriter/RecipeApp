@@ -30,7 +30,7 @@ extension CustomTextField {
         let textField = CustomTextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.backgroundColor = Colors.RecipeCell.backgroundColor
-        textField.textColor = UIColor(hex: "#434443")
+        textField.textColor = Colors.textsViewsColor
         textField.font = UIFont(name: Fonts.AmericanTypewriter, size: 18)
         textField.layer.cornerRadius = 10
         return textField
