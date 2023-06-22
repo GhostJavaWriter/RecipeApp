@@ -24,11 +24,10 @@ final class CategoriesViewController: UIViewController, RecipesDataManaging {
         label.textColor = Colors.welcomeLabelColor
         label.font = UIFont(name: Fonts.welcomeLabelFont,
                             size: Fonts.Sizes.welcomeLabel)
-//        label.adjustsFontSizeToFitWidth = true
-//        label.minimumScaleFactor = 0.7
         label.textAlignment = .left
         return label
     }()
+    
     private lazy var welcomeLabelP2: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -36,8 +35,6 @@ final class CategoriesViewController: UIViewController, RecipesDataManaging {
         label.textColor = Colors.welcomeLabelColor
         label.font = UIFont(name: Fonts.welcomeLabelFont,
                             size: Fonts.Sizes.welcomeLabel)
-//        label.adjustsFontSizeToFitWidth = true
-//        label.minimumScaleFactor = 0.7
         label.textAlignment = .right
         return label
     }()
@@ -48,6 +45,8 @@ final class CategoriesViewController: UIViewController, RecipesDataManaging {
         collectionView.delegate = self
         return collectionView
     }()
+    
+    private lazy var margins = Metrics.Margins.screenMargins
     
     // MARK: - Properties
     
@@ -70,6 +69,7 @@ final class CategoriesViewController: UIViewController, RecipesDataManaging {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setFontSize()
         configureView()
     }
 
@@ -85,7 +85,7 @@ final class CategoriesViewController: UIViewController, RecipesDataManaging {
         containerView.addSubview(welcomeLabelP2)
         
         let margins = view.layoutMarginsGuide
-        view.directionalLayoutMargins = Metrics.Margins.screenMargins
+        view.directionalLayoutMargins = self.margins
         
         NSLayoutConstraint.activate([
             
@@ -113,6 +113,27 @@ final class CategoriesViewController: UIViewController, RecipesDataManaging {
             collectionView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
         ])
         
+    }
+    
+    private func setFontSize() {
+        
+        let fontName = Fonts.welcomeLabelFont
+        
+        switch UIScreen.main.bounds.height {
+        
+        case 667.0: // iPhone 6,6s,7,8,SE (2nd generation)
+            welcomeLabelP1.font = UIFont(name: fontName, size: 45)
+            welcomeLabelP2.font = UIFont(name: fontName, size: 45)
+            margins = NSDirectionalEdgeInsets(top: 0,
+                                              leading: 60,
+                                              bottom: 20,
+                                              trailing: 60)
+        default:
+            welcomeLabelP1.font = UIFont(name: fontName, size: Fonts.Sizes.welcomeLabel)
+            welcomeLabelP2.font = UIFont(name: fontName, size: Fonts.Sizes.welcomeLabel)
+            margins = Metrics.Margins.screenMargins
+        }
+
     }
 }
 

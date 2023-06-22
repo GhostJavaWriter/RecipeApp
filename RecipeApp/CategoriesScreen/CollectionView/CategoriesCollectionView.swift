@@ -11,6 +11,7 @@ final class CategoriesCollectionView: UICollectionView {
     
     private let reuseIdentifier = String(describing: CategoryCollectionViewCell.self)
     private let layout = CategoriesFlowLayout()
+    private lazy var itemWidth = frame.size.width * Metrics.CategorieItem.itemSizeScale
     
     init() {
         super.init(frame: .zero, collectionViewLayout: layout)
@@ -19,7 +20,7 @@ final class CategoriesCollectionView: UICollectionView {
         
         translatesAutoresizingMaskIntoConstraints = false
         register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        
+        showsVerticalScrollIndicator = false
     }
 
     required init?(coder: NSCoder) {
@@ -29,8 +30,19 @@ final class CategoriesCollectionView: UICollectionView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let width = frame.size.width * Metrics.CategorieItem.itemSizeScale
-        layout.itemSize = CGSize(width: width, height: width)
+        setItemSize()
+        layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
+    }
+    
+    private func setItemSize() {
+        
+        switch UIScreen.main.bounds.height {
+        
+        case 667.0: // iPhone 6,6s,7,8,SE (2nd generation)
+            itemWidth = frame.size.width * 0.45
+        default:
+            itemWidth = frame.size.width * Metrics.CategorieItem.itemSizeScale
+        }
 
     }
 }

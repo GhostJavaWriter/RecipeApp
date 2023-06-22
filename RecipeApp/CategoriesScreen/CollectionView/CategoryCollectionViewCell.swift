@@ -33,7 +33,7 @@ final class CategoryCollectionViewCell: UICollectionViewCell {
             categoryNameLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             categoryNameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])
-        
+        setFontSize()
         contentView.layer.cornerRadius = Metrics.CategorieItem.cornerRadius
         contentView.layer.borderWidth = Metrics.CategorieItem.borderWidth
         contentView.layer.borderColor = Colors.CategorieItem.borderColor
@@ -41,5 +41,19 @@ final class CategoryCollectionViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setFontSize() {
+        
+        let fontName = Fonts.categorieItemFont
+        
+        switch UIScreen.main.bounds.height {
+        
+        case 667.0: // iPhone 6,6s,7,8,SE (2nd generation)
+            categoryNameLabel.font = UIFont(name: fontName, size: 23)
+        default:
+            categoryNameLabel.font = UIFont(name: fontName, size: Fonts.Sizes.categorieName)
+        }
+
     }
 }
