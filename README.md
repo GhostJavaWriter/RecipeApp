@@ -1,5 +1,13 @@
 # RecipeApp
-Should be gorgeous app for storing cooking recipes
+Should be gorgeous app for storing cooking recipes.
+Design: Figma, UIKit
+Language: Swift
+Data storing: CoreData
+Features: 
+- Create recipes
+- Edit recipes
+- Share recipes
+- Drag and drop to delete a recipe
 
 ## Screenshots
 
