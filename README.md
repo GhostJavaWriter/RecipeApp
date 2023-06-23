@@ -9,6 +9,7 @@ Features:
 - Share recipes
 - Drag and drop to delete a recipe
 
+AppStore link: https://apps.apple.com/app/recipes-keeper/id6450554239
 ## Screenshots
 
 Here are some screenshots of my app in action:
