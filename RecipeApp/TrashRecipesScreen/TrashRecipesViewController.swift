@@ -21,14 +21,14 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
     
     private let delegate = TrashRecipeCollectionViewDelegate()
     private let dataSource = TrashRecipesCollectionViewDataSource()
-    private var dataManager: RecipesDataManager
+    private var coreDataStack: CoreDataStack
     
     private lazy var recipesFetchedResultsController: NSFetchedResultsController = {
         
         let fetchRequest = Recipe.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "deletedDate", ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "deletedDate != nil")
-        let context = dataManager.getContext()
+        let context = coreDataStack.mainContext
         let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                                 managedObjectContext: context,
                                                                 sectionNameKeyPath: nil,
@@ -37,8 +37,8 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
         return fetchResultsController
     }()
     
-    init(dataManager: RecipesDataManager) {
-        self.dataManager = dataManager
+    init(coreDataStack: CoreDataStack) {
+        self.coreDataStack = coreDataStack
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -65,13 +65,11 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
         delegate.fetchedResultsController = recipesFetchedResultsController
         dataSource.fetchedResultsController = recipesFetchedResultsController
         delegate.restoreRecipe = { [weak self] indexPath in
-            if let object = self?.recipesFetchedResultsController.object(at: indexPath) {
-                DispatchQueue.main.async {
-                    object.deletedDate = nil
-                    self?.dataManager.saveContext()
-                }
-            } else {
-                NSLog("object nil, \(#function)")
+            guard let self = self else { return }
+            let object = recipesFetchedResultsController.object(at: indexPath)
+            DispatchQueue.main.async {
+                object.deletedDate = nil
+                self.coreDataStack.saveContext()
             }
         }
         
@@ -100,11 +98,11 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
             
             guard let self = self else { return }
             
-            let context = dataManager.getContext()
+            let context = coreDataStack.mainContext
             for object in recipesFetchedResultsController.fetchedObjects ?? [] {
                 context.delete(object)
             }
-            dataManager.saveContext()
+            coreDataStack.saveContext()
         }
         let cancelAction = UIAlertAction(title: "No", style: .cancel)
         ac.addAction(confirmAction)

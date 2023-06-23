@@ -12,7 +12,7 @@ enum RecipeViewControllerMode {
     case newRecipe
 }
 
-final class RecipeViewController: UIViewController, RecipesDataManaging {
+final class RecipeViewController: UIViewController {
     
     // MARK: - UI
     
@@ -26,7 +26,7 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
     
     // MARK: - Properties
     
-    var dataManager: RecipesDataManager
+    var coreDataStack: CoreDataStack
     private var currentGroup: RecipesGroup
     private var currentRecipe: Recipe?
     private var mode: RecipeViewControllerMode
@@ -38,9 +38,9 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
     
     // MARK: - Init
     
-    init(mode: RecipeViewControllerMode, dataManager: RecipesDataManager, currentGroup: RecipesGroup) {
+    init(mode: RecipeViewControllerMode, coreDataStack: CoreDataStack, currentGroup: RecipesGroup) {
         self.mode = mode
-        self.dataManager = dataManager
+        self.coreDataStack = coreDataStack
         self.currentGroup = currentGroup
         super.init(nibName: nil, bundle: nil)
     }
@@ -144,7 +144,7 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
             currentRecipe.ingredients = ingedients
             currentRecipe.cookMethod = method
            
-            dataManager.saveContext()
+            coreDataStack.saveContext()
         }
     }
     
@@ -230,7 +230,7 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
         else {
             return
         }
-        let newRecipe = Recipe(context: dataManager.getContext())
+        let newRecipe = Recipe(context: coreDataStack.mainContext)
         if let link = scrollView.linkTextField.text,
            let url = URL(string: link),
            UIApplication.shared.canOpenURL(url) {
@@ -242,7 +242,7 @@ final class RecipeViewController: UIViewController, RecipesDataManaging {
         newRecipe.cookMethod = method
         newRecipe.recipesGroup = currentGroup
         
-        dataManager.saveContext()
+        coreDataStack.saveContext()
     }
     
     @objc private func keyboardWillShow(notification: NSNotification) {

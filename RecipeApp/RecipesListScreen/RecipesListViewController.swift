@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-final class RecipesListViewController: UIViewController, UICollectionViewDragDelegate, RecipesDataManaging, NSFetchedResultsControllerDelegate {
+final class RecipesListViewController: UIViewController, UICollectionViewDragDelegate, NSFetchedResultsControllerDelegate {
     
     // MARK: - UI
     
@@ -35,7 +35,7 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
         let fetchRequest = Recipe.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Recipe.name), ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "recipesGroup.name == %@ AND deletedDate == nil", name)
-        let context = dataManager.getContext()
+        let context = coreDataStack.mainContext
         let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                                 managedObjectContext: context,
                                                                 sectionNameKeyPath: nil,
@@ -44,14 +44,14 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
         return fetchResultsController
     }()
     
-    var dataManager: RecipesDataManager
+    var coreDataStack: CoreDataStack
     private let currentGroup: RecipesGroup
     private lazy var dataSource = RecipesCollectionViewDataSource(fetchedResultsController: recipesFetchedResultsController)
     private let delegate = RecipesCollectionViewDelegate()
     private let reuseIdentifier = String(describing: RecipeCollectionViewCell.self)
     
-    init(dataManager: RecipesDataManager, currentGroup: RecipesGroup) {
-        self.dataManager = dataManager
+    init(coreDataStack: CoreDataStack, currentGroup: RecipesGroup) {
+        self.coreDataStack = coreDataStack
         self.currentGroup = currentGroup
         super.init(nibName: nil, bundle: nil)
     }
@@ -76,18 +76,18 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
         
         delegate.navigationController = navigationController
         delegate.currentGroup = currentGroup
-        delegate.dataManager = dataManager
+        delegate.coreDataStack = coreDataStack
         delegate.fetchedResultsController = recipesFetchedResultsController
         
         addButton.addButtonTapped = { [weak self] in
             guard let self = self else { return }
-            let newRecipeVC = RecipeViewController(mode: .newRecipe, dataManager: dataManager, currentGroup: currentGroup)
+            let newRecipeVC = RecipeViewController(mode: .newRecipe, coreDataStack: coreDataStack, currentGroup: currentGroup)
             present(newRecipeVC, animated: true)
         }
         
         trashButton.trashButtonTapped = { [weak self] in
             guard let self = self else { return }
-            let trashRecipesVC = TrashRecipesViewController(dataManager: self.dataManager)
+            let trashRecipesVC = TrashRecipesViewController(coreDataStack: coreDataStack)
             self.navigationController?.pushViewController(trashRecipesVC, animated: true)
         }
         
@@ -194,11 +194,11 @@ extension RecipesListViewController: UIDropInteractionDelegate {
             guard let self = self else { return }
             if let recipe = recipes.first as? String {
                 
-                self.dataManager.getPersistentContainer().performBackgroundTask { context in
+                coreDataStack.persistentContainer.performBackgroundTask { context in
                     let recipeWithName = self.recipesFetchedResultsController.fetchedObjects?.first {$0.name == recipe}
                     recipeWithName?.deletedDate = Date()
                     DispatchQueue.main.async {
-                        self.dataManager.saveContext()
+                        self.coreDataStack.saveContext()
                     }
                 }
             } else {

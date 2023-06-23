@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CategoriesViewController: UIViewController, RecipesDataManaging {
+final class CategoriesViewController: UIViewController {
 
     // MARK: - UI
     
@@ -50,13 +50,13 @@ final class CategoriesViewController: UIViewController, RecipesDataManaging {
     
     // MARK: - Properties
     
-    var dataManager: RecipesDataManager
-    private lazy var dataSource = CategoriesCollectionViewDataSource(dataManager: dataManager)
+    private var coreDataStack: CoreDataStack
+    private lazy var dataSource = CategoriesCollectionViewDataSource(coreDataStack: coreDataStack)
     
     // MARK: - Init
     
-    init(dataManager: RecipesDataManager) {
-        self.dataManager = dataManager
+    init(coreDataStack: CoreDataStack) {
+        self.coreDataStack = coreDataStack
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -89,8 +89,6 @@ final class CategoriesViewController: UIViewController, RecipesDataManaging {
         
         NSLayoutConstraint.activate([
             
-            // configure caption label
-            
             containerView.topAnchor.constraint(equalTo: margins.topAnchor),
             containerView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
@@ -104,8 +102,6 @@ final class CategoriesViewController: UIViewController, RecipesDataManaging {
             welcomeLabelP2.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             welcomeLabelP2.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             welcomeLabelP2.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-            
-            // configure collection view
             
             collectionView.topAnchor.constraint(equalToSystemSpacingBelow: containerView.bottomAnchor, multiplier: 1),
             collectionView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
@@ -151,9 +147,8 @@ extension CategoriesViewController: UICollectionViewDelegate {
             cell.transform = originalTransform
         }, completion: nil)
         
-        let recipesGroups = dataManager.getRecipesGroups()
-        let currentGroup = recipesGroups[indexPath.row]
-        let recipesVC = RecipesListViewController(dataManager: dataManager, currentGroup: currentGroup)
+        let currentGroup = coreDataStack.getRecipesGroupAt(indexPath)
+        let recipesVC = RecipesListViewController(coreDataStack: coreDataStack, currentGroup: currentGroup)
         navigationController?.pushViewController(recipesVC, animated: true)
     }
     
