@@ -240,7 +240,7 @@ final class RecipeViewController: UIViewController {
         newRecipe.name = name
         newRecipe.ingredients = ingedients
         newRecipe.cookMethod = method
-        newRecipe.recipesGroup = currentGroup
+        currentGroup.addToRecipes(newRecipe)
         
         coreDataStack.saveContext()
     }

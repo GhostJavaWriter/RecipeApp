@@ -51,7 +51,7 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = rightBarButton
-        
+        delegate.navigationContoller = navigationController
         do {
             try recipesFetchedResultsController.performFetch()
             if recipesFetchedResultsController.fetchedObjects?.count == 0 {
@@ -79,9 +79,18 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         switch type {
-        case .delete: collectionView.deleteItems(at: [indexPath!])
-        case .insert: collectionView.insertItems(at: [newIndexPath!])
-        case .update: collectionView.reloadItems(at: [indexPath!])
+        case .delete:
+            if let indexPath = indexPath {
+                collectionView.deleteItems(at: [indexPath])
+            }
+        case .insert:
+            if let newIndexPath = newIndexPath {
+                collectionView.insertItems(at: [newIndexPath])
+            }
+        case .update:
+            if let indexPath = indexPath {
+                collectionView.reloadItems(at: [indexPath])
+            }
         case .move: collectionView.reloadData()
         default: collectionView.reloadData()
         }
