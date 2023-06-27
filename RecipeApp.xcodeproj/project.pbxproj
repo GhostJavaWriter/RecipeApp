@@ -39,7 +39,6 @@
 		DEE0839F2A36948800C0ECEC /* TrashRecipesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE0839E2A36948800C0ECEC /* TrashRecipesViewController.swift */; };
 		DEE083A22A37F02200C0ECEC /* TrashRecipeCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083A12A37F02200C0ECEC /* TrashRecipeCollectionViewDelegate.swift */; };
 		DEE083A42A37F14300C0ECEC /* TrashRecipesCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083A32A37F14300C0ECEC /* TrashRecipesCollectionViewDataSource.swift */; };
-		DEE083CE2A393D8100C0ECEC /* RecipesDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083CD2A393D8100C0ECEC /* RecipesDataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,7 +76,6 @@
 		DEE0839E2A36948800C0ECEC /* TrashRecipesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashRecipesViewController.swift; sourceTree = "<group>"; };
 		DEE083A12A37F02200C0ECEC /* TrashRecipeCollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashRecipeCollectionViewDelegate.swift; sourceTree = "<group>"; };
 		DEE083A32A37F14300C0ECEC /* TrashRecipesCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashRecipesCollectionViewDataSource.swift; sourceTree = "<group>"; };
-		DEE083CD2A393D8100C0ECEC /* RecipesDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesDataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,7 +138,6 @@
 			isa = PBXGroup;
 			children = (
 				DECB8B602A26724A007D0409 /* AppDelegate.swift */,
-				DEE083CD2A393D8100C0ECEC /* RecipesDataManager.swift */,
 				DE9D3A712A45397D00EC7299 /* CoreDataStack */,
 				DE8358C02A29215200675966 /* CategoriesScreen */,
 				DE8358C32A29221E00675966 /* RecipesListScreen */,
@@ -336,7 +333,6 @@
 				DE8358C22A29221700675966 /* RecipesListViewController.swift in Sources */,
 				DEE083862A2C1DE400C0ECEC /* RecipeViewController.swift in Sources */,
 				DECB8B892A283607007D0409 /* CategoriesCollectionViewDataSource.swift in Sources */,
-				DEE083CE2A393D8100C0ECEC /* RecipesDataManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
