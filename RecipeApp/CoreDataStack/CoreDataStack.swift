@@ -9,13 +9,9 @@ import CoreData
 
 final class CoreDataStack {
     
-    private(set) var persistentContainer: NSPersistentContainer = {
+    private(set) lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "CoreDataModel")
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
-        })
+        loadPersistentStoreFor(container)
         return container
     }()
     
@@ -23,17 +19,7 @@ final class CoreDataStack {
         return persistentContainer.viewContext
     }
     
-    private lazy var recipesGroups: [RecipesGroup] = {
-        let fetchRequest: NSFetchRequest<RecipesGroup> = RecipesGroup.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(RecipesGroup.name), ascending: true)]
-        do {
-            let recipesGroups = try mainContext.fetch(fetchRequest)
-            return recipesGroups
-        } catch {
-            print("Failed to fetch recipes groups: \(error.localizedDescription)")
-            return []
-        }
-    }()
+    private lazy var recipesGroups: [RecipesGroup] = fetchRecipesGroups()
     
     /// Create default categories
     func createDefaultCategories() {
@@ -44,11 +30,8 @@ final class CoreDataStack {
                                  "Beverages\nCocktails",
                                  "Sauces\nCreams"]
         
-        for name in recipesGroupNames {
-            let group = RecipesGroup(context: mainContext)
-            group.name = name
-        }
-        saveContext()
+        recipesGroupNames.forEach { createCategory(named: $0) }
+        saveContextIfHasChanges()
     }
     
     /// Return pre-setted recipes groups or empty array if error occurs
@@ -62,35 +45,60 @@ final class CoreDataStack {
     }
     
     /// Save main context
-    func saveContext () {
+    func saveContextIfHasChanges () {
+        guard mainContext.hasChanges else { return }
         
-        if mainContext.hasChanges {
-            do {
-                try mainContext.save()
-            } catch let error as NSError {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
+        do {
+            try mainContext.save()
+        } catch let error as NSError {
+            fatalError("Unresolved error \(error), \(error.userInfo)")
         }
     }
     
     /// Empty recipes in trash that older than 30 days
     func emptyTrash() {
-        let fetchRequest: NSFetchRequest<Recipe> = Recipe.fetchRequest()
-        if let thirtyDaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date()) as? NSDate {
-            fetchRequest.predicate = NSPredicate(format: "deletedDate <= %@", thirtyDaysAgo)
-            
-            do {
-                let recipes = try mainContext.fetch(fetchRequest)
-                for recipe in recipes {
-                    mainContext.delete(recipe)
-                }
-                saveContext()
-            } catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
-            }
-        } else {
+        guard let thirtyDaysAgo = Calendar.current.date(byAdding: .day,
+                                                        value: -30,
+                                                        to: Date()) as NSDate?
+        else {
             NSLog("NSDate error \(#function)")
+            return
+        }
+        
+        let fetchRequest: NSFetchRequest<Recipe> = Recipe.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "deletedDate <= %@", thirtyDaysAgo)
+        deleteRecipes(with: fetchRequest)
+    }
+}
+
+private extension CoreDataStack {
+    
+    func fetchRecipesGroups() -> [RecipesGroup] {
+        let fetchRequest: NSFetchRequest<RecipesGroup> = RecipesGroup.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(RecipesGroup.name), ascending: true)]
+        return (try? mainContext.fetch(fetchRequest)) ?? []
+    }
+    
+    func loadPersistentStoreFor(_ container: NSPersistentContainer) {
+        container.loadPersistentStores { (_, error) in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
         }
     }
-
+    
+    func createCategory(named name: String) {
+        let group = RecipesGroup(context: mainContext)
+        group.name = name
+    }
+    
+    func deleteRecipes(with fetchRequest: NSFetchRequest<Recipe>) {
+        do {
+            let oldRecipes = try mainContext.fetch(fetchRequest)
+            oldRecipes.forEach { mainContext.delete($0) }
+            saveContextIfHasChanges()
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+    }
 }

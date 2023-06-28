@@ -69,7 +69,7 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
             let object = recipesFetchedResultsController.object(at: indexPath)
             DispatchQueue.main.async {
                 object.deletedDate = nil
-                self.coreDataStack.saveContext()
+                self.coreDataStack.saveContextIfHasChanges()
             }
         }
         
@@ -111,7 +111,7 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
             for object in recipesFetchedResultsController.fetchedObjects ?? [] {
                 context.delete(object)
             }
-            coreDataStack.saveContext()
+            coreDataStack.saveContextIfHasChanges()
         }
         let cancelAction = UIAlertAction(title: "No", style: .cancel)
         ac.addAction(confirmAction)

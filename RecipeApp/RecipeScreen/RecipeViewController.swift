@@ -144,7 +144,7 @@ final class RecipeViewController: UIViewController {
             currentRecipe.ingredients = ingedients
             currentRecipe.cookMethod = method
            
-            coreDataStack.saveContext()
+            coreDataStack.saveContextIfHasChanges()
         }
     }
     
@@ -242,7 +242,7 @@ final class RecipeViewController: UIViewController {
         newRecipe.cookMethod = method
         currentGroup.addToRecipes(newRecipe)
         
-        coreDataStack.saveContext()
+        coreDataStack.saveContextIfHasChanges()
     }
     
     @objc private func keyboardWillShow(notification: NSNotification) {
