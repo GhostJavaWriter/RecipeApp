@@ -22,15 +22,16 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
     private let delegate = TrashRecipeCollectionViewDelegate()
     private let dataSource = TrashRecipesCollectionViewDataSource()
     private var coreDataStack: CoreDataStack
+    private lazy var backgroundContext = coreDataStack.persistentContainer.newBackgroundContext()
     
     private lazy var recipesFetchedResultsController: NSFetchedResultsController = {
         
         let fetchRequest = Recipe.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "deletedDate", ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "deletedDate != nil")
-        let context = coreDataStack.mainContext
+
         let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                managedObjectContext: context,
+                                                                managedObjectContext: backgroundContext,
                                                                 sectionNameKeyPath: nil,
                                                                 cacheName: nil)
         fetchResultsController.delegate = self
@@ -69,7 +70,7 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
             let object = recipesFetchedResultsController.object(at: indexPath)
             DispatchQueue.main.async {
                 object.deletedDate = nil
-                self.coreDataStack.saveContextIfHasChanges()
+                self.coreDataStack.saveContextIfHasChanges(self.backgroundContext)
             }
         }
         
@@ -77,6 +78,11 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        
+        if let _ = controller.fetchedObjects?.isEmpty {
+            collectionView.reloadData()
+            return
+        }
         
         switch type {
         case .delete:
@@ -107,11 +113,10 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
             
             guard let self = self else { return }
             
-            let context = coreDataStack.mainContext
             for object in recipesFetchedResultsController.fetchedObjects ?? [] {
-                context.delete(object)
+                backgroundContext.delete(object)
             }
-            coreDataStack.saveContextIfHasChanges()
+            coreDataStack.saveContextIfHasChanges(backgroundContext)
         }
         let cancelAction = UIAlertAction(title: "No", style: .cancel)
         ac.addAction(confirmAction)

@@ -45,11 +45,21 @@ final class CoreDataStack {
     }
     
     /// Save main context
-    func saveContextIfHasChanges () {
+    func saveContextIfHasChanges() {
         guard mainContext.hasChanges else { return }
         
         do {
             try mainContext.save()
+        } catch let error as NSError {
+            fatalError("Unresolved error \(error), \(error.userInfo)")
+        }
+    }
+    
+    func saveContextIfHasChanges(_ context: NSManagedObjectContext) {
+        guard context.hasChanges else { return }
+        
+        do {
+            try context.save()
         } catch let error as NSError {
             fatalError("Unresolved error \(error), \(error.userInfo)")
         }
