@@ -71,6 +71,8 @@ final class CoreDataStack {
     }
 }
 
+// MARK: - private methods
+
 private extension CoreDataStack {
     
     func fetchRecipesGroups() -> [RecipesGroup] {

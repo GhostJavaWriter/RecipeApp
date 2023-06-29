@@ -10,6 +10,7 @@ import UIKit
 final class TrashButton: UIButton {
     
     var trashButtonTapped: (() -> Void)?
+    private let animationDuration = 0.2
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,7 +37,7 @@ final class TrashButton: UIButton {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        UIView.animate(withDuration: 0.2) {
+        UIView.animate(withDuration: animationDuration) {
             self.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
         }
     }
@@ -47,7 +48,7 @@ final class TrashButton: UIButton {
     }
     
     private func scaleIdentity() {
-        UIView.animate(withDuration: 0.2) {
+        UIView.animate(withDuration: animationDuration) {
             self.transform = CGAffineTransform.identity
         }
     }

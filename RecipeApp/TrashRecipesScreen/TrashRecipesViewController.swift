@@ -128,7 +128,7 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
         let margins = view.layoutMarginsGuide
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: margins.topAnchor),
+            collectionView.topAnchor.constraint(equalToSystemSpacingBelow: margins.topAnchor, multiplier: 1),
             collectionView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),

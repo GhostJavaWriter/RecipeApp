@@ -24,6 +24,8 @@ final class RecipesListViewController: UIViewController {
     private let currentGroup: RecipesGroup
     private let delegate = RecipesCollectionViewDelegate()
     private let reuseIdentifier = String(describing: RecipeCollectionViewCell.self)
+    private let animationDuration = 0.3
+    private let defaultGroupName = "default"
     
     private lazy var recipesFetchedResultsController = makeFetchedResultsController()
     private lazy var dataSource = RecipesCollectionViewDataSource(fetchedResultsController: recipesFetchedResultsController)
@@ -153,26 +155,42 @@ extension RecipesListViewController: UIDropInteractionDelegate {
                          sessionDidUpdate session: UIDropSession) -> UIDropProposal
     {
 
-        UIView.animate(withDuration: 0.3) {
-            self.trashButton.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-        }
+        animateTrashButton(transform: CGAffineTransform(scaleX: 1.3, y: 1.3))
         return UIDropProposal(operation: .copy)
     }
 
     func dropInteraction(_ interaction: UIDropInteraction,
                          sessionDidExit session: UIDropSession) {
-        UIView.animate(withDuration: 0.3) {
-            self.trashButton.transform = .identity
-        }
+        animateTrashButton(transform: .identity)
     }
 
     func dropInteraction(_ interaction: UIDropInteraction,
                          performDrop session: UIDropSession) {
 
-        UIView.animate(withDuration: 0.3) {
-            self.trashButton.transform = .identity
-        }
+        animateTrashButton(transform: .identity)
+        handleDrop(session: session)
+    }
+}
 
+// MARK: - Private extension
+
+private extension RecipesListViewController {
+    
+    func makeFetchedResultsController() -> NSFetchedResultsController<Recipe> {
+        let name = currentGroup.name ?? defaultGroupName
+        let fetchRequest = Recipe.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Recipe.name), ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "recipesGroup.name == %@ AND deletedDate == nil", name)
+        let context = coreDataStack.mainContext
+        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                                managedObjectContext: context,
+                                                                sectionNameKeyPath: nil,
+                                                                cacheName: nil)
+        fetchResultsController.delegate = self
+        return fetchResultsController
+    }
+    
+    func handleDrop(session: UIDropSession) {
         session.loadObjects(ofClass: NSString.self) { [weak self] recipes in
             guard let self = self else { return }
             if let recipe = recipes.first as? String {
@@ -189,23 +207,11 @@ extension RecipesListViewController: UIDropInteractionDelegate {
             }
         }
     }
-}
-
-// MARK: - Private extension
-
-private extension RecipesListViewController {
-    func makeFetchedResultsController() -> NSFetchedResultsController<Recipe> {
-        let name = currentGroup.name!
-        let fetchRequest = Recipe.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Recipe.name), ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "recipesGroup.name == %@ AND deletedDate == nil", name)
-        let context = coreDataStack.mainContext
-        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                managedObjectContext: context,
-                                                                sectionNameKeyPath: nil,
-                                                                cacheName: nil)
-        fetchResultsController.delegate = self
-        return fetchResultsController
+    
+    func animateTrashButton(transform: CGAffineTransform) {
+        UIView.animate(withDuration: animationDuration) {
+            self.trashButton.transform = transform
+        }
     }
     
     func configureDelegate() {
