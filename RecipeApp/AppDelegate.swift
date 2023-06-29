@@ -12,32 +12,24 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "CoreDataModel")
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
-        })
-        return container
-    }()
+    var coreDataStack = CoreDataStack()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let dataManager = RecipesDataManager()
-        dataManager.emptyTrash()
-        let categoriesVC = CategoriesViewController(dataManager: dataManager)
-        let navController = UINavigationController(rootViewController: categoriesVC)
-        
+        // TODO: - empty trash
         if UserDefaults.standard.object(forKey: "FirstLaunch") == nil {
             UserDefaults.standard.set(true, forKey: "FirstLaunch")
-            dataManager.createDefaultCategories()
-            NSLog("Default recipes group created")
+            coreDataStack.createDefaultCategories()
+            NSLog("Default recipes groups created")
         } else {
-            NSLog("Default recipes group loaded")
+            NSLog("Default recipes groups loaded")
         }
+        coreDataStack.emptyTrash()
+        
+        let categoriesVC = CategoriesViewController(coreDataStack: coreDataStack)
+        let navController = UINavigationController(rootViewController: categoriesVC)
 
         UINavigationBar.appearance().tintColor = Colors.CategorieItem.backgroundColor
         
@@ -48,19 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
-        self.saveContext()
-    }
-    
-    func saveContext () {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
-        }
+        coreDataStack.saveContextIfHasChanges()
     }
 }
 

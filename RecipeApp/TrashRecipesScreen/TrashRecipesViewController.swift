@@ -21,24 +21,25 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
     
     private let delegate = TrashRecipeCollectionViewDelegate()
     private let dataSource = TrashRecipesCollectionViewDataSource()
-    private var dataManager: RecipesDataManager
+    private var coreDataStack: CoreDataStack
+    private lazy var backgroundContext = coreDataStack.persistentContainer.newBackgroundContext()
     
     private lazy var recipesFetchedResultsController: NSFetchedResultsController = {
         
         let fetchRequest = Recipe.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "deletedDate", ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "deletedDate != nil")
-        let context = dataManager.getContext()
+
         let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                managedObjectContext: context,
+                                                                managedObjectContext: backgroundContext,
                                                                 sectionNameKeyPath: nil,
                                                                 cacheName: nil)
         fetchResultsController.delegate = self
         return fetchResultsController
     }()
     
-    init(dataManager: RecipesDataManager) {
-        self.dataManager = dataManager
+    init(coreDataStack: CoreDataStack) {
+        self.coreDataStack = coreDataStack
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -51,7 +52,7 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = rightBarButton
-        
+        delegate.navigationContoller = navigationController
         do {
             try recipesFetchedResultsController.performFetch()
             if recipesFetchedResultsController.fetchedObjects?.count == 0 {
@@ -65,13 +66,11 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
         delegate.fetchedResultsController = recipesFetchedResultsController
         dataSource.fetchedResultsController = recipesFetchedResultsController
         delegate.restoreRecipe = { [weak self] indexPath in
-            if let object = self?.recipesFetchedResultsController.object(at: indexPath) {
-                DispatchQueue.main.async {
-                    object.deletedDate = nil
-                    self?.dataManager.saveContext()
-                }
-            } else {
-                NSLog("object nil, \(#function)")
+            guard let self = self else { return }
+            let object = recipesFetchedResultsController.object(at: indexPath)
+            DispatchQueue.main.async {
+                object.deletedDate = nil
+                self.coreDataStack.saveContextIfHasChanges(self.backgroundContext)
             }
         }
         
@@ -80,10 +79,24 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
+        if let _ = controller.fetchedObjects?.isEmpty {
+            collectionView.reloadData()
+            return
+        }
+        
         switch type {
-        case .delete: collectionView.deleteItems(at: [indexPath!])
-        case .insert: collectionView.insertItems(at: [newIndexPath!])
-        case .update: collectionView.reloadItems(at: [indexPath!])
+        case .delete:
+            if let indexPath = indexPath {
+                collectionView.deleteItems(at: [indexPath])
+            }
+        case .insert:
+            if let newIndexPath = newIndexPath {
+                collectionView.insertItems(at: [newIndexPath])
+            }
+        case .update:
+            if let indexPath = indexPath {
+                collectionView.reloadItems(at: [indexPath])
+            }
         case .move: collectionView.reloadData()
         default: collectionView.reloadData()
         }
@@ -100,11 +113,10 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
             
             guard let self = self else { return }
             
-            let context = dataManager.getContext()
             for object in recipesFetchedResultsController.fetchedObjects ?? [] {
-                context.delete(object)
+                backgroundContext.delete(object)
             }
-            dataManager.saveContext()
+            coreDataStack.saveContextIfHasChanges(backgroundContext)
         }
         let cancelAction = UIAlertAction(title: "No", style: .cancel)
         ac.addAction(confirmAction)
@@ -121,7 +133,7 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
         let margins = view.layoutMarginsGuide
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: margins.topAnchor),
+            collectionView.topAnchor.constraint(equalToSystemSpacingBelow: margins.topAnchor, multiplier: 1),
             collectionView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),

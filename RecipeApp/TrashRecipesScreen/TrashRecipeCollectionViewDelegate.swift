@@ -12,6 +12,8 @@ final class TrashRecipeCollectionViewDelegate: NSObject, UICollectionViewDelegat
     
     var fetchedResultsController: NSFetchedResultsController<Recipe>!
     var restoreRecipe: ((IndexPath) -> Void)?
+    var navigationContoller: UINavigationController?
+    var coreDataStack: CoreDataStack!
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
@@ -25,6 +27,9 @@ final class TrashRecipeCollectionViewDelegate: NSObject, UICollectionViewDelegat
             cell.transform = originalTransform
         }, completion: nil)
         
+        // TODO: show recipe details (RecipeViewController)
+//        let recipeVC = RecipeViewController(mode: .view, coreDataStack: coreDataStack, currentGroup: <#T##RecipesGroup#>)
+//        navigationContoller?.pushViewController(recipeVC, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -8,50 +8,32 @@
 import UIKit
 import CoreData
 
-final class RecipesListViewController: UIViewController, UICollectionViewDragDelegate, RecipesDataManaging, NSFetchedResultsControllerDelegate {
+final class RecipesListViewController: UIViewController {
     
     // MARK: - UI
     
     private lazy var containerView = ButtonsConteinerView(leftButton: addButton, rightButton: trashButton)
-    
     private lazy var addButton = AddButton()
-    private lazy var trashButton: TrashButton = {
-        let button = TrashButton()
-        button.addInteraction(UIDropInteraction(delegate: self))
-        return button
-    }()
-    
-    private lazy var collectionView: RecipesCollectionView = {
-        let collectionView = RecipesCollectionView()
-        collectionView.dataSource = dataSource
-        collectionView.delegate = delegate
-        collectionView.dragDelegate = self
-        return collectionView
-    }()
+    private lazy var trashButton = makeTrashButton()
+    private lazy var collectionView = makeCollectionView()
     
     // MARK: - Properties
-    private lazy var recipesFetchedResultsController: NSFetchedResultsController = {
-        let name = currentGroup.name!
-        let fetchRequest = Recipe.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Recipe.name), ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "recipesGroup.name == %@ AND deletedDate == nil", name)
-        let context = dataManager.getContext()
-        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                managedObjectContext: context,
-                                                                sectionNameKeyPath: nil,
-                                                                cacheName: nil)
-        fetchResultsController.delegate = self
-        return fetchResultsController
-    }()
     
-    var dataManager: RecipesDataManager
+    var coreDataStack: CoreDataStack
+    
     private let currentGroup: RecipesGroup
-    private lazy var dataSource = RecipesCollectionViewDataSource(fetchedResultsController: recipesFetchedResultsController)
     private let delegate = RecipesCollectionViewDelegate()
     private let reuseIdentifier = String(describing: RecipeCollectionViewCell.self)
+    private let animationDuration = 0.3
+    private let defaultGroupName = "default"
     
-    init(dataManager: RecipesDataManager, currentGroup: RecipesGroup) {
-        self.dataManager = dataManager
+    private lazy var recipesFetchedResultsController = makeFetchedResultsController()
+    private lazy var dataSource = RecipesCollectionViewDataSource(fetchedResultsController: recipesFetchedResultsController)
+    
+    // MARK: - Init
+    
+    init(coreDataStack: CoreDataStack, currentGroup: RecipesGroup) {
+        self.coreDataStack = coreDataStack
         self.currentGroup = currentGroup
         super.init(nibName: nil, bundle: nil)
     }
@@ -72,37 +54,23 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
             print(error.localizedDescription)
         }
         
-        configureView()
-        
-        delegate.navigationController = navigationController
-        delegate.currentGroup = currentGroup
-        delegate.dataManager = dataManager
-        delegate.fetchedResultsController = recipesFetchedResultsController
-        
-        addButton.addButtonTapped = { [weak self] in
-            guard let self = self else { return }
-            let newRecipeVC = RecipeViewController(mode: .newRecipe, dataManager: dataManager, currentGroup: currentGroup)
-            present(newRecipeVC, animated: true)
-        }
-        
-        trashButton.trashButtonTapped = { [weak self] in
-            guard let self = self else { return }
-            let trashRecipesVC = TrashRecipesViewController(dataManager: self.dataManager)
-            self.navigationController?.pushViewController(trashRecipesVC, animated: true)
-        }
-        
+        setupUI()
+        configureDelegate()
+        addButtonTappedEvent()
+        trashButtonTappedEvent()
     }
     
-    // MARK: - Private methods
+    // MARK: - Setup UI
     
-    private func configureView() {
-        
+    func setupUI() {
         view.backgroundColor = Colors.mainBackgroundColor
         view.addSubview(collectionView)
         view.addSubview(containerView)
-        
+        setupConstraints()
+    }
+    
+    func setupConstraints() {
         let margins = view.layoutMarginsGuide
-
         NSLayoutConstraint.activate([
             
             containerView.heightAnchor.constraint(equalTo: addButton.heightAnchor, multiplier: 2),
@@ -117,21 +85,36 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
             collectionView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
         ])
     }
-    
-    // MARK: - NSFetchedResultsControllerDelegate
+}
+
+// MARK: - NSFetchedResultsControllerDelegate
+
+extension RecipesListViewController: NSFetchedResultsControllerDelegate {
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         switch type {
-        case .delete: collectionView.deleteItems(at: [indexPath!])
-        case .insert: collectionView.insertItems(at: [newIndexPath!])
-        case .update: collectionView.reloadItems(at: [indexPath!])
+        case .delete:
+            if let indexPath = indexPath {
+                collectionView.deleteItems(at: [indexPath])
+            }
+        case .insert:
+            if let newIndexPath = newIndexPath {
+                collectionView.insertItems(at: [newIndexPath])
+            }
+        case .update:
+            if let indexPath = indexPath {
+                collectionView.reloadItems(at: [indexPath])
+            }
         case .move: collectionView.reloadData()
         default: collectionView.reloadData()
         }
     }
-    
-    // MARK: - UITableViewDragDelegate
+}
+
+// MARK: - UICollectionViewDragDelegate
+
+extension RecipesListViewController: UICollectionViewDragDelegate {
     
     func collectionView(_ collectionView: UICollectionView,
                         itemsForBeginning session: UIDragSession,
@@ -158,6 +141,8 @@ final class RecipesListViewController: UIViewController, UICollectionViewDragDel
     }
 }
 
+// MARK: - UIDropInteractionDelegate
+
 extension RecipesListViewController: UIDropInteractionDelegate {
     
     func dropInteraction(_ interaction: UIDropInteraction,
@@ -170,40 +155,99 @@ extension RecipesListViewController: UIDropInteractionDelegate {
                          sessionDidUpdate session: UIDropSession) -> UIDropProposal
     {
 
-        UIView.animate(withDuration: 0.3) {
-            self.trashButton.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-        }
+        animateTrashButton(transform: CGAffineTransform(scaleX: 1.3, y: 1.3))
         return UIDropProposal(operation: .copy)
     }
 
     func dropInteraction(_ interaction: UIDropInteraction,
                          sessionDidExit session: UIDropSession) {
-        UIView.animate(withDuration: 0.3) {
-            self.trashButton.transform = .identity
-        }
+        animateTrashButton(transform: .identity)
     }
 
     func dropInteraction(_ interaction: UIDropInteraction,
                          performDrop session: UIDropSession) {
 
-        UIView.animate(withDuration: 0.3) {
-            self.trashButton.transform = .identity
-        }
+        animateTrashButton(transform: .identity)
+        handleDrop(session: session)
+    }
+}
 
+// MARK: - Private extension
+
+private extension RecipesListViewController {
+    
+    func makeFetchedResultsController() -> NSFetchedResultsController<Recipe> {
+        let name = currentGroup.name ?? defaultGroupName
+        let fetchRequest = Recipe.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Recipe.name), ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "recipesGroup.name == %@ AND deletedDate == nil", name)
+        let context = coreDataStack.mainContext
+        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                                managedObjectContext: context,
+                                                                sectionNameKeyPath: nil,
+                                                                cacheName: nil)
+        fetchResultsController.delegate = self
+        return fetchResultsController
+    }
+    
+    func handleDrop(session: UIDropSession) {
         session.loadObjects(ofClass: NSString.self) { [weak self] recipes in
             guard let self = self else { return }
             if let recipe = recipes.first as? String {
                 
-                self.dataManager.getPersistentContainer().performBackgroundTask { context in
+                coreDataStack.persistentContainer.performBackgroundTask { context in
                     let recipeWithName = self.recipesFetchedResultsController.fetchedObjects?.first {$0.name == recipe}
                     recipeWithName?.deletedDate = Date()
                     DispatchQueue.main.async {
-                        self.dataManager.saveContext()
+                        self.coreDataStack.saveContextIfHasChanges()
                     }
                 }
             } else {
                 NSLog("recipe error", #function)
             }
         }
+    }
+    
+    func animateTrashButton(transform: CGAffineTransform) {
+        UIView.animate(withDuration: animationDuration) {
+            self.trashButton.transform = transform
+        }
+    }
+    
+    func configureDelegate() {
+        delegate.navigationController = navigationController
+        delegate.currentGroup = currentGroup
+        delegate.coreDataStack = coreDataStack
+        delegate.fetchedResultsController = recipesFetchedResultsController
+    }
+    
+    func addButtonTappedEvent() {
+        addButton.addButtonTapped = { [weak self] in
+            guard let self = self else { return }
+            let newRecipeVC = RecipeViewController(mode: .newRecipe, coreDataStack: coreDataStack, currentGroup: currentGroup)
+            present(newRecipeVC, animated: true)
+        }
+    }
+    
+    func trashButtonTappedEvent() {
+        trashButton.trashButtonTapped = { [weak self] in
+            guard let self = self else { return }
+            let trashRecipesVC = TrashRecipesViewController(coreDataStack: coreDataStack)
+            self.navigationController?.pushViewController(trashRecipesVC, animated: true)
+        }
+    }
+    
+    func makeTrashButton() -> TrashButton {
+        let button = TrashButton()
+        button.addInteraction(UIDropInteraction(delegate: self))
+        return button
+    }
+    
+    func makeCollectionView() -> RecipesCollectionView {
+        let collectionView = RecipesCollectionView()
+        collectionView.dataSource = dataSource
+        collectionView.delegate = delegate
+        collectionView.dragDelegate = self
+        return collectionView
     }
 }

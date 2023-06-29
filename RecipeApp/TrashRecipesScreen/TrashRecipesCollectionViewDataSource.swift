@@ -15,7 +15,7 @@ class TrashRecipesCollectionViewDataSource: NSObject, UICollectionViewDataSource
     private let reuseIdentifier = String(describing: RecipeCollectionViewCell.self)
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return fetchedResultsController.fetchedObjects?.count ?? 0
+        return fetchedResultsController.fetchedObjects?.count ?? .zero
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

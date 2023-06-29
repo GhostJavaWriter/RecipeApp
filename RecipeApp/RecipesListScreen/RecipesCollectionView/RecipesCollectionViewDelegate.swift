@@ -11,7 +11,7 @@ import CoreData
 final class RecipesCollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     var navigationController: UINavigationController?
-    var dataManager: RecipesDataManager!
+    var coreDataStack: CoreDataStack!
     var currentGroup: RecipesGroup!
     var fetchedResultsController: NSFetchedResultsController<Recipe>!
     
@@ -28,7 +28,7 @@ final class RecipesCollectionViewDelegate: NSObject, UICollectionViewDelegate, U
         }, completion: nil)
         
         
-        let recipesVC = RecipeViewController(mode: .view, dataManager: dataManager, currentGroup: currentGroup)
+        let recipesVC = RecipeViewController(mode: .view, coreDataStack: coreDataStack, currentGroup: currentGroup)
         recipesVC.configureRecipe(withModel: fetchedResultsController.object(at: indexPath))
         navigationController?.pushViewController(recipesVC, animated: true)
     }

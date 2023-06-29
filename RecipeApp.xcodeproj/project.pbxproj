@@ -12,6 +12,7 @@
 		DE8358CC2A2966BC00675966 /* AmericanTypewriterRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE8358CB2A2966BC00675966 /* AmericanTypewriterRegular.ttf */; };
 		DE8358CE2A2A5A6B00675966 /* AddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358CD2A2A5A6B00675966 /* AddButton.swift */; };
 		DE8358D02A2A636B00675966 /* TrashButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358CF2A2A636B00675966 /* TrashButton.swift */; };
+		DE9D3A702A4538E700EC7299 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9D3A6F2A4538E700EC7299 /* CoreDataStack.swift */; };
 		DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B602A26724A007D0409 /* AppDelegate.swift */; };
 		DECB8B652A26724A007D0409 /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECB8B642A26724A007D0409 /* CategoriesViewController.swift */; };
 		DECB8B6A2A26724A007D0409 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DECB8B692A26724A007D0409 /* Assets.xcassets */; };
@@ -38,7 +39,6 @@
 		DEE0839F2A36948800C0ECEC /* TrashRecipesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE0839E2A36948800C0ECEC /* TrashRecipesViewController.swift */; };
 		DEE083A22A37F02200C0ECEC /* TrashRecipeCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083A12A37F02200C0ECEC /* TrashRecipeCollectionViewDelegate.swift */; };
 		DEE083A42A37F14300C0ECEC /* TrashRecipesCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083A32A37F14300C0ECEC /* TrashRecipesCollectionViewDataSource.swift */; };
-		DEE083CE2A393D8100C0ECEC /* RecipesDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE083CD2A393D8100C0ECEC /* RecipesDataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +47,7 @@
 		DE8358CB2A2966BC00675966 /* AmericanTypewriterRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AmericanTypewriterRegular.ttf; sourceTree = "<group>"; };
 		DE8358CD2A2A5A6B00675966 /* AddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButton.swift; sourceTree = "<group>"; };
 		DE8358CF2A2A636B00675966 /* TrashButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashButton.swift; sourceTree = "<group>"; };
+		DE9D3A6F2A4538E700EC7299 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		DECB8B5D2A26724A007D0409 /* RecipeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecipeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DECB8B602A26724A007D0409 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DECB8B642A26724A007D0409 /* CategoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewController.swift; sourceTree = "<group>"; };
@@ -75,7 +76,6 @@
 		DEE0839E2A36948800C0ECEC /* TrashRecipesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashRecipesViewController.swift; sourceTree = "<group>"; };
 		DEE083A12A37F02200C0ECEC /* TrashRecipeCollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashRecipeCollectionViewDelegate.swift; sourceTree = "<group>"; };
 		DEE083A32A37F14300C0ECEC /* TrashRecipesCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashRecipesCollectionViewDataSource.swift; sourceTree = "<group>"; };
-		DEE083CD2A393D8100C0ECEC /* RecipesDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesDataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +109,15 @@
 			path = RecipesListScreen;
 			sourceTree = "<group>";
 		};
+		DE9D3A712A45397D00EC7299 /* CoreDataStack */ = {
+			isa = PBXGroup;
+			children = (
+				DE9D3A6F2A4538E700EC7299 /* CoreDataStack.swift */,
+				DE60F3442A3B781900225566 /* CoreDataModel.xcdatamodeld */,
+			);
+			path = CoreDataStack;
+			sourceTree = "<group>";
+		};
 		DECB8B542A26724A007D0409 = {
 			isa = PBXGroup;
 			children = (
@@ -129,12 +138,11 @@
 			isa = PBXGroup;
 			children = (
 				DECB8B602A26724A007D0409 /* AppDelegate.swift */,
-				DEE083CD2A393D8100C0ECEC /* RecipesDataManager.swift */,
-				DE60F3442A3B781900225566 /* CoreDataModel.xcdatamodeld */,
+				DE9D3A712A45397D00EC7299 /* CoreDataStack */,
 				DE8358C02A29215200675966 /* CategoriesScreen */,
 				DE8358C32A29221E00675966 /* RecipesListScreen */,
-				DEE083A02A36948D00C0ECEC /* TrashRecipesScreen */,
 				DEE083872A2C1DF000C0ECEC /* RecipeScreen */,
+				DEE083A02A36948D00C0ECEC /* TrashRecipesScreen */,
 				DECB8B832A27ADD6007D0409 /* Helpers */,
 				DECB8B7C2A26D8A2007D0409 /* Fonts */,
 				DEE0838E2A35277700C0ECEC /* Common */,
@@ -302,6 +310,7 @@
 				DECB8B652A26724A007D0409 /* CategoriesViewController.swift in Sources */,
 				DEE083922A355E4300C0ECEC /* RecipesCollectionView.swift in Sources */,
 				DEE083992A35623F00C0ECEC /* RecipesCollectionViewDelegate.swift in Sources */,
+				DE9D3A702A4538E700EC7299 /* CoreDataStack.swift in Sources */,
 				DEE083A42A37F14300C0ECEC /* TrashRecipesCollectionViewDataSource.swift in Sources */,
 				DECB8B902A28415A007D0409 /* CategoriesFlowLayout.swift in Sources */,
 				DE8358CE2A2A5A6B00675966 /* AddButton.swift in Sources */,
@@ -324,7 +333,6 @@
 				DE8358C22A29221700675966 /* RecipesListViewController.swift in Sources */,
 				DEE083862A2C1DE400C0ECEC /* RecipeViewController.swift in Sources */,
 				DECB8B892A283607007D0409 /* CategoriesCollectionViewDataSource.swift in Sources */,
-				DEE083CE2A393D8100C0ECEC /* RecipesDataManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
