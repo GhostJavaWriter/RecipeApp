@@ -32,10 +32,8 @@ final class RecipesCollectionViewDelegate: NSObject, UICollectionViewDelegate, U
             cell.transform = originalTransform
         }, completion: nil)
         
-        
-//        let recipesVC = RecipeViewController(mode: .view, coreDataStack: coreDataStack, currentGroup: currentGroup)
-//        recipesVC.configureRecipe(withModel: fetchedResultsController.object(at: indexPath))
-//        navigationController?.pushViewController(recipesVC, animated: true)
+        let recipeVC = viewModel.getRecipeViewControllerFor(recipeAt: indexPath)
+        navigationController?.pushViewController(recipeVC, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

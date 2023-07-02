@@ -26,9 +26,8 @@ class RecipesCollectionViewDataSource: NSObject, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? RecipeCollectionViewCell else { return UICollectionViewCell()}
         
-        if let recipeModel = viewModel.getRecipeAt(indexPath) {
-            cell.setupCell(with: recipeModel)
-        }
+        let recipeModel = viewModel.getRecipeAt(indexPath)
+        cell.setupCell(with: recipeModel)
         
         return cell
     }

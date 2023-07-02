@@ -24,7 +24,7 @@ class CategoriesCollectionViewDataSource: NSObject, UICollectionViewDataSource {
         let reuseIdentifier = viewModel.reuseIdentifier
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? CategoryCollectionViewCell else { return UICollectionViewCell()}
         
-        let recipesGroupName = viewModel.getGroupNameAt(indexPath)
+        let recipesGroupName = viewModel.getGroupAt(indexPath).name
         cell.categoryNameLabel.text = recipesGroupName
         return cell
     }

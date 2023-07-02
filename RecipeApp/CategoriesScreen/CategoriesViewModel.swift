@@ -20,20 +20,15 @@ final class CategoriesViewModel {
         coreDataStack.getRecipesGroups().count
     }
     
-    func getGroupNameAt(_ indexPath: IndexPath) -> String {
+    func getGroupAt(_ indexPath: IndexPath) -> RecipesGroup {
         
-        if let groupName = coreDataStack.getRecipesGroupAt(indexPath).name {
-            return groupName
-        } else {
-            NSLog("group name error, \(#function)")
-            return "error"
-        }
+        return coreDataStack.getRecipesGroupAt(indexPath)
     }
     
     func getRecipesListViewController(recipesGroupIndexPath indexPath: IndexPath) -> RecipesListViewController {
-        let currentGroupName = getGroupNameAt(indexPath)
+        let currentGroup = getGroupAt(indexPath)
         let recipesListViewModel = RecipesListViewModel(coreDataStack: coreDataStack,
-                                                        currentGroupName: currentGroupName)
+                                                        currentGroup: currentGroup)
         return RecipesListViewController(viewModel: recipesListViewModel)
     }
 }

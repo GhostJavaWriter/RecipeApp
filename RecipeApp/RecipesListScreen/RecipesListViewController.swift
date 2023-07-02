@@ -180,9 +180,10 @@ private extension RecipesListViewController {
     
     func addButtonTappedEvent() {
         addButton.addButtonTapped = { [weak self] in
-//            guard let self = self else { return }
-//            let newRecipeVC = RecipeViewController(mode: .newRecipe, coreDataStack: coreDataStack, currentGroup: viewModel.currentGroupName)
-//            present(newRecipeVC, animated: true)
+            guard let self = self else { return }
+            
+            let newRecipeVC = viewModel.getRecipeViewControllerForNewRecipe()
+            present(newRecipeVC, animated: true)
         }
     }
     

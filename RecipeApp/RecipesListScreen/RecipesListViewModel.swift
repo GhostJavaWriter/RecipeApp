@@ -13,11 +13,12 @@ final class RecipesListViewModel {
     // MARK: - Properties
     
     private var coreDataStack: CoreDataStack
-    let currentGroupName: String
+    let currentGroup: RecipesGroup
     
     private(set) lazy var fetchedResultsController: NSFetchedResultsController<Recipe> = {
         let mainContext = coreDataStack.viewContext
         let fetchRequest = Recipe.fetchRequest()
+        let currentGroupName = currentGroup.name ?? "defaultGroup"
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Recipe.name), ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "recipesGroup.name == %@ AND deletedDate == nil", currentGroupName)
         
@@ -30,9 +31,9 @@ final class RecipesListViewModel {
     
     // MARK: - Init
     
-    init(coreDataStack: CoreDataStack, currentGroupName: String) {
+    init(coreDataStack: CoreDataStack, currentGroup: RecipesGroup) {
         self.coreDataStack = coreDataStack
-        self.currentGroupName = currentGroupName
+        self.currentGroup = currentGroup
     }
     
     // MARK: - Private methods
@@ -41,7 +42,7 @@ final class RecipesListViewModel {
         fetchedResultsController.fetchedObjects?.count ?? .zero
     }
     
-    func getRecipeAt(_ indexPath: IndexPath) -> Recipe? {
+    func getRecipeAt(_ indexPath: IndexPath) -> Recipe {
         return fetchedResultsController.object(at: indexPath)
     }
     
@@ -57,6 +58,24 @@ final class RecipesListViewModel {
         let viewModel = TrashRecipesViewModel(coreDataStack: coreDataStack)
         let trashRecipesVC = TrashRecipesViewController(viewModel: viewModel)
         return trashRecipesVC
+    }
+    
+    func getRecipeViewControllerFor(recipeAt indexPath: IndexPath) -> RecipeViewController {
+        let recipe = getRecipeAt(indexPath)
+        let viewModel = RecipeViewModel(coreDataStack: coreDataStack,
+                                        mode: .view,
+                                        currentRecipe: recipe,
+                                        currentGroup: nil)
+        
+        return RecipeViewController(viewModel: viewModel)
+    }
+    
+    func getRecipeViewControllerForNewRecipe() -> RecipeViewController {
+        let viewModel = RecipeViewModel(coreDataStack: coreDataStack,
+                                        mode: .newRecipe,
+                                        currentRecipe: nil,
+                                        currentGroup: currentGroup)
+        return RecipeViewController(viewModel: viewModel)
     }
     
     func handleDrop(session: UIDropSession) {

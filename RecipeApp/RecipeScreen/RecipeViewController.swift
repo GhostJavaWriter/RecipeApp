@@ -7,11 +7,6 @@
 
 import UIKit
 
-enum RecipeViewControllerMode {
-    case view
-    case newRecipe
-}
-
 final class RecipeViewController: UIViewController {
     
     // MARK: - UI
@@ -25,11 +20,7 @@ final class RecipeViewController: UIViewController {
     private lazy var containerView = ButtonsConteinerView(leftButton: leftButton, rightButton: rightButton)
     
     // MARK: - Properties
-    
-    var coreDataStack: CoreDataStack
-    private var currentGroup: RecipesGroup
-    private var currentRecipe: Recipe?
-    private var mode: RecipeViewControllerMode
+    private let viewModel: RecipeViewModel
     private lazy var isEditingMode = false {
         didSet {
             setButtons(isEditing: isEditingMode)
@@ -38,10 +29,8 @@ final class RecipeViewController: UIViewController {
     
     // MARK: - Init
     
-    init(mode: RecipeViewControllerMode, coreDataStack: CoreDataStack, currentGroup: RecipesGroup) {
-        self.mode = mode
-        self.coreDataStack = coreDataStack
-        self.currentGroup = currentGroup
+    init(viewModel: RecipeViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -60,22 +49,13 @@ final class RecipeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTextFields()
         
+        setupTextFields()
         configureView()
+        configureRecipeData()
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    // MARK: - Public methods
-    
-    func configureRecipe(withModel model: Recipe) {
-        currentRecipe = model
-        nameTextField.text = model.name
-        scrollView.ingredientsTextView.text = model.ingredients
-        scrollView.methodTextView.text = model.cookMethod
-        scrollView.linkTextField.text = model.link
     }
     
     // MARK: - Actions
@@ -105,7 +85,7 @@ final class RecipeViewController: UIViewController {
     
     @objc private func cancelChanges() {
         
-        switch mode {
+        switch viewModel.mode {
         case .view:
             isEditingMode.toggle()
             view.endEditing(true)
@@ -116,10 +96,11 @@ final class RecipeViewController: UIViewController {
     
     @objc private func saveButtonTapped() {
         
-        switch mode {
+        switch viewModel.mode {
         case .view:
             isEditingMode.toggle()
             saveChanges()
+            
             view.endEditing(true)
         case .newRecipe:
             createNewRecipe()
@@ -128,24 +109,13 @@ final class RecipeViewController: UIViewController {
     }
     
     private func saveChanges() {
-        if let currentRecipe = currentRecipe {
-            guard let name = nameTextField.text,
-                  let ingedients = scrollView.ingredientsTextView.text,
-                  let method = scrollView.methodTextView.text
-            else {
-                return
-            }
-            if let link = scrollView.linkTextField.text,
-               let url = URL(string: link),
-               UIApplication.shared.canOpenURL(url) {
-                currentRecipe.link = link
-            }
-            currentRecipe.name = name
-            currentRecipe.ingredients = ingedients
-            currentRecipe.cookMethod = method
-           
-            coreDataStack.saveViewContext()
-        }
+        
+        let name = nameTextField.text
+        let ingedients = scrollView.ingredientsTextView.text
+        let method = scrollView.methodTextView.text
+        let link = scrollView.linkTextField.text
+        
+        viewModel.saveChanges(newName: name, newIndgredients: ingedients, newMethod: method, link: link)
     }
     
     @objc func textsDidChange() {
@@ -166,6 +136,14 @@ final class RecipeViewController: UIViewController {
     
     // MARK: - Private methods
     
+    private func configureRecipeData() {
+        guard let recipe = viewModel.currentRecipe else { return }
+        nameTextField.text = recipe.name
+        scrollView.ingredientsTextView.text = recipe.ingredients
+        scrollView.methodTextView.text = recipe.cookMethod
+        scrollView.linkTextField.text = recipe.link
+    }
+    
     private func setupTextFields() {
         nameTextField.addTarget(self, action: #selector(textsDidChange), for: .editingChanged)
         scrollView.ingredientsTextView.delegate = self
@@ -177,72 +155,15 @@ final class RecipeViewController: UIViewController {
         leftButton.isEnabled = isEnable
     }
     
-    private func configureView() {
-        
-        switch mode {
-        case .view:
-            isEditingMode = false
-        case .newRecipe:
-            leftButton.isEnabled = false
-            isEditingMode = true
-        }
-        
-        view.backgroundColor = Colors.mainBackgroundColor
-        
-        view.addSubview(nameLabel)
-        view.addSubview(nameTextField)
-        view.addSubview(scrollView)
-        view.addSubview(containerView)
-        
-        view.directionalLayoutMargins = Metrics.Margins.recipeScreenMargins
-        let margins = view.layoutMarginsGuide
-        let content = scrollView.contentLayoutGuide
-        
-        NSLayoutConstraint.activate([
-            
-            containerView.topAnchor.constraint(equalTo: margins.topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            
-            nameLabel.topAnchor.constraint(equalToSystemSpacingBelow: containerView.bottomAnchor, multiplier: 1),
-            nameLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            nameLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            
-            nameTextField.topAnchor.constraint(equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1),
-            nameTextField.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            nameTextField.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            nameTextField.heightAnchor.constraint(equalToConstant: nameLabel.font.pointSize * 2.27),
-            
-            scrollView.widthAnchor.constraint(equalTo: content.widthAnchor, multiplier: 1),
-            
-            scrollView.topAnchor.constraint(equalToSystemSpacingBelow: nameTextField.bottomAnchor, multiplier: 1),
-            scrollView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
-        ])
-    }
-    
     private func createNewRecipe() {
         
-        guard let name = nameTextField.text,
-              let ingedients = scrollView.ingredientsTextView.text,
-              let method = scrollView.methodTextView.text
-        else {
-            return
-        }
-        let newRecipe = Recipe(context: coreDataStack.viewContext)
-        if let link = scrollView.linkTextField.text,
-           let url = URL(string: link),
-           UIApplication.shared.canOpenURL(url) {
-            newRecipe.link = link
-        }
-        newRecipe.id = UUID().uuidString
-        newRecipe.name = name
-        newRecipe.ingredients = ingedients
-        newRecipe.cookMethod = method
-        currentGroup.addToRecipes(newRecipe)
+        let name = nameTextField.text
+        let ingedients = scrollView.ingredientsTextView.text
+        let method = scrollView.methodTextView.text
+        let link = scrollView.linkTextField.text
         
-        coreDataStack.saveViewContext()
+        viewModel.createNewRecipeWith(name: name, ingredients: ingedients, method: method, link: link)
+
     }
     
     @objc private func keyboardWillShow(notification: NSNotification) {
@@ -284,6 +205,53 @@ final class RecipeViewController: UIViewController {
             rightButton.removeTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
             rightButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
         }
+    }
+    
+    // MARK: - SetupUI
+    
+    private func configureView() {
+        
+        switch viewModel.mode {
+        case .view:
+            isEditingMode = false
+        case .newRecipe:
+            leftButton.isEnabled = false
+            isEditingMode = true
+        }
+        
+        view.backgroundColor = Colors.mainBackgroundColor
+        
+        view.addSubview(nameLabel)
+        view.addSubview(nameTextField)
+        view.addSubview(scrollView)
+        view.addSubview(containerView)
+        
+        view.directionalLayoutMargins = Metrics.Margins.recipeScreenMargins
+        let margins = view.layoutMarginsGuide
+        let content = scrollView.contentLayoutGuide
+        
+        NSLayoutConstraint.activate([
+            
+            containerView.topAnchor.constraint(equalTo: margins.topAnchor),
+            containerView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            
+            nameLabel.topAnchor.constraint(equalToSystemSpacingBelow: containerView.bottomAnchor, multiplier: 1),
+            nameLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            nameLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            
+            nameTextField.topAnchor.constraint(equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1),
+            nameTextField.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            nameTextField.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            nameTextField.heightAnchor.constraint(equalToConstant: nameLabel.font.pointSize * 2.27),
+            
+            scrollView.widthAnchor.constraint(equalTo: content.widthAnchor, multiplier: 1),
+            
+            scrollView.topAnchor.constraint(equalToSystemSpacingBelow: nameTextField.bottomAnchor, multiplier: 1),
+            scrollView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
+        ])
     }
     
 }
