@@ -94,28 +94,27 @@ final class RecipeViewController: UIViewController {
         }
     }
     
-    @objc private func saveButtonTapped() {
+    @objc private func leftButtonTapped() {
         
         switch viewModel.mode {
         case .view:
             isEditingMode.toggle()
-            saveChanges()
-            
+            saveRecipe()
             view.endEditing(true)
         case .newRecipe:
-            createNewRecipe()
+            saveRecipe()
             dismiss(animated: true)
         }
     }
     
-    private func saveChanges() {
+    private func saveRecipe() {
         
         let name = nameTextField.text
         let ingedients = scrollView.ingredientsTextView.text
         let method = scrollView.methodTextView.text
         let link = scrollView.linkTextField.text
         
-        viewModel.saveChanges(newName: name, newIndgredients: ingedients, newMethod: method, link: link)
+        viewModel.saveRecipeWith(newName: name, newIndgredients: ingedients, newMethod: method, link: link)
     }
     
     @objc func textsDidChange() {
@@ -155,35 +154,6 @@ final class RecipeViewController: UIViewController {
         leftButton.isEnabled = isEnable
     }
     
-    private func createNewRecipe() {
-        
-        let name = nameTextField.text
-        let ingedients = scrollView.ingredientsTextView.text
-        let method = scrollView.methodTextView.text
-        let link = scrollView.linkTextField.text
-        
-        viewModel.createNewRecipeWith(name: name, ingredients: ingedients, method: method, link: link)
-
-    }
-    
-    @objc private func keyboardWillShow(notification: NSNotification) {
-        guard let userInfo = notification.userInfo,
-              let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
-        else {
-            return
-        }
-        
-        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height, right: 0.0)
-        scrollView.contentInset = contentInsets
-        scrollView.scrollIndicatorInsets = contentInsets
-    }
-    
-    @objc private func keyboardWillHide(notification: NSNotification) {
-        let contentInsets = UIEdgeInsets.zero
-        scrollView.contentInset = contentInsets
-        scrollView.scrollIndicatorInsets = contentInsets
-    }
-    
     private func setButtons(isEditing: Bool) {
         
         nameTextField.isUserInteractionEnabled = isEditing
@@ -196,11 +166,11 @@ final class RecipeViewController: UIViewController {
         
         if isEditing {
             leftButton.removeTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-            leftButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+            leftButton.addTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
             rightButton.removeTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
             rightButton.addTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
         } else {
-            leftButton.removeTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+            leftButton.removeTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
             leftButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
             rightButton.removeTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
             rightButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
@@ -252,6 +222,26 @@ final class RecipeViewController: UIViewController {
             scrollView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
         ])
+    }
+    
+    // MARK: - Keyboard adjust handle
+    
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        else {
+            return
+        }
+        
+        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height, right: 0.0)
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
+    
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        let contentInsets = UIEdgeInsets.zero
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
     }
     
 }

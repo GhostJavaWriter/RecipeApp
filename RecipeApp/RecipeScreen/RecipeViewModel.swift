@@ -27,48 +27,41 @@ final class RecipeViewModel {
         self.currentGroup = currentGroup
     }
     
-    func saveChanges(newName: String?, newIndgredients: String?, newMethod: String?, link: String?) {
+    func saveRecipeWith(newName: String?, newIndgredients: String?, newMethod: String?, link: String?) {
+        
         guard let name = newName,
               let ingedients = newIndgredients,
               let method = newMethod
         else {
+            NSLog("empty recipe fields \(#function)")
             return
         }
+        
+        var recipe: Recipe?
+        
+        switch mode {
+        case .newRecipe:
+            recipe = Recipe(context: coreDataStack.viewContext)
+            recipe?.recipesGroup = currentGroup
+            recipe?.id = UUID().uuidString
+        case .view:
+            recipe = currentRecipe
+        }
+        
         if let link = link,
            let url = URL(string: link),
            UIApplication.shared.canOpenURL(url) {
-            currentRecipe?.link = link
+            recipe?.link = link
         }
-        currentRecipe?.name = name
-        currentRecipe?.ingredients = ingedients
-        currentRecipe?.cookMethod = method
+        recipe?.name = name
+        recipe?.ingredients = ingedients
+        recipe?.cookMethod = method
        
         coreDataStack.saveViewContext()
     }
     
-    func createNewRecipeWith(name: String?, ingredients: String?, method: String?, link: String?) {
+    func shareRecipe() {
         
-        let newRecipe = Recipe(context: coreDataStack.viewContext)
-        
-        guard let name = name,
-              let ingredients = ingredients,
-              let method = method
-        else {
-            return
-        }
-        
-        if let link = link,
-           let url = URL(string: link),
-           UIApplication.shared.canOpenURL(url) {
-            newRecipe.link = link
-        }
-        
-        newRecipe.id = UUID().uuidString
-        newRecipe.name = name
-        newRecipe.ingredients = ingredients
-        newRecipe.cookMethod = method
-        currentGroup?.addToRecipes(newRecipe)
-        
-        coreDataStack.saveViewContext()
     }
+    
 }
