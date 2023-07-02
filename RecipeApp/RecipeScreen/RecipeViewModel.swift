@@ -27,11 +27,11 @@ final class RecipeViewModel {
         self.currentGroup = currentGroup
     }
     
-    func saveRecipeWith(newName: String?, newIndgredients: String?, newMethod: String?, link: String?) {
+    func saveRecipeWith(recipeFieldsDataModel: RecipeFieldsDataModel) {
         
-        guard let name = newName,
-              let ingedients = newIndgredients,
-              let method = newMethod
+        guard let name = recipeFieldsDataModel.name,
+              let ingedients = recipeFieldsDataModel.ingredients,
+              let method = recipeFieldsDataModel.method
         else {
             NSLog("empty recipe fields \(#function)")
             return
@@ -48,7 +48,7 @@ final class RecipeViewModel {
             recipe = currentRecipe
         }
         
-        if let link = link,
+        if let link = recipeFieldsDataModel.link,
            let url = URL(string: link),
            UIApplication.shared.canOpenURL(url) {
             recipe?.link = link
@@ -60,8 +60,18 @@ final class RecipeViewModel {
         coreDataStack.saveViewContext()
     }
     
-    func shareRecipe() {
+    func setupRecipeDataForShare(recipeFieldsDataModel: RecipeFieldsDataModel) -> String {
+        let recipeName = recipeFieldsDataModel.name ?? "-"
+        let ingredients = recipeFieldsDataModel.ingredients ?? "-"
+        let method = recipeFieldsDataModel.method ?? "-"
         
+        var shareText = "Recipe Name: \(recipeName)\nIngredients: \(ingredients)\nMethod:\(method)"
+        
+        if let link = recipeFieldsDataModel.link {
+            shareText = shareText + "\nLink: \(link)"
+        }
+        
+        return shareText
     }
     
 }

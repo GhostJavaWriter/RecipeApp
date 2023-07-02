@@ -12,6 +12,7 @@
 		DE0849C62A51F77100B33710 /* RecipesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0849C52A51F77100B33710 /* RecipesListViewModel.swift */; };
 		DE0849C82A5204AE00B33710 /* RecipeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0849C72A5204AE00B33710 /* RecipeViewModel.swift */; };
 		DE0849CA2A52089100B33710 /* CategoriesCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0849C92A52089100B33710 /* CategoriesCollectionViewDelegate.swift */; };
+		DE0849CC2A523A9900B33710 /* RecipeFieldsDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0849CB2A523A9900B33710 /* RecipeFieldsDataModel.swift */; };
 		DE60F3462A3B781900225566 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DE60F3442A3B781900225566 /* CoreDataModel.xcdatamodeld */; };
 		DE8358C22A29221700675966 /* RecipesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8358C12A29221700675966 /* RecipesListViewController.swift */; };
 		DE8358CC2A2966BC00675966 /* AmericanTypewriterRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE8358CB2A2966BC00675966 /* AmericanTypewriterRegular.ttf */; };
@@ -51,6 +52,7 @@
 		DE0849C52A51F77100B33710 /* RecipesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesListViewModel.swift; sourceTree = "<group>"; };
 		DE0849C72A5204AE00B33710 /* RecipeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeViewModel.swift; sourceTree = "<group>"; };
 		DE0849C92A52089100B33710 /* CategoriesCollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesCollectionViewDelegate.swift; sourceTree = "<group>"; };
+		DE0849CB2A523A9900B33710 /* RecipeFieldsDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFieldsDataModel.swift; sourceTree = "<group>"; };
 		DE60F3452A3B781900225566 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		DE8358C12A29221700675966 /* RecipesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesListViewController.swift; sourceTree = "<group>"; };
 		DE8358CB2A2966BC00675966 /* AmericanTypewriterRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AmericanTypewriterRegular.ttf; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 			children = (
 				DEE083852A2C1DE400C0ECEC /* RecipeViewController.swift */,
 				DE0849C72A5204AE00B33710 /* RecipeViewModel.swift */,
+				DE0849CB2A523A9900B33710 /* RecipeFieldsDataModel.swift */,
 				DEE0838A2A302EA700C0ECEC /* CustomTextField.swift */,
 				DEE0838F2A35401900C0ECEC /* CustomScrollView.swift */,
 			);
@@ -333,6 +336,7 @@
 				DEE0838D2A35259900C0ECEC /* ButtonsConteinerView.swift in Sources */,
 				DEE0839B2A35627700C0ECEC /* RecipesCollectionViewFlowLayout.swift in Sources */,
 				DE0849C62A51F77100B33710 /* RecipesListViewModel.swift in Sources */,
+				DE0849CC2A523A9900B33710 /* RecipeFieldsDataModel.swift in Sources */,
 				DECB8B612A26724A007D0409 /* AppDelegate.swift in Sources */,
 				DEE0838B2A302EA700C0ECEC /* CustomTextField.swift in Sources */,
 				DECB8B802A27AD42007D0409 /* ScaledFont.swift in Sources */,

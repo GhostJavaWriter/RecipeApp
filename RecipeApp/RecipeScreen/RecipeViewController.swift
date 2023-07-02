@@ -62,19 +62,9 @@ final class RecipeViewController: UIViewController {
     
     @objc private func shareButtonTapped() {
         
-        let recipeName = nameTextField.text ?? "-"
-        let ingredients = scrollView.ingredientsTextView.text ?? "-"
-        let method = scrollView.methodTextView.text ?? "-"
-        
-        var shareText = "Recipe Name: \(recipeName)\nIngredients: \(ingredients)\nMethod:\(method)"
-        
-        if let link = scrollView.linkTextField.text {
-            shareText = shareText + "\nLink: \(link)"
-        }
-        
-        let activityViewController = UIActivityViewController(activityItems: [shareText],
-                                                              applicationActivities: nil)
-        self.present(activityViewController, animated: true, completion: nil)
+        let shareText = viewModel.setupRecipeDataForShare(recipeFieldsDataModel: getRecipeFields())
+        let vc = UIActivityViewController(activityItems: [shareText], applicationActivities: nil)
+        self.present(vc, animated: true, completion: nil)
     }
     
     @objc private func editButtonTapped() {
@@ -99,22 +89,12 @@ final class RecipeViewController: UIViewController {
         switch viewModel.mode {
         case .view:
             isEditingMode.toggle()
-            saveRecipe()
+            viewModel.saveRecipeWith(recipeFieldsDataModel: getRecipeFields())
             view.endEditing(true)
         case .newRecipe:
-            saveRecipe()
+            viewModel.saveRecipeWith(recipeFieldsDataModel: getRecipeFields())
             dismiss(animated: true)
         }
-    }
-    
-    private func saveRecipe() {
-        
-        let name = nameTextField.text
-        let ingedients = scrollView.ingredientsTextView.text
-        let method = scrollView.methodTextView.text
-        let link = scrollView.linkTextField.text
-        
-        viewModel.saveRecipeWith(newName: name, newIndgredients: ingedients, newMethod: method, link: link)
     }
     
     @objc func textsDidChange() {
@@ -134,6 +114,19 @@ final class RecipeViewController: UIViewController {
     }
     
     // MARK: - Private methods
+    
+    private func getRecipeFields() -> RecipeFieldsDataModel {
+        
+        let nameText = nameTextField.text
+        let ingredientsText = scrollView.ingredientsTextView.text
+        let methodText = scrollView.methodTextView.text
+        let link = scrollView.linkTextField.text
+        
+        return RecipeFieldsDataModel(name: nameText,
+                                     ingredients: ingredientsText,
+                                     method: methodText,
+                                     link: link)
+    }
     
     private func configureRecipeData() {
         guard let recipe = viewModel.currentRecipe else { return }
