@@ -19,23 +19,18 @@ final class RecipesListViewController: UIViewController {
     
     // MARK: - Properties
     
-    var coreDataStack: CoreDataStack
+    var viewModel: RecipesListViewModel
     
-    private let currentGroup: RecipesGroup
-    private let delegate = RecipesCollectionViewDelegate()
-    private let reuseIdentifier = String(describing: RecipeCollectionViewCell.self)
+    private lazy var delegate = RecipesCollectionViewDelegate(navigationController: navigationController, viewModel: viewModel)
+    private lazy var dataSource = RecipesCollectionViewDataSource(viewModel: viewModel)
+    private lazy var recipesFetchedResultsController = viewModel.fetchedResultsController
+    
     private let animationDuration = 0.3
-    private let defaultGroupName = "default"
-    
-    private lazy var mainContext = coreDataStack.persistentContainer.viewContext
-    private lazy var recipesFetchedResultsController = makeFetchedResultsController()
-    private lazy var dataSource = RecipesCollectionViewDataSource(fetchedResultsController: recipesFetchedResultsController)
     
     // MARK: - Init
     
-    init(coreDataStack: CoreDataStack, currentGroup: RecipesGroup) {
-        self.coreDataStack = coreDataStack
-        self.currentGroup = currentGroup
+    init(viewModel: RecipesListViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -48,17 +43,17 @@ final class RecipesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        do {
-            try recipesFetchedResultsController.performFetch()
-            
-        } catch let error as NSError {
-            print(error.localizedDescription)
-        }
-        
         setupUI()
-        configureDelegate()
         addButtonTappedEvent()
         trashButtonTappedEvent()
+        
+        recipesFetchedResultsController.delegate = self
+        
+        do {
+            try viewModel.fetchData()
+        } catch let error as NSError {
+            NSLog(error.localizedDescription)
+        }
     }
     
     // MARK: - Setup UI
@@ -169,7 +164,7 @@ extension RecipesListViewController: UIDropInteractionDelegate {
                          performDrop session: UIDropSession) {
 
         animateTrashButton(transform: .identity)
-        handleDrop(session: session)
+        viewModel.handleDrop(session: session)
     }
 }
 
@@ -177,65 +172,25 @@ extension RecipesListViewController: UIDropInteractionDelegate {
 
 private extension RecipesListViewController {
     
-    func makeFetchedResultsController() -> NSFetchedResultsController<Recipe> {
-        let name = currentGroup.name ?? defaultGroupName
-        let fetchRequest = Recipe.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Recipe.name), ascending: false)]
-        fetchRequest.predicate = NSPredicate(format: "recipesGroup.name == %@ AND deletedDate == nil", name)
-        
-        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                managedObjectContext: mainContext,
-                                                                sectionNameKeyPath: nil,
-                                                                cacheName: nil)
-        fetchResultsController.delegate = self
-        return fetchResultsController
-    }
-    
-    func handleDrop(session: UIDropSession) {
-        session.loadObjects(ofClass: NSString.self) { [weak self] recipes in
-            guard let self = self else { return }
-            if let recipe = recipes.first as? String {
-                
-                coreDataStack.persistentContainer.performBackgroundTask { context in
-                    let recipeWithName = self.recipesFetchedResultsController.fetchedObjects?.first {$0.name == recipe}
-                    recipeWithName?.deletedDate = Date()
-                    DispatchQueue.main.async {
-                        self.coreDataStack.saveContextIfHasChanges(context)
-                    }
-                }
-            } else {
-                NSLog("recipe error", #function)
-            }
-        }
-    }
-    
     func animateTrashButton(transform: CGAffineTransform) {
         UIView.animate(withDuration: animationDuration) {
             self.trashButton.transform = transform
         }
     }
     
-    func configureDelegate() {
-        delegate.navigationController = navigationController
-        delegate.currentGroup = currentGroup
-        delegate.coreDataStack = coreDataStack
-        delegate.fetchedResultsController = recipesFetchedResultsController
-    }
-    
     func addButtonTappedEvent() {
         addButton.addButtonTapped = { [weak self] in
-            guard let self = self else { return }
-            let newRecipeVC = RecipeViewController(mode: .newRecipe, coreDataStack: coreDataStack, currentGroup: currentGroup)
-            present(newRecipeVC, animated: true)
+//            guard let self = self else { return }
+//            let newRecipeVC = RecipeViewController(mode: .newRecipe, coreDataStack: coreDataStack, currentGroup: viewModel.currentGroupName)
+//            present(newRecipeVC, animated: true)
         }
     }
     
     func trashButtonTappedEvent() {
         trashButton.trashButtonTapped = { [weak self] in
             guard let self = self else { return }
-            let viewModel = TrashRecipesViewModel(coreDataStack: coreDataStack)
-            let trashRecipesVC = TrashRecipesViewController(viewModel: viewModel)
-            self.navigationController?.pushViewController(trashRecipesVC, animated: true)
+            let trashRecipesVC = viewModel.getTrashRecipesViewController()
+            navigationController?.pushViewController(trashRecipesVC, animated: true)
         }
     }
     

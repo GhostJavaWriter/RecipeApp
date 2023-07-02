@@ -153,9 +153,14 @@ extension CategoriesViewController: UICollectionViewDelegate {
     }
     
     private func showRecipeList(forIndexPath indexPath: IndexPath) {
-        let currentGroup = coreDataStack.getRecipesGroupAt(indexPath)
-        let recipesVC = RecipesListViewController(coreDataStack: coreDataStack, currentGroup: currentGroup)
-        navigationController?.pushViewController(recipesVC, animated: true)
+        if let currentGroupName = coreDataStack.getRecipesGroupAt(indexPath).name {
+            let recipesListViewModel = RecipesListViewModel(coreDataStack: coreDataStack, currentGroupName: currentGroupName)
+            let recipesVC = RecipesListViewController(viewModel: recipesListViewModel)
+            navigationController?.pushViewController(recipesVC, animated: true)
+        } else {
+            NSLog("groupName == nil")
+        }
+        
     }
 }
 

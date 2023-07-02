@@ -14,6 +14,8 @@ final class TrashRecipeCollectionViewDelegate: NSObject, UICollectionViewDelegat
     
     init(viewModel: TrashRecipesViewModel) {
         self.viewModel = viewModel
+        
+        super.init()
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

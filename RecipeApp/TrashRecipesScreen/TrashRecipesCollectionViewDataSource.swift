@@ -16,6 +16,7 @@ class TrashRecipesCollectionViewDataSource: NSObject, UICollectionViewDataSource
     
     init(viewModel: TrashRecipesViewModel) {
         self.viewModel = viewModel
+        super.init()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
