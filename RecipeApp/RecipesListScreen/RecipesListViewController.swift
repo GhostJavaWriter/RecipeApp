@@ -27,7 +27,7 @@ final class RecipesListViewController: UIViewController {
     private let animationDuration = 0.3
     private let defaultGroupName = "default"
     
-    private lazy var backgroundContext = coreDataStack.persistentContainer.newBackgroundContext()
+    private lazy var mainContext = coreDataStack.persistentContainer.viewContext
     private lazy var recipesFetchedResultsController = makeFetchedResultsController()
     private lazy var dataSource = RecipesCollectionViewDataSource(fetchedResultsController: recipesFetchedResultsController)
     
@@ -184,7 +184,7 @@ private extension RecipesListViewController {
         fetchRequest.predicate = NSPredicate(format: "recipesGroup.name == %@ AND deletedDate == nil", name)
         
         let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                managedObjectContext: backgroundContext,
+                                                                managedObjectContext: mainContext,
                                                                 sectionNameKeyPath: nil,
                                                                 cacheName: nil)
         fetchResultsController.delegate = self

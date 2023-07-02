@@ -11,14 +11,14 @@ import CoreData
 final class TrashRecipesViewModel {
     
     private var coreDataStack: CoreDataStack
-    private lazy var backgroundContext = coreDataStack.persistentContainer.newBackgroundContext()
+    private lazy var mainContext = coreDataStack.persistentContainer.viewContext
     
     lazy var recipesFetchedResultsController: NSFetchedResultsController<Recipe> = {
         let fetchRequest = Recipe.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "deletedDate", ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "deletedDate != nil")
         let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                managedObjectContext: backgroundContext,
+                                                                managedObjectContext: mainContext,
                                                                 sectionNameKeyPath: nil,
                                                                 cacheName: nil)
         return fetchResultsController
@@ -45,9 +45,9 @@ final class TrashRecipesViewModel {
     
     func emptyTrash() {
         for object in recipesFetchedResultsController.fetchedObjects ?? [] {
-            backgroundContext.delete(object)
+            mainContext.delete(object)
         }
-        coreDataStack.saveContextIfHasChanges(backgroundContext)
+        coreDataStack.saveContextIfHasChanges()
     }
     
     func getNumberOfItemsInSection() -> Int {
@@ -62,6 +62,6 @@ final class TrashRecipesViewModel {
         
         let object = recipesFetchedResultsController.object(at: indexPath)
         object.deletedDate = nil
-        coreDataStack.saveContextIfHasChanges(backgroundContext)
+        coreDataStack.saveContextIfHasChanges()
     }
 }
