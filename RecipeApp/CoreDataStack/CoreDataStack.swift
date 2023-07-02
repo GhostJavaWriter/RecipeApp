@@ -19,17 +19,6 @@ final class CoreDataStack {
         return persistentContainer.viewContext
     }
     
-    private(set) lazy var trashRecipesFRC: NSFetchedResultsController<Recipe> = {
-        let fetchRequest = Recipe.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "deletedDate", ascending: true)]
-        fetchRequest.predicate = NSPredicate(format: "deletedDate != nil")
-        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                managedObjectContext: viewContext,
-                                                                sectionNameKeyPath: nil,
-                                                                cacheName: nil)
-        return fetchResultsController
-    }()
-    
     private lazy var recipesGroups: [RecipesGroup] = fetchRecipesGroups()
     
     /// Create default categories

@@ -28,7 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         coreDataStack.emptyTrash()
         
-        let categoriesVC = CategoriesViewController(coreDataStack: coreDataStack)
+        let categoriesViewModel = CategoriesViewModel(coreDataStack: coreDataStack)
+        let categoriesVC = CategoriesViewController(viewModel: categoriesViewModel)
         let navController = UINavigationController(rootViewController: categoriesVC)
 
         UINavigationBar.appearance().tintColor = Colors.CategorieItem.backgroundColor

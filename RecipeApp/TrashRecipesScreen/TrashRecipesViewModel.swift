@@ -11,13 +11,23 @@ import CoreData
 final class TrashRecipesViewModel {
     
     private var coreDataStack: CoreDataStack
-    private(set) lazy var fetchedResultsController = coreDataStack.trashRecipesFRC
+    
+    private(set) lazy var fetchedResultsController: NSFetchedResultsController<Recipe> = {
+        let viewContext = coreDataStack.viewContext
+        let fetchRequest = Recipe.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "deletedDate", ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "deletedDate != nil")
+        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                                managedObjectContext: viewContext,
+                                                                sectionNameKeyPath: nil,
+                                                                cacheName: nil)
+        return fetchResultsController
+    }()
     
     // MARK: - Init
     
     init(coreDataStack: CoreDataStack) {
         self.coreDataStack = coreDataStack
-        
         
     }
     

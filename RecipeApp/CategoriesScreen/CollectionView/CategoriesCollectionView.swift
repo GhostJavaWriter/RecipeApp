@@ -9,16 +9,23 @@ import UIKit
 
 final class CategoriesCollectionView: UICollectionView {
     
-    private let reuseIdentifier = String(describing: CategoryCollectionViewCell.self)
-    private let layout = CategoriesFlowLayout()
+    private let layout: UICollectionViewFlowLayout = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = Metrics.CategorieItem.minimumLineSpacing
+        layout.minimumInteritemSpacing = Metrics.CategorieItem.minimumInteritemSpacing
+        return layout
+    }()
+    
     private lazy var itemWidth = frame.size.width * Metrics.CategorieItem.itemSizeScale
     
-    init() {
+    init(reuseIdentifier: String) {
         super.init(frame: .zero, collectionViewLayout: layout)
         
         backgroundColor = .clear
         
         translatesAutoresizingMaskIntoConstraints = false
+        
         register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         showsVerticalScrollIndicator = false
     }
