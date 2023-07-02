@@ -27,6 +27,7 @@ final class RecipesListViewController: UIViewController {
     private let animationDuration = 0.3
     private let defaultGroupName = "default"
     
+    private lazy var backgroundContext = coreDataStack.persistentContainer.newBackgroundContext()
     private lazy var recipesFetchedResultsController = makeFetchedResultsController()
     private lazy var dataSource = RecipesCollectionViewDataSource(fetchedResultsController: recipesFetchedResultsController)
     
@@ -181,9 +182,9 @@ private extension RecipesListViewController {
         let fetchRequest = Recipe.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Recipe.name), ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "recipesGroup.name == %@ AND deletedDate == nil", name)
-        let context = coreDataStack.mainContext
+        
         let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                managedObjectContext: context,
+                                                                managedObjectContext: backgroundContext,
                                                                 sectionNameKeyPath: nil,
                                                                 cacheName: nil)
         fetchResultsController.delegate = self
@@ -199,7 +200,7 @@ private extension RecipesListViewController {
                     let recipeWithName = self.recipesFetchedResultsController.fetchedObjects?.first {$0.name == recipe}
                     recipeWithName?.deletedDate = Date()
                     DispatchQueue.main.async {
-                        self.coreDataStack.saveContextIfHasChanges()
+                        self.coreDataStack.saveContextIfHasChanges(context)
                     }
                 }
             } else {
@@ -232,7 +233,8 @@ private extension RecipesListViewController {
     func trashButtonTappedEvent() {
         trashButton.trashButtonTapped = { [weak self] in
             guard let self = self else { return }
-            let trashRecipesVC = TrashRecipesViewController(coreDataStack: coreDataStack)
+            let viewModel = TrashRecipesViewModel(coreDataStack: coreDataStack)
+            let trashRecipesVC = TrashRecipesViewController(viewModel: viewModel)
             self.navigationController?.pushViewController(trashRecipesVC, animated: true)
         }
     }

@@ -8,7 +8,9 @@
 import UIKit
 import CoreData
 
-final class TrashRecipesViewController: UIViewController, NSFetchedResultsControllerDelegate {
+final class TrashRecipesViewController: UIViewController {
+    
+    // MARK: - UI
     
     private lazy var collectionView: RecipesCollectionView = {
         let collectionView = RecipesCollectionView()
@@ -19,28 +21,16 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
     
     private lazy var rightBarButton = UIBarButtonItem(title: "Empty Trash", style: .plain, target: self, action: #selector(cleanTrashButtonTapped))
     
-    private let delegate = TrashRecipeCollectionViewDelegate()
-    private let dataSource = TrashRecipesCollectionViewDataSource()
-    private var coreDataStack: CoreDataStack
-    private lazy var backgroundContext = coreDataStack.persistentContainer.newBackgroundContext()
+    // MARK: - Properties
     
-    private lazy var recipesFetchedResultsController: NSFetchedResultsController = {
-        
-        let fetchRequest = Recipe.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "deletedDate", ascending: true)]
-        fetchRequest.predicate = NSPredicate(format: "deletedDate != nil")
-
-        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                managedObjectContext: backgroundContext,
-                                                                sectionNameKeyPath: nil,
-                                                                cacheName: nil)
-        fetchResultsController.delegate = self
-        return fetchResultsController
-    }()
+    private lazy var delegate = TrashRecipeCollectionViewDelegate(viewModel: viewModel)
+    private lazy var dataSource = TrashRecipesCollectionViewDataSource(viewModel: viewModel)
+    private var viewModel: TrashRecipesViewModel
     
-    init(coreDataStack: CoreDataStack) {
-        self.coreDataStack = coreDataStack
-        
+    // MARK: - Init
+    
+    init(viewModel: TrashRecipesViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -48,43 +38,75 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - LifeCycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = rightBarButton
-        delegate.navigationContoller = navigationController
+        viewModel.recipesFetchedResultsController.delegate = self
         do {
-            try recipesFetchedResultsController.performFetch()
-            if recipesFetchedResultsController.fetchedObjects?.count == 0 {
+            let recipes = try viewModel.fetchData()
+            if recipes.count == 0 {
                 rightBarButton.isEnabled = false
             }
-            
         } catch let error as NSError {
             print(error.localizedDescription)
-        }
-        
-        delegate.fetchedResultsController = recipesFetchedResultsController
-        dataSource.fetchedResultsController = recipesFetchedResultsController
-        delegate.restoreRecipe = { [weak self] indexPath in
-            guard let self = self else { return }
-            let object = recipesFetchedResultsController.object(at: indexPath)
-            DispatchQueue.main.async {
-                object.deletedDate = nil
-                self.coreDataStack.saveContextIfHasChanges(self.backgroundContext)
-            }
         }
         
         configureView()
     }
     
+    // MARK: - Actions
+    
+    @objc func cleanTrashButtonTapped() {
+        
+        let ac = UIAlertController(title: "Are you sure you want to permanently erase the items in the Trash?", message: "You can’t undo this action.", preferredStyle: .alert)
+        let confirmAction = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
+            
+            guard let self = self else { return }
+            
+            self.viewModel.emptyTrash()
+        }
+        let cancelAction = UIAlertAction(title: "No", style: .cancel)
+        ac.addAction(confirmAction)
+        ac.addAction(cancelAction)
+        
+        present(ac, animated: true)
+    }
+    
+    // MARK: - SetupUI
+    
+    private func configureView() {
+        
+        view.addSubview(collectionView)
+        view.backgroundColor = Colors.mainBackgroundColor
+        view.directionalLayoutMargins = Metrics.Margins.recipeScreenMargins
+        let margins = view.layoutMarginsGuide
+        
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalToSystemSpacingBelow: margins.topAnchor, multiplier: 1),
+            collectionView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+        ])
+    }
+}
+
+// MARK: - NSFetchedResultsControllerDelegate
+
+extension TrashRecipesViewController: NSFetchedResultsControllerDelegate {
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         if let _ = controller.fetchedObjects?.isEmpty {
             collectionView.reloadData()
+            rightBarButton.isEnabled = false
             return
         }
         
         switch type {
+        
         case .delete:
             if let indexPath = indexPath {
                 collectionView.deleteItems(at: [indexPath])
@@ -100,43 +122,5 @@ final class TrashRecipesViewController: UIViewController, NSFetchedResultsContro
         case .move: collectionView.reloadData()
         default: collectionView.reloadData()
         }
-        
-        if recipesFetchedResultsController.fetchedObjects?.count == 0 {
-            rightBarButton.isEnabled = false
-        }
-    }
-    
-    @objc func cleanTrashButtonTapped() {
-        
-        let ac = UIAlertController(title: "Are you sure you want to permanently erase the items in the Trash?", message: "You can’t undo this action.", preferredStyle: .alert)
-        let confirmAction = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
-            
-            guard let self = self else { return }
-            
-            for object in recipesFetchedResultsController.fetchedObjects ?? [] {
-                backgroundContext.delete(object)
-            }
-            coreDataStack.saveContextIfHasChanges(backgroundContext)
-        }
-        let cancelAction = UIAlertAction(title: "No", style: .cancel)
-        ac.addAction(confirmAction)
-        ac.addAction(cancelAction)
-        
-        present(ac, animated: true)
-    }
-    
-    private func configureView() {
-        
-        view.addSubview(collectionView)
-        view.backgroundColor = Colors.mainBackgroundColor
-        view.directionalLayoutMargins = Metrics.Margins.recipeScreenMargins
-        let margins = view.layoutMarginsGuide
-        
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalToSystemSpacingBelow: margins.topAnchor, multiplier: 1),
-            collectionView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-        ])
     }
 }
