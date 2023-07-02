@@ -144,7 +144,7 @@ final class RecipeViewController: UIViewController {
             currentRecipe.ingredients = ingedients
             currentRecipe.cookMethod = method
            
-            coreDataStack.saveContextIfHasChanges()
+            coreDataStack.saveViewContext()
         }
     }
     
@@ -230,7 +230,7 @@ final class RecipeViewController: UIViewController {
         else {
             return
         }
-        let newRecipe = Recipe(context: coreDataStack.mainContext)
+        let newRecipe = Recipe(context: coreDataStack.viewContext)
         if let link = scrollView.linkTextField.text,
            let url = URL(string: link),
            UIApplication.shared.canOpenURL(url) {
@@ -242,7 +242,7 @@ final class RecipeViewController: UIViewController {
         newRecipe.cookMethod = method
         currentGroup.addToRecipes(newRecipe)
         
-        coreDataStack.saveContextIfHasChanges()
+        coreDataStack.saveViewContext()
     }
     
     @objc private func keyboardWillShow(notification: NSNotification) {

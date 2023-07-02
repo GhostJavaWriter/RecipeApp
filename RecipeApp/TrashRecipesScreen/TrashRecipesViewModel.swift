@@ -11,18 +11,7 @@ import CoreData
 final class TrashRecipesViewModel {
     
     private var coreDataStack: CoreDataStack
-    private lazy var mainContext = coreDataStack.persistentContainer.viewContext
-    
-    lazy var recipesFetchedResultsController: NSFetchedResultsController<Recipe> = {
-        let fetchRequest = Recipe.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "deletedDate", ascending: true)]
-        fetchRequest.predicate = NSPredicate(format: "deletedDate != nil")
-        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                managedObjectContext: mainContext,
-                                                                sectionNameKeyPath: nil,
-                                                                cacheName: nil)
-        return fetchResultsController
-    }()
+    private(set) lazy var fetchedResultsController = coreDataStack.trashRecipesFRC
     
     // MARK: - Init
     
@@ -36,32 +25,32 @@ final class TrashRecipesViewModel {
     
     func fetchData() throws -> [Recipe] {
         do {
-            try recipesFetchedResultsController.performFetch()
-            return recipesFetchedResultsController.fetchedObjects ?? []
+            try fetchedResultsController.performFetch()
+            return fetchedResultsController.fetchedObjects ?? []
         } catch {
             throw error
         }
     }
     
     func emptyTrash() {
-        for object in recipesFetchedResultsController.fetchedObjects ?? [] {
-            mainContext.delete(object)
+        for object in fetchedResultsController.fetchedObjects ?? [] {
+            coreDataStack.viewContext.delete(object)
         }
-        coreDataStack.saveContextIfHasChanges()
+        coreDataStack.saveViewContext()
     }
     
     func getNumberOfItemsInSection() -> Int {
-        recipesFetchedResultsController.fetchedObjects?.count ?? .zero
+        fetchedResultsController.fetchedObjects?.count ?? .zero
     }
     
     func getRecipeAt(_ indexPath: IndexPath) -> Recipe? {
-        return recipesFetchedResultsController.object(at: indexPath)
+        return fetchedResultsController.object(at: indexPath)
     }
     
     func restoreRecipeAt(_ indexPath: IndexPath) {
         
-        let object = recipesFetchedResultsController.object(at: indexPath)
+        let object = fetchedResultsController.object(at: indexPath)
         object.deletedDate = nil
-        coreDataStack.saveContextIfHasChanges()
+        coreDataStack.saveViewContext()
     }
 }

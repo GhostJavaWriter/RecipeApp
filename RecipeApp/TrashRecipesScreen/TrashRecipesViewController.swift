@@ -44,7 +44,7 @@ final class TrashRecipesViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = rightBarButton
-        viewModel.recipesFetchedResultsController.delegate = self
+        viewModel.fetchedResultsController.delegate = self
         do {
             let recipes = try viewModel.fetchData()
             if recipes.count == 0 {
