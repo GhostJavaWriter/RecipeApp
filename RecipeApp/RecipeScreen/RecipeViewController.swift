@@ -97,20 +97,14 @@ final class RecipeViewController: UIViewController {
         }
     }
     
-    @objc func textsDidChange() {
+    @objc private func textsDidChange() {
         
-        let nameText = nameTextField.text ?? ""
-        let ingredientsText = scrollView.ingredientsTextView.text ?? ""
-        let methodText = scrollView.methodTextView.text ?? ""
-        
-        guard scrollView.ingredientsTextView.isValid(with: ingredientsText),
-              scrollView.methodTextView.isValid(with: methodText),
-              nameTextField.isValid(with: nameText)
-        else {
-            changeSaveButtonState(isEnable: false)
+        let isValid = viewModel.recipeFieldsIsValid(recipeFieldsDataModel: getRecipeFields())
+        if isValid {
+            changeSaveButtonState(isEnable: true)
             return
         }
-        changeSaveButtonState(isEnable: true)
+        changeSaveButtonState(isEnable: false)
     }
     
     // MARK: - Private methods
@@ -138,9 +132,9 @@ final class RecipeViewController: UIViewController {
     
     private func setupTextFields() {
         nameTextField.addTarget(self, action: #selector(textsDidChange), for: .editingChanged)
+        scrollView.linkTextField.addTarget(self, action: #selector(textsDidChange), for: .editingChanged)
         scrollView.ingredientsTextView.delegate = self
         scrollView.methodTextView.delegate = self
-        scrollView.linkTextField.addTarget(self, action: #selector(textsDidChange), for: .editingChanged)
     }
     
     private func changeSaveButtonState(isEnable: Bool) {
@@ -245,28 +239,6 @@ extension RecipeViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         textsDidChange()
-    }
-}
-
-extension UITextView {
-    func isValid(with word: String) -> Bool {
-        guard let text = self.text?.trimmingCharacters(in: .whitespacesAndNewlines),
-              text.count >= 3 else {
-            return false
-        }
-
-        return true
-    }
-}
-
-extension UITextField {
-    func isValid(with word: String) -> Bool {
-        guard let text = self.text?.trimmingCharacters(in: .whitespacesAndNewlines),
-              text.count >= 3 else {
-            return false
-        }
-
-        return true
     }
 }
 
