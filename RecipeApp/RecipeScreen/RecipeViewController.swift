@@ -113,7 +113,7 @@ final class RecipeViewController: UIViewController {
         let nameText = nameTextField.text
         let ingredientsText = scrollView.ingredientsTextView.text
         let methodText = scrollView.methodTextView.text
-        let link = scrollView.linkTextField.text
+        let link = scrollView.linkTextView.text
         return RecipeFieldsDataModel(name: nameText,
                                      ingredients: ingredientsText,
                                      method: methodText,
@@ -125,12 +125,12 @@ final class RecipeViewController: UIViewController {
         nameTextField.text = recipe.name
         scrollView.ingredientsTextView.text = recipe.ingredients
         scrollView.methodTextView.text = recipe.cookMethod
-        scrollView.linkTextField.text = recipe.link
+        scrollView.linkTextView.text = recipe.link
     }
     
     private func setupTextFields() {
         nameTextField.addTarget(self, action: #selector(textsDidChange), for: .editingChanged)
-        scrollView.linkTextField.addTarget(self, action: #selector(textsDidChange), for: .editingChanged)
+        scrollView.linkTextView.delegate = self
         scrollView.ingredientsTextView.delegate = self
         scrollView.methodTextView.delegate = self
     }
