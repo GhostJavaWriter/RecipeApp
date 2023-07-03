@@ -17,12 +17,12 @@ final class RecipeViewModel {
     private var coreDataStack: CoreDataStack
     let currentRecipe: Recipe?
     let currentGroup: RecipesGroup?
-    let mode: RecipeViewControllerMode
+    let type: RecipeViewControllerMode
     
-    init(coreDataStack: CoreDataStack, mode: RecipeViewControllerMode, currentRecipe: Recipe?, currentGroup: RecipesGroup?) {
+    init(coreDataStack: CoreDataStack, type: RecipeViewControllerMode, currentRecipe: Recipe?, currentGroup: RecipesGroup?) {
         
         self.coreDataStack = coreDataStack
-        self.mode = mode
+        self.type = type
         self.currentRecipe = currentRecipe
         self.currentGroup = currentGroup
     }
@@ -39,7 +39,7 @@ final class RecipeViewModel {
         
         var recipe: Recipe?
         
-        switch mode {
+        switch type {
         case .newRecipe:
             recipe = Recipe(context: coreDataStack.viewContext)
             recipe?.recipesGroup = currentGroup

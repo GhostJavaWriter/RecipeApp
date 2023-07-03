@@ -51,6 +51,10 @@ final class RecipeViewController: UIViewController {
         super.viewDidLoad()
         
         setupTextFields()
+        
+        leftButton.addTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
+        rightButton.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
+        
         configureView()
         configureRecipeData()
         
@@ -60,37 +64,44 @@ final class RecipeViewController: UIViewController {
     
     // MARK: - Actions
     
-    @objc private func shareButtonTapped() {
+    // share/cancel actions
+    @objc private func rightButtonTapped() {
         
-        let shareText = viewModel.setupRecipeDataForShare(recipeFieldsDataModel: getRecipeFields())
-        let vc = UIActivityViewController(activityItems: [shareText], applicationActivities: nil)
-        self.present(vc, animated: true, completion: nil)
-    }
-    
-    @objc private func editButtonTapped() {
-        
-        isEditingMode.toggle()
-        nameTextField.becomeFirstResponder()
-    }
-    
-    @objc private func cancelChanges() {
-        
-        switch viewModel.mode {
+        switch viewModel.type {
         case .view:
-            isEditingMode.toggle()
-            view.endEditing(true)
+            if !isEditingMode {
+                
+                let shareText = viewModel.setupRecipeDataForShare(recipeFieldsDataModel: getRecipeFields())
+                let vc = UIActivityViewController(activityItems: [shareText], applicationActivities: nil)
+                self.present(vc, animated: true, completion: nil)
+            } else {
+                view.endEditing(true)
+                navigationController?.popViewController(animated: true)
+            }
+            
         case .newRecipe:
             dismiss(animated: true)
         }
     }
     
+    // edit/save actions
     @objc private func leftButtonTapped() {
         
-        switch viewModel.mode {
+        switch viewModel.type {
+        // ViewController opens in viewing/editing type
         case .view:
-            isEditingMode.toggle()
-            viewModel.saveRecipeWith(recipeFieldsDataModel: getRecipeFields())
-            view.endEditing(true)
+            // Change buttons images and actions from edit and share to save and cancel
+            if !isEditingMode {
+                // turn on edit buttons action
+                isEditingMode.toggle()
+                nameTextField.becomeFirstResponder()
+            } else {
+                // turn off edit mode and saves recipe changes when tapped once again.
+                viewModel.saveRecipeWith(recipeFieldsDataModel: getRecipeFields())
+                isEditingMode.toggle()
+                view.endEditing(true)
+                navigationController?.popViewController(animated: true)
+            }
         case .newRecipe:
             viewModel.saveRecipeWith(recipeFieldsDataModel: getRecipeFields())
             dismiss(animated: true)
@@ -101,10 +112,10 @@ final class RecipeViewController: UIViewController {
         
         let isValid = viewModel.recipeFieldsIsValid(recipeFieldsDataModel: getRecipeFields())
         if isValid {
-            changeSaveButtonState(isEnable: true)
+            leftButton.isEnabled = true
             return
         }
-        changeSaveButtonState(isEnable: false)
+        leftButton.isEnabled = false
     }
     
     // MARK: - Private methods
@@ -137,10 +148,6 @@ final class RecipeViewController: UIViewController {
         scrollView.methodTextView.delegate = self
     }
     
-    private func changeSaveButtonState(isEnable: Bool) {
-        leftButton.isEnabled = isEnable
-    }
-    
     private func setButtons(isEditing: Bool) {
         
         nameTextField.isUserInteractionEnabled = isEditing
@@ -150,25 +157,13 @@ final class RecipeViewController: UIViewController {
         let rightButtonImageName = isEditing ? "cancelImage" : "shareImage"
         leftButton.setImage(UIImage(named: leftButtonImageName), for: .normal)
         rightButton.setImage(UIImage(named: rightButtonImageName), for: .normal)
-        
-        if isEditing {
-            leftButton.removeTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-            leftButton.addTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
-            rightButton.removeTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
-            rightButton.addTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
-        } else {
-            leftButton.removeTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
-            leftButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-            rightButton.removeTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
-            rightButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
-        }
     }
     
     // MARK: - SetupUI
     
     private func configureView() {
         
-        switch viewModel.mode {
+        switch viewModel.type {
         case .view:
             isEditingMode = false
         case .newRecipe:

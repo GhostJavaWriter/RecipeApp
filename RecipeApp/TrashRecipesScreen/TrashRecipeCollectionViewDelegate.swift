@@ -31,7 +31,7 @@ final class TrashRecipeCollectionViewDelegate: NSObject, UICollectionViewDelegat
         }, completion: nil)
         
         // TODO: show recipe details (RecipeViewController)
-//        let recipeVC = RecipeViewController(mode: .view, coreDataStack: coreDataStack, currentGroup: <#T##RecipesGroup#>)
+//        let recipeVC = RecipeViewController(type: .view, coreDataStack: coreDataStack, currentGroup: <#T##RecipesGroup#>)
 //        navigationContoller?.pushViewController(recipeVC, animated: true)
     }
     

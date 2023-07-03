@@ -63,7 +63,7 @@ final class RecipesListViewModel {
     func getRecipeViewControllerFor(recipeAt indexPath: IndexPath) -> RecipeViewController {
         let recipe = getRecipeAt(indexPath)
         let viewModel = RecipeViewModel(coreDataStack: coreDataStack,
-                                        mode: .view,
+                                        type: .view,
                                         currentRecipe: recipe,
                                         currentGroup: nil)
         
@@ -72,7 +72,7 @@ final class RecipesListViewModel {
     
     func getRecipeViewControllerForNewRecipe() -> RecipeViewController {
         let viewModel = RecipeViewModel(coreDataStack: coreDataStack,
-                                        mode: .newRecipe,
+                                        type: .newRecipe,
                                         currentRecipe: nil,
                                         currentGroup: currentGroup)
         return RecipeViewController(viewModel: viewModel)
