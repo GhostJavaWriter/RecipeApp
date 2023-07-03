@@ -18,7 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        // TODO: - empty trash
         if UserDefaults.standard.object(forKey: "FirstLaunch") == nil {
             UserDefaults.standard.set(true, forKey: "FirstLaunch")
             coreDataStack.createDefaultCategories()
@@ -26,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             NSLog("Default recipes groups loaded")
         }
+        // delete recipes in trash longer than 30 days
         coreDataStack.emptyTrash()
         
         let categoriesViewModel = CategoriesViewModel(coreDataStack: coreDataStack)
