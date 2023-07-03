@@ -14,7 +14,6 @@ final class RecipeViewController: UIViewController {
     private let nameLabel = UILabel.makeLabel(text: "Name")
     private let nameTextField = CustomTextField.makeTextField()
     private let scrollView = CustomScrollView()
-    
     private let rightButton = UIButton.makeButton(withImage: "shareImage")
     private let leftButton = UIButton.makeButton(withImage: "editImage")
     private lazy var containerView = ButtonsConteinerView(leftButton: leftButton, rightButton: rightButton)
@@ -38,13 +37,6 @@ final class RecipeViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification,
-                                                  object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification,
-                                                  object: nil)
-    }
-    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -66,11 +58,9 @@ final class RecipeViewController: UIViewController {
     
     // share/cancel actions
     @objc private func rightButtonTapped() {
-        
         switch viewModel.type {
         case .view:
             if !isEditingMode {
-                
                 let shareText = viewModel.setupRecipeDataForShare(recipeFieldsDataModel: getRecipeFields())
                 let vc = UIActivityViewController(activityItems: [shareText], applicationActivities: nil)
                 self.present(vc, animated: true, completion: nil)
@@ -78,7 +68,6 @@ final class RecipeViewController: UIViewController {
                 view.endEditing(true)
                 navigationController?.popViewController(animated: true)
             }
-            
         case .newRecipe:
             dismiss(animated: true)
         }
@@ -86,7 +75,6 @@ final class RecipeViewController: UIViewController {
     
     // edit/save actions
     @objc private func leftButtonTapped() {
-        
         switch viewModel.type {
         // ViewController opens in viewing/editing type
         case .view:
@@ -126,7 +114,6 @@ final class RecipeViewController: UIViewController {
         let ingredientsText = scrollView.ingredientsTextView.text
         let methodText = scrollView.methodTextView.text
         let link = scrollView.linkTextField.text
-        
         return RecipeFieldsDataModel(name: nameText,
                                      ingredients: ingredientsText,
                                      method: methodText,
@@ -149,10 +136,8 @@ final class RecipeViewController: UIViewController {
     }
     
     private func setButtons(isEditing: Bool) {
-        
         nameTextField.isUserInteractionEnabled = isEditing
         scrollView.setEditable(isEditing: isEditing)
-        
         let leftButtonImageName = isEditing ? "saveImage" : "editImage"
         let rightButtonImageName = isEditing ? "cancelImage" : "shareImage"
         leftButton.setImage(UIImage(named: leftButtonImageName), for: .normal)
@@ -162,7 +147,6 @@ final class RecipeViewController: UIViewController {
     // MARK: - SetupUI
     
     private func configureView() {
-        
         switch viewModel.type {
         case .view:
             isEditingMode = false
@@ -172,7 +156,6 @@ final class RecipeViewController: UIViewController {
         }
         
         view.backgroundColor = Colors.mainBackgroundColor
-        
         view.addSubview(nameLabel)
         view.addSubview(nameTextField)
         view.addSubview(scrollView)
@@ -183,22 +166,17 @@ final class RecipeViewController: UIViewController {
         let content = scrollView.contentLayoutGuide
         
         NSLayoutConstraint.activate([
-            
             containerView.topAnchor.constraint(equalTo: margins.topAnchor),
             containerView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            
             nameLabel.topAnchor.constraint(equalToSystemSpacingBelow: containerView.bottomAnchor, multiplier: 1),
             nameLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             nameLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            
             nameTextField.topAnchor.constraint(equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1),
             nameTextField.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             nameTextField.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             nameTextField.heightAnchor.constraint(equalToConstant: nameLabel.font.pointSize * 2.27),
-            
             scrollView.widthAnchor.constraint(equalTo: content.widthAnchor, multiplier: 1),
-            
             scrollView.topAnchor.constraint(equalToSystemSpacingBelow: nameTextField.bottomAnchor, multiplier: 1),
             scrollView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
