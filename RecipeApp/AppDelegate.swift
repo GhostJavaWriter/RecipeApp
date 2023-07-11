@@ -18,7 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        // TODO: - empty trash
         if UserDefaults.standard.object(forKey: "FirstLaunch") == nil {
             UserDefaults.standard.set(true, forKey: "FirstLaunch")
             coreDataStack.createDefaultCategories()
@@ -26,9 +25,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             NSLog("Default recipes groups loaded")
         }
+        // delete recipes in trash longer than 30 days
         coreDataStack.emptyTrash()
         
-        let categoriesVC = CategoriesViewController(coreDataStack: coreDataStack)
+        let categoriesViewModel = CategoriesViewModel(coreDataStack: coreDataStack)
+        let categoriesVC = CategoriesViewController(viewModel: categoriesViewModel)
         let navController = UINavigationController(rootViewController: categoriesVC)
 
         UINavigationBar.appearance().tintColor = Colors.CategorieItem.backgroundColor
@@ -40,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
-        coreDataStack.saveContextIfHasChanges()
+        coreDataStack.saveViewContext()
     }
 }
 

@@ -9,23 +9,23 @@ import UIKit
 
 class CategoriesCollectionViewDataSource: NSObject, UICollectionViewDataSource {
     
-    private var coreDataStack: CoreDataStack
-    private let reuseIdentifier = String(describing: CategoryCollectionViewCell.self)
+    private let viewModel: CategoriesViewModel
     
-    init(coreDataStack: CoreDataStack) {
-        self.coreDataStack = coreDataStack
+    init(viewModel: CategoriesViewModel) {
+        self.viewModel = viewModel
+        super.init()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return coreDataStack.getRecipesGroups().count
+        return viewModel.getNumberOfItemsInSection()
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let reuseIdentifier = viewModel.reuseIdentifier
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? CategoryCollectionViewCell else { return UICollectionViewCell()}
         
-        let recipesGroups = coreDataStack.getRecipesGroups()
-        cell.categoryNameLabel.text = recipesGroups[indexPath.item].name
-        
+        let recipesGroupName = viewModel.getGroupAt(indexPath).name
+        cell.categoryNameLabel.text = recipesGroupName
         return cell
     }
 }

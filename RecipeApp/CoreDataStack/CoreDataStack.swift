@@ -15,7 +15,7 @@ final class CoreDataStack {
         return container
     }()
     
-    var mainContext: NSManagedObjectContext {
+    var viewContext: NSManagedObjectContext {
         return persistentContainer.viewContext
     }
     
@@ -31,7 +31,7 @@ final class CoreDataStack {
                                  "Sauces\nCreams"]
         
         recipesGroupNames.forEach { createCategory(named: $0) }
-        saveContextIfHasChanges()
+        saveViewContext()
     }
     
     /// Return pre-setted recipes groups or empty array if error occurs
@@ -45,11 +45,11 @@ final class CoreDataStack {
     }
     
     /// Save main context
-    func saveContextIfHasChanges() {
-        guard mainContext.hasChanges else { return }
+    func saveViewContext() {
+        guard viewContext.hasChanges else { return }
         
         do {
-            try mainContext.save()
+            try viewContext.save()
         } catch let error as NSError {
             fatalError("Unresolved error \(error), \(error.userInfo)")
         }
@@ -88,7 +88,7 @@ private extension CoreDataStack {
     func fetchRecipesGroups() -> [RecipesGroup] {
         let fetchRequest: NSFetchRequest<RecipesGroup> = RecipesGroup.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(RecipesGroup.name), ascending: true)]
-        return (try? mainContext.fetch(fetchRequest)) ?? []
+        return (try? viewContext.fetch(fetchRequest)) ?? []
     }
     
     func loadPersistentStoreFor(_ container: NSPersistentContainer) {
@@ -100,15 +100,15 @@ private extension CoreDataStack {
     }
     
     func createCategory(named name: String) {
-        let group = RecipesGroup(context: mainContext)
+        let group = RecipesGroup(context: viewContext)
         group.name = name
     }
     
     func deleteRecipes(with fetchRequest: NSFetchRequest<Recipe>) {
         do {
-            let oldRecipes = try mainContext.fetch(fetchRequest)
-            oldRecipes.forEach { mainContext.delete($0) }
-            saveContextIfHasChanges()
+            let oldRecipes = try viewContext.fetch(fetchRequest)
+            oldRecipes.forEach { viewContext.delete($0) }
+            saveViewContext()
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }

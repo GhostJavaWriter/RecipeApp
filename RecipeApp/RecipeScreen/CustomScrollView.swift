@@ -14,7 +14,7 @@ final class CustomScrollView: UIScrollView {
     private let methodLabel = UILabel.makeLabel(text: "Method")
     private let ingredientsLabel = UILabel.makeLabel(text: "Ingredients")
     private let linkLabel = UILabel.makeLabel(text: "Link")
-    private(set) lazy var linkTextField = CustomTextField.makeTextField()
+    private(set) lazy var linkTextView = UITextView.makeLinkTextView()
     private(set) lazy var ingredientsTextView = UITextView.makeTextView()
     private(set) lazy var methodTextView = UITextView.makeTextView()
     
@@ -33,7 +33,7 @@ final class CustomScrollView: UIScrollView {
     func setEditable(isEditing: Bool) {
         ingredientsTextView.isEditable = isEditing
         methodTextView.isEditable = isEditing
-        linkTextField.isUserInteractionEnabled = isEditing
+        linkTextView.isEditable = isEditing
     }
     
     private func configureView() {
@@ -44,7 +44,7 @@ final class CustomScrollView: UIScrollView {
         addSubview(methodLabel)
         addSubview(ingredientsLabel)
         addSubview(linkLabel)
-        addSubview(linkTextField)
+        addSubview(linkTextView)
         addSubview(ingredientsTextView)
         addSubview(methodTextView)
         
@@ -69,11 +69,10 @@ final class CustomScrollView: UIScrollView {
             linkLabel.leadingAnchor.constraint(equalTo: content.leadingAnchor),
             linkLabel.trailingAnchor.constraint(equalTo: content.trailingAnchor),
             
-            linkTextField.topAnchor.constraint(equalToSystemSpacingBelow: linkLabel.bottomAnchor, multiplier: 1),
-            linkTextField.leadingAnchor.constraint(equalTo: content.leadingAnchor),
-            linkTextField.trailingAnchor.constraint(equalTo: content.trailingAnchor),
-            linkTextField.bottomAnchor.constraint(equalTo: content.bottomAnchor),
-            linkTextField.heightAnchor.constraint(equalToConstant: linkLabel.font.pointSize * 1.5),
+            linkTextView.topAnchor.constraint(equalToSystemSpacingBelow: linkLabel.bottomAnchor, multiplier: 1),
+            linkTextView.leadingAnchor.constraint(equalTo: content.leadingAnchor),
+            linkTextView.trailingAnchor.constraint(equalTo: content.trailingAnchor),
+            linkTextView.bottomAnchor.constraint(equalTo: content.bottomAnchor),
             
             ingredientsTextView.heightAnchor.constraint(greaterThanOrEqualTo: heightAnchor, multiplier: 0.3),
             methodTextView.heightAnchor.constraint(greaterThanOrEqualTo: heightAnchor, multiplier: 0.3)
@@ -91,6 +90,21 @@ private extension UITextView {
         textView.font = UIFont(name: Fonts.AmericanTypewriter, size: 18)
         textView.textColor = Colors.textsViewsColor
         textView.isScrollEnabled = false
+        return textView
+    }
+    
+    static func makeLinkTextView() -> UITextView {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.backgroundColor = Colors.RecipeCell.backgroundColor
+        textView.layer.cornerRadius = 10
+        textView.font = UIFont(name: Fonts.AmericanTypewriter, size: 18)
+        textView.textColor = Colors.textsViewsColor
+        textView.isScrollEnabled = false
+//        textView.textContainer.maximumNumberOfLines = 1
+        textView.isUserInteractionEnabled = true
+        textView.isSelectable = true
+        textView.dataDetectorTypes = .link
         return textView
     }
 }

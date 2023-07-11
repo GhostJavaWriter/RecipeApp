@@ -7,11 +7,6 @@
 
 import UIKit
 
-enum RecipeViewControllerMode {
-    case view
-    case newRecipe
-}
-
 final class RecipeViewController: UIViewController {
     
     // MARK: - UI
@@ -19,17 +14,12 @@ final class RecipeViewController: UIViewController {
     private let nameLabel = UILabel.makeLabel(text: "Name")
     private let nameTextField = CustomTextField.makeTextField()
     private let scrollView = CustomScrollView()
-    
     private let rightButton = UIButton.makeButton(withImage: "shareImage")
     private let leftButton = UIButton.makeButton(withImage: "editImage")
     private lazy var containerView = ButtonsConteinerView(leftButton: leftButton, rightButton: rightButton)
     
     // MARK: - Properties
-    
-    var coreDataStack: CoreDataStack
-    private var currentGroup: RecipesGroup
-    private var currentRecipe: Recipe?
-    private var mode: RecipeViewControllerMode
+    private let viewModel: RecipeViewModel
     private lazy var isEditingMode = false {
         didSet {
             setButtons(isEditing: isEditingMode)
@@ -38,10 +28,8 @@ final class RecipeViewController: UIViewController {
     
     // MARK: - Init
     
-    init(mode: RecipeViewControllerMode, coreDataStack: CoreDataStack, currentGroup: RecipesGroup) {
-        self.mode = mode
-        self.coreDataStack = coreDataStack
-        self.currentGroup = currentGroup
+    init(viewModel: RecipeViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -49,137 +37,117 @@ final class RecipeViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification,
-                                                  object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification,
-                                                  object: nil)
-    }
-    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupTextFields()
         
+        leftButton.addTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
+        rightButton.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
+        
         configureView()
+        configureRecipeData()
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    // MARK: - Public methods
-    
-    func configureRecipe(withModel model: Recipe) {
-        currentRecipe = model
-        nameTextField.text = model.name
-        scrollView.ingredientsTextView.text = model.ingredients
-        scrollView.methodTextView.text = model.cookMethod
-        scrollView.linkTextField.text = model.link
-    }
-    
     // MARK: - Actions
     
-    @objc private func shareButtonTapped() {
-        
-        let recipeName = nameTextField.text ?? "-"
-        let ingredients = scrollView.ingredientsTextView.text ?? "-"
-        let method = scrollView.methodTextView.text ?? "-"
-        
-        var shareText = "Recipe Name: \(recipeName)\nIngredients: \(ingredients)\nMethod:\(method)"
-        
-        if let link = scrollView.linkTextField.text {
-            shareText = shareText + "\nLink: \(link)"
-        }
-        
-        let activityViewController = UIActivityViewController(activityItems: [shareText],
-                                                              applicationActivities: nil)
-        self.present(activityViewController, animated: true, completion: nil)
-    }
-    
-    @objc private func editButtonTapped() {
-        
-        isEditingMode.toggle()
-        nameTextField.becomeFirstResponder()
-    }
-    
-    @objc private func cancelChanges() {
-        
-        switch mode {
+    // share/cancel actions
+    @objc private func rightButtonTapped() {
+        switch viewModel.type {
         case .view:
-            isEditingMode.toggle()
-            view.endEditing(true)
+            if !isEditingMode {
+                let shareText = viewModel.setupRecipeDataForShare(recipeFieldsDataModel: getRecipeFields())
+                let vc = UIActivityViewController(activityItems: [shareText], applicationActivities: nil)
+                self.present(vc, animated: true, completion: nil)
+            } else {
+                view.endEditing(true)
+                navigationController?.popViewController(animated: true)
+            }
         case .newRecipe:
             dismiss(animated: true)
         }
     }
     
-    @objc private func saveButtonTapped() {
-        
-        switch mode {
+    // edit/save actions
+    @objc private func leftButtonTapped() {
+        switch viewModel.type {
+        // ViewController opens in viewing/editing type
         case .view:
-            isEditingMode.toggle()
-            saveChanges()
-            view.endEditing(true)
+            // Change buttons images and actions from edit and share to save and cancel
+            if !isEditingMode {
+                // turn on edit buttons action
+                isEditingMode.toggle()
+                nameTextField.becomeFirstResponder()
+            } else {
+                // turn off edit mode and saves recipe changes when tapped once again.
+                viewModel.saveRecipeWith(recipeFieldsDataModel: getRecipeFields())
+                isEditingMode.toggle()
+                view.endEditing(true)
+                navigationController?.popViewController(animated: true)
+            }
         case .newRecipe:
-            createNewRecipe()
+            viewModel.saveRecipeWith(recipeFieldsDataModel: getRecipeFields())
             dismiss(animated: true)
         }
     }
     
-    private func saveChanges() {
-        if let currentRecipe = currentRecipe {
-            guard let name = nameTextField.text,
-                  let ingedients = scrollView.ingredientsTextView.text,
-                  let method = scrollView.methodTextView.text
-            else {
-                return
-            }
-            if let link = scrollView.linkTextField.text,
-               let url = URL(string: link),
-               UIApplication.shared.canOpenURL(url) {
-                currentRecipe.link = link
-            }
-            currentRecipe.name = name
-            currentRecipe.ingredients = ingedients
-            currentRecipe.cookMethod = method
-           
-            coreDataStack.saveContextIfHasChanges()
-        }
-    }
-    
-    @objc func textsDidChange() {
+    @objc private func textsDidChange() {
         
-        let nameText = nameTextField.text ?? ""
-        let ingredientsText = scrollView.ingredientsTextView.text ?? ""
-        let methodText = scrollView.methodTextView.text ?? ""
-        
-        guard scrollView.ingredientsTextView.isValid(with: ingredientsText),
-              scrollView.methodTextView.isValid(with: methodText),
-              nameTextField.isValid(with: nameText)
-        else {
-            changeSaveButtonState(isEnable: false)
+        let isValid = viewModel.recipeFieldsIsValid(recipeFieldsDataModel: getRecipeFields())
+        if isValid {
+            leftButton.isEnabled = true
             return
         }
-        changeSaveButtonState(isEnable: true)
+        leftButton.isEnabled = false
     }
     
     // MARK: - Private methods
     
+    private func getRecipeFields() -> RecipeFieldsDataModel {
+        
+        let nameText = nameTextField.text
+        let ingredientsText = scrollView.ingredientsTextView.text
+        let methodText = scrollView.methodTextView.text
+        let link = scrollView.linkTextView.text
+        return RecipeFieldsDataModel(name: nameText,
+                                     ingredients: ingredientsText,
+                                     method: methodText,
+                                     link: link)
+    }
+    
+    private func configureRecipeData() {
+        guard let recipe = viewModel.currentRecipe else { return }
+        nameTextField.text = recipe.name
+        scrollView.ingredientsTextView.text = recipe.ingredients
+        scrollView.methodTextView.text = recipe.cookMethod
+        scrollView.linkTextView.text = recipe.link
+    }
+    
     private func setupTextFields() {
         nameTextField.addTarget(self, action: #selector(textsDidChange), for: .editingChanged)
+        scrollView.linkTextView.delegate = self
         scrollView.ingredientsTextView.delegate = self
         scrollView.methodTextView.delegate = self
-        scrollView.linkTextField.addTarget(self, action: #selector(textsDidChange), for: .editingChanged)
     }
     
-    private func changeSaveButtonState(isEnable: Bool) {
-        leftButton.isEnabled = isEnable
+    private func setButtons(isEditing: Bool) {
+        nameTextField.isUserInteractionEnabled = isEditing
+        scrollView.setEditable(isEditing: isEditing)
+        let leftButtonImageName = isEditing ? "saveImage" : "editImage"
+        let rightButtonImageName = isEditing ? "cancelImage" : "shareImage"
+        leftButton.setImage(UIImage(named: leftButtonImageName), for: .normal)
+        rightButton.setImage(UIImage(named: rightButtonImageName), for: .normal)
     }
+    
+    // MARK: - SetupUI
     
     private func configureView() {
-        
-        switch mode {
+        switch viewModel.type {
         case .view:
             isEditingMode = false
         case .newRecipe:
@@ -188,7 +156,6 @@ final class RecipeViewController: UIViewController {
         }
         
         view.backgroundColor = Colors.mainBackgroundColor
-        
         view.addSubview(nameLabel)
         view.addSubview(nameTextField)
         view.addSubview(scrollView)
@@ -199,22 +166,17 @@ final class RecipeViewController: UIViewController {
         let content = scrollView.contentLayoutGuide
         
         NSLayoutConstraint.activate([
-            
             containerView.topAnchor.constraint(equalTo: margins.topAnchor),
             containerView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            
             nameLabel.topAnchor.constraint(equalToSystemSpacingBelow: containerView.bottomAnchor, multiplier: 1),
             nameLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             nameLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            
             nameTextField.topAnchor.constraint(equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1),
             nameTextField.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             nameTextField.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             nameTextField.heightAnchor.constraint(equalToConstant: nameLabel.font.pointSize * 2.27),
-            
             scrollView.widthAnchor.constraint(equalTo: content.widthAnchor, multiplier: 1),
-            
             scrollView.topAnchor.constraint(equalToSystemSpacingBelow: nameTextField.bottomAnchor, multiplier: 1),
             scrollView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
@@ -222,28 +184,7 @@ final class RecipeViewController: UIViewController {
         ])
     }
     
-    private func createNewRecipe() {
-        
-        guard let name = nameTextField.text,
-              let ingedients = scrollView.ingredientsTextView.text,
-              let method = scrollView.methodTextView.text
-        else {
-            return
-        }
-        let newRecipe = Recipe(context: coreDataStack.mainContext)
-        if let link = scrollView.linkTextField.text,
-           let url = URL(string: link),
-           UIApplication.shared.canOpenURL(url) {
-            newRecipe.link = link
-        }
-        newRecipe.id = UUID().uuidString
-        newRecipe.name = name
-        newRecipe.ingredients = ingedients
-        newRecipe.cookMethod = method
-        currentGroup.addToRecipes(newRecipe)
-        
-        coreDataStack.saveContextIfHasChanges()
-    }
+    // MARK: - Keyboard adjust handle
     
     @objc private func keyboardWillShow(notification: NSNotification) {
         guard let userInfo = notification.userInfo,
@@ -263,29 +204,6 @@ final class RecipeViewController: UIViewController {
         scrollView.scrollIndicatorInsets = contentInsets
     }
     
-    private func setButtons(isEditing: Bool) {
-        
-        nameTextField.isUserInteractionEnabled = isEditing
-        scrollView.setEditable(isEditing: isEditing)
-        
-        let leftButtonImageName = isEditing ? "saveImage" : "editImage"
-        let rightButtonImageName = isEditing ? "cancelImage" : "shareImage"
-        leftButton.setImage(UIImage(named: leftButtonImageName), for: .normal)
-        rightButton.setImage(UIImage(named: rightButtonImageName), for: .normal)
-        
-        if isEditing {
-            leftButton.removeTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-            leftButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
-            rightButton.removeTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
-            rightButton.addTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
-        } else {
-            leftButton.removeTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
-            leftButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-            rightButton.removeTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
-            rightButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
-        }
-    }
-    
 }
 
 // MARK: - Private extensions
@@ -294,28 +212,6 @@ extension RecipeViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         textsDidChange()
-    }
-}
-
-extension UITextView {
-    func isValid(with word: String) -> Bool {
-        guard let text = self.text?.trimmingCharacters(in: .whitespacesAndNewlines),
-              text.count >= 3 else {
-            return false
-        }
-
-        return true
-    }
-}
-
-extension UITextField {
-    func isValid(with word: String) -> Bool {
-        guard let text = self.text?.trimmingCharacters(in: .whitespacesAndNewlines),
-              text.count >= 3 else {
-            return false
-        }
-
-        return true
     }
 }
 

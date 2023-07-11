@@ -11,28 +11,29 @@ final class CategoriesViewController: UIViewController {
     
     // MARK: - UI
     
-    private let containerView = makeView()
-    private let welcomeLabelP1 = makeWelcomeLabel(withText: "What will", alignment: .left)
-    private let welcomeLabelP2 = makeWelcomeLabel(withText: "we cook?", alignment: .right)
+    private lazy var containerView = makeView()
+    private lazy var welcomeLabelP1 = makeWelcomeLabel(withText: "What will", alignment: .left)
+    private lazy var welcomeLabelP2 = makeWelcomeLabel(withText: "we cook?", alignment: .right)
     private lazy var collectionView: UICollectionView = {
-        let collectionView = CategoriesCollectionView()
-        collectionView.dataSource = self.dataSource
-        collectionView.delegate = self
+        let reuseIdentifier = viewModel.reuseIdentifier
+        let collectionView = CategoriesCollectionView(reuseIdentifier: reuseIdentifier)
+        collectionView.dataSource = dataSource
+        collectionView.delegate = delegate
         return collectionView
     }()
     
     private var margins = Metrics.Margins.screenMargins
     
     // MARK: - Properties
-    
-    private let coreDataStack: CoreDataStack
+    private let viewModel: CategoriesViewModel
     private let dataSource: CategoriesCollectionViewDataSource
+    private lazy var delegate = CategoriesCollectionViewDelegate(viewModel: viewModel, navigationController: navigationController)
     
     // MARK: - Init
     
-    init(coreDataStack: CoreDataStack) {
-        self.coreDataStack = coreDataStack
-        self.dataSource = CategoriesCollectionViewDataSource(coreDataStack: coreDataStack)
+    init(viewModel: CategoriesViewModel) {
+        self.viewModel = viewModel
+        self.dataSource = CategoriesCollectionViewDataSource(viewModel: viewModel)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -44,18 +45,15 @@ final class CategoriesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
-    }
-    
-    // MARK: - Setup UI
-    
-    private func setupUI() {
+        
         view.backgroundColor = Colors.mainBackgroundColor
         setupContainerView()
         setupCollectionView()
         setupWelcomeLabels()
         updateFontSizeAndMargins()
     }
+    
+    // MARK: - Setup UI
     
     private func setupContainerView() {
         view.addSubview(containerView)
@@ -111,51 +109,22 @@ final class CategoriesViewController: UIViewController {
         welcomeLabelP2.font = UIFont(name: fontName, size: size)
     }
     
-}
+    // MARK: - Factory methods
 
-// MARK: - Factory methods
-
-private func makeView() -> UIView {
-    let view = UIView()
-    view.translatesAutoresizingMaskIntoConstraints = false
-    return view
-}
-
-private func makeWelcomeLabel(withText text: String, alignment: NSTextAlignment) -> UILabel {
-    let label = UILabel()
-    label.translatesAutoresizingMaskIntoConstraints = false
-    label.text = text
-    label.textColor = Colors.welcomeLabelColor
-    label.font = UIFont(name: Fonts.welcomeLabelFont, size: Fonts.Sizes.welcomeLabel)
-    label.textAlignment = alignment
-    return label
-}
-
-// MARK: - UICollectionViewDelegate
-
-extension CategoriesViewController: UICollectionViewDelegate {
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
-        animateCellSelection(for: cell)
-        showRecipeList(forIndexPath: indexPath)
+    private func makeView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
-    
-    private func animateCellSelection(for cell: UICollectionViewCell) {
-        let originalTransform = cell.transform
-        let scaledTransform = originalTransform.scaledBy(x: 0.95, y: 0.95)
-        
-        cell.transform = scaledTransform
-        
-        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [], animations: {
-            cell.transform = originalTransform
-        }, completion: nil)
-    }
-    
-    private func showRecipeList(forIndexPath indexPath: IndexPath) {
-        let currentGroup = coreDataStack.getRecipesGroupAt(indexPath)
-        let recipesVC = RecipesListViewController(coreDataStack: coreDataStack, currentGroup: currentGroup)
-        navigationController?.pushViewController(recipesVC, animated: true)
+
+    private func makeWelcomeLabel(withText text: String, alignment: NSTextAlignment) -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = text
+        label.textColor = Colors.welcomeLabelColor
+        label.font = UIFont(name: Fonts.welcomeLabelFont, size: Fonts.Sizes.welcomeLabel)
+        label.textAlignment = alignment
+        return label
     }
 }
 

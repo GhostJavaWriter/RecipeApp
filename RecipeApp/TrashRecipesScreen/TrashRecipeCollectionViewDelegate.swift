@@ -10,10 +10,13 @@ import CoreData
 
 final class TrashRecipeCollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    var fetchedResultsController: NSFetchedResultsController<Recipe>!
-    var restoreRecipe: ((IndexPath) -> Void)?
-    var navigationContoller: UINavigationController?
-    var coreDataStack: CoreDataStack!
+    var viewModel: TrashRecipesViewModel
+    
+    init(viewModel: TrashRecipesViewModel) {
+        self.viewModel = viewModel
+        
+        super.init()
+    }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
@@ -28,7 +31,7 @@ final class TrashRecipeCollectionViewDelegate: NSObject, UICollectionViewDelegat
         }, completion: nil)
         
         // TODO: show recipe details (RecipeViewController)
-//        let recipeVC = RecipeViewController(mode: .view, coreDataStack: coreDataStack, currentGroup: <#T##RecipesGroup#>)
+//        let recipeVC = RecipeViewController(type: .view, coreDataStack: coreDataStack, currentGroup: <#T##RecipesGroup#>)
 //        navigationContoller?.pushViewController(recipeVC, animated: true)
     }
     
@@ -41,15 +44,18 @@ final class TrashRecipeCollectionViewDelegate: NSObject, UICollectionViewDelegat
     }
     
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { suggestedActions in
+        
+        return UIContextMenuConfiguration(identifier: nil,
+                                          previewProvider: nil,
+                                          actionProvider: { _ in
             
             let indexPath = indexPaths[0]
             
-            if let recipe = self.fetchedResultsController.fetchedObjects?[indexPath.row] {
+            if let recipe = self.viewModel.getRecipeAt(indexPath) {
                 
                 let restore = UIAction(title: "\(recipe.name!)", image: UIImage(systemName: "arrowshape.turn.up.left")) { action in
                     
-                    self.restoreRecipe?(indexPath)
+                    self.viewModel.restoreRecipeAt(indexPath)
                 }
                 return UIMenu(title: "Restore recipe", children: [restore])
             }
